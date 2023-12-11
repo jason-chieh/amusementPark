@@ -10,6 +10,7 @@ export default{
   },
   components:{
     RouterView,
+    HomeHeaderView
   },
 }
 </script>

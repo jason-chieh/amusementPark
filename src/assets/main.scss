@@ -1,7 +1,14 @@
-body{
-    margin: 0;
-}
-
 @import "../../node_modules/bootstrap/scss/functions";
 @import "../../node_modules/bootstrap/scss/variables";
 @import "../../node_modules/bootstrap/scss/bootstrap.scss";
+
+
+@import url(//fonts.googleapis.com/earlyaccess/notosanstc.css);
+
+
+body{
+    margin: 0;
+    font-family: 'Noto Sans TC',sans-serif !important;
+}
+
+

@@ -9,6 +9,12 @@ export default{
     },
     methods:{
         goBack(){
+            this.$router.push("/BackView")
+        },
+        goHome(){
+            this.$router.push("/")
+        },
+        goTest(){
             this.$router.push("/about")
         }
     },
@@ -18,14 +24,15 @@ export default{
 <template>
     <div class="headerBody">
         <div class="headerBodyLeft">
-            <img src="../../picture/logo/logo2.jpg" alt="">
+            <img @click="goHome" src="../../picture/logo/logo2.jpg" alt="">
         </div>
         <div class="headerBodyRight">
             <button type="button">精選內容</button>
             <button type="button">最新消息</button>
             <button type="button">停車資訊</button>
             <button type="button">購票登入</button>
-            <button @click="goBack()" type="button">暫時性測試通道</button>
+            <button @click="goTest()" type="button">暫時性測試通道</button>
+            <button @click="goBack()" type="button">暫時性後台通道</button>
             <i class="fa-solid fa-magnifying-glass"></i>
         </div>
         
@@ -46,6 +53,9 @@ export default{
         img{
             width: auto;
             height: 100%;
+            &:hover{
+                cursor: pointer;
+            }
         }
     }
     .headerBodyRight{
