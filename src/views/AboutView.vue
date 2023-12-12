@@ -11,6 +11,7 @@ export default{
 				imageFile: null, // 用于保存选择的文件对象
 				imgSrc:null,
 				testImg:null,
+				test123:[],
 
 
 				
@@ -25,9 +26,38 @@ export default{
 		handleFileChange(event) {
 			// 获取选择的文件
 			const file = event.target.files[0];
-			this.imageFile = file; // 保存文件对象到组件数据中
-			console.log(this.imageFile)
-			console.log(typeof this.imageFile)
+
+
+
+			if (!file) return;
+
+			const reader = new FileReader();
+			reader.readAsDataURL(file);
+			reader.onload = () => {
+				// 將圖片存儲到專案資料夾中
+				this.saveImageToFolder(reader.result);
+			};
+
+
+
+
+			// this.imageFile = file; // 保存文件对象到组件数据中
+			// console.log(this.imageFile)
+			// console.log(typeof this.imageFile)
+
+			// if (file) {
+			// const reader = new FileReader();
+
+			// reader.onload = (e) => {
+			// 	// 将读取到的图片数据设置为预览图像的 src
+			// 	this.$refs.preview.src = e.target.result;
+			// 	// 显示预览图像
+			// 	this.$refs.preview.style.display = 'block';
+			// };
+
+			// // 读取文件内容
+			// reader.readAsDataURL(file);
+			// }
     	},
 		//測試上傳照片到後端-成功
 		uploadImage() {
@@ -158,8 +188,37 @@ export default{
             .then((res) => res.json())
             .catch((error) => console.error("Error:", error))
             .then((response) => console.log("Success:", response));
-		}
+		},
 		
+
+		searchFacility(){
+            const url = 'http://localhost:8080/api/park/getAllFacility';
+            // 要帶入的值
+
+            const queryParams = new URLSearchParams({
+            });
+
+            // 將查詢字串附加到 URL
+            const urlWithParams = `${url}?${queryParams}`;
+
+            fetch(urlWithParams, {
+            method: "GET", 
+            headers: new Headers({
+                "Accept":"application/json",
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin":"*"
+            }),
+            })
+            .then(response => {
+            // 將API回應轉換為JSON格式
+            return response.json();
+            })
+            .then(data => {
+            // 將API回應的JSON數據設置到組件的responseData數據屬性中
+            this.test123 = data;
+			console.log(this.test123)
+            })
+        }
 
 
 
@@ -196,6 +255,13 @@ export default{
     </form>
 </div>
 
+<label for="file-upload" class="custom-file-upload">
+  Custom File Upload
+</label>
+<input id="file-upload" type="file" @change="handleFileChange">
+<img ref="preview" style="display: none; max-width: 200px; max-height: 200px;">
+
+
 
 
 <div>
@@ -213,7 +279,7 @@ export default{
   </div>
 
 
-  <button @click="addfacility">測試新增資料到後端</button>
+  <button @click="searchFacility">測試新增資料到後端</button>
 </template>
 
 <style lang="scss" scoped>
@@ -226,6 +292,28 @@ export default{
 
 img{
   width: 100px;
+}
+
+
+/* 隐藏默认的文件选择按钮 */
+input[type="file"] {
+  display: none;
+}
+
+/* 自定义文件选择按钮外观 */
+.custom-file-upload {
+  border: 1px solid #ccc;
+  display: inline-block;
+  padding: 6px 12px;
+  cursor: pointer;
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+/* 当文件选择按钮被激活（hover 或 focus 时），改变其外观 */
+.custom-file-upload:hover,
+.custom-file-upload:focus {
+  background-color: #a52c2c;
 }
 
 </style>

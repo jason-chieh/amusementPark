@@ -5,14 +5,18 @@ import HomeHeaderView from '../views/HomeHeaderView.vue'
 export default{
   data(){
         return{
+          //讓中間midheader可以跳轉頁面的變數
           page:1,
-          Arr:[1,2,3,4,5,6]
+          //暫時性可以把卡片v-for出來的陣列
+          Arr:[1,2,3,4,5,6],
+          //抓出已經開放的設施
+          publishedFacility:[]
         }
   },
   methods:{
     // 讓卡片們旋轉
-    changeCard(index){
-      // document.querySelector('.card').classList.toggle('rotate');
+    changeCard(){
+
       // 獲取所有的 .card 元素
       const card = event.currentTarget.closest('.card');
 
@@ -31,11 +35,49 @@ export default{
 
 
 
+    //搜尋所有的已開放遊樂施
+    searchFacility(){
+            const url = 'http://localhost:8080/api/park/getAllFacility';
+            // 要帶入的值
 
+            const queryParams = new URLSearchParams({
+            });
+
+            // 將查詢字串附加到 URL
+            const urlWithParams = `${url}?${queryParams}`;
+
+            fetch(urlWithParams, {
+            method: "GET", 
+            headers: new Headers({
+                "Accept":"application/json",
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin":"*"
+            }),
+            })
+            .then(response => {
+            // 將API回應轉換為JSON格式
+            return response.json();
+            })
+            .then(data => {
+            // 將API回應的JSON數據設置到組件的responseData數據屬性中
+            this.publishedFacility = data;
+
+            //將所有陣列裡面照片的字串加上資料型態 讓img可以讀取
+            for(let i = 0;i<this.publishedFacility.length;i++){
+              var string = this.publishedFacility[i].photo;
+              this.publishedFacility[i].photo = 'data:image/jpeg;base64,' + string;
+            }
+
+			      console.log(this.publishedFacility)
+            })
+    }
   },
   components:{
     HomeHeaderView
   },
+  mounted(){
+    this.searchFacility()
+  }
 }
 </script>
 
@@ -43,8 +85,8 @@ export default{
       <HomeHeaderView  class="HomeHeaderViewClass" />
       <!-- 上方bootstrap輪播 -->
       <div class="bootstrapAd">
-        <div id="carouselExampleControls" class="carousel slide carousel-fade" data-bs-ride="carousel">
-          <div class="carousel-inner">
+        <div id="carouselExampleControls" class="carousel slide " data-bs-ride="carousel" data-interval="3000">
+          <div class="carousel-inner" >
             <div class="carousel-item active">
                 <img src="../../picture/ad/sky.jpg" class="d-block w-100" alt="...">
                 <div class="carousel-caption d-none d-md-block">
@@ -124,23 +166,25 @@ export default{
       <div v-if="page==1"  class="bootstrapCard">
         <h1>遊樂設施</h1>
         <div class="cardPlace">
-              <div class="card" v-for="item, index in this.Arr" :key="index" >
+              <div class="card" v-for="item, index in this.publishedFacility"  >
                   <div class="cardFront"  >
-                    <img src="../../picture/ad/flash.jpg" class="card-img-top" alt="..." >
+                    <img :src=item.photo class="card-img-top" alt="..." >
                     <div class="card-body">
-                      <h5 class="card-title">Card title</h5>
-                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                      <h5 class="card-title" style="font-size: 20pt;">{{item.name}}</h5>
+                      <p class="card-text">{{item.description}}</p>
                     </div>
-                    <button @click="changeCard(index)" class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next" >
+                    <button @click="changeCard()" class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next" >
                       <span class="carousel-control-next-icon" aria-hidden="true" ></span>
                       <span class="visually-hidden" >Next</span>
                     </button>
                   </div>
                   <!-- //===================================================== -->
                   <div class="cardBack">
-                    <h3>你好啊</h3>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. At, cum.</p>
-                    <button type="button">詳細資訊</button>
+                    <h3>{{item.name}}</h3>
+                    <p>活動期間:{{item.startDate}}~{{item.endDate}}</p>
+                    <p>限制年齡:{{item.age}}</p>
+                    <p>地點:{{item.place}}</p>
+                    <button class="btnMore" type="button">詳細資訊</button>
                     <button  @click="changeCard(index)" class="carousel-control-next " type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next" >
                       <span  class="carousel-control-next-icon" aria-hidden="true"></span>
                       <span class="visually-hidden">Next</span>
@@ -525,13 +569,15 @@ export default{
         padding: 5% 5%;
         p{
           font-size: 12pt;
-          height: 50%;
         }
         button{
           border: 0;
           border-radius: 10px;
           font-size: 14pt;
           color: #0779E4;
+        }
+        .btnMore{
+          margin-top: 50%;
         }
     }
     .carousel-control-next {
