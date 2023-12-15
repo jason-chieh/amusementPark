@@ -35,16 +35,22 @@ export default{
                 desc: '',
                 region: '',
                 age:0,
-                date1: '',
-                date2: '',
+                date1: '',//startDate
+                date2: '',//endDate
                 published: false,
                 photoS: "",
 
-            
+                //管理設施去後端撈的所有資料
+                allFacility:[],
+                
+                //編輯設施的時候要有一個舊name讓資料庫可以找因為我的pk是鳴子
+                editOldName:"",
 
 
-                //這是測試用去後端拿照片------------測試用
-                imgSrc:null,
+                //管理設施搜尋欄綁的變數
+                searchName:"",
+                searchPlace:"",
+                searchOpen:"",
 
             }
     },
@@ -76,6 +82,38 @@ export default{
             timer: 1500
             });
         },
+        //新增成功提示窗-更新成功
+        showUpdateSucess(){
+            Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Your work has been Update",
+            showConfirmButton: false,
+            timer: 1500
+            });
+        },
+        //確定要刪除嗎
+        sureDelete(index){
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                    title: "Deleted!",
+                    text: "Your file has been deleted.",
+                    icon: "success",
+                    });
+                    this.delFacility(index);
+                    // console.log(index)
+                }
+                });
+        },
         //畫面會黑屏loading
         openFullScreen2(){
             const loading = ElLoading.service({
@@ -85,7 +123,7 @@ export default{
             })
             setTimeout(() => {
                 loading.close()
-            }, 2000)
+            }, 500)
             
         },
 // ================================================================以上特效提示框
@@ -101,17 +139,55 @@ export default{
         //頁面跳轉框
         goBackHome(){
             this.changePageNum=0
-            this.openFullScreen2()
         },
         goManageFacility(){
-            
+            this.searchAllFacility()
             this.changePageNum=1
         },
         goAddFacility(){
+            this.name =""
+            this.desc=""
+            this.region=""
+            this.age=0
+            this.date1=""
+            this.date2=""
+            this.published=false
+
+             //設定照片
+             const img = document.getElementById('addFacilityImg')
+            img.src = ""
+
+
             this.changePageNum=2
+        },
+        goEdit(index){
+            this.name =this.allFacility[index].name
+            this.desc=this.allFacility[index].description
+            this.region=this.allFacility[index].place
+            this.age=this.allFacility[index].age
+            this.date1=this.allFacility[index].startDate
+            this.date2=this.allFacility[index].endDate
+            this.published=this.allFacility[index].published
+            this.photoS=this.allFacility[index].photo;
+            //設定照片
+            const img = document.getElementById('edditimgShow')
+            img.src = this.allFacility[index].photo;
+            img.style.display = 'block'; // 顯示圖片
+            //設定舊姓名
+            this.editOldName=this.allFacility[index].name
+
+            
+
+            //頁面跳轉
+            this.changePageNum=3
+            this.openFullScreen2()
         },
 
 // ================================================================以上頁面跳轉框
+        handleChange(value){
+            console.log(value)
+        },
+
 
         //新增設施-選擇照片
 		handleFileChange(event) {
@@ -129,6 +205,9 @@ export default{
 				// 顯示預覽img
 				this.$refs.preview.style.display = 'block';
                 this.photoS =e.target.result
+
+                const img = document.getElementById('edditimgShow')
+                img.src = e.target.result
                 // console.log(e.target.result)
                 // console.log(typeof e.target.result)
 			};
@@ -188,46 +267,211 @@ export default{
             this.$refs.preview.src='';
 
         },
-        handleChange(value){
-            console.log(value)
+
+
+        //管理設施-往後端搜尋所有的遊樂設施-fetch
+        searchAllFacility(){
+
+                const url = 'http://localhost:8080/api/park/getAllFacilityFromBack';
+                // 要帶入的值
+
+                const queryParams = new URLSearchParams({
+                });
+
+                // 將查詢字串附加到 URL
+                const urlWithParams = `${url}?${queryParams}`;
+
+                fetch(urlWithParams, {
+                method: "GET", 
+                headers: new Headers({
+                    "Accept":"application/json",
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin":"*"
+                }),
+                })
+                .then(response => {
+                // 將API回應轉換為JSON格式
+                return  response.json();
+                })
+                .then(data => {
+                // 將API回應的JSON數據設置到組件的responseData數據屬性中
+                this.allFacility = data;
+
+                //將所有陣列裡面照片的字串加上資料型態 讓img可以讀取
+                for(let i = 0;i<this.allFacility.length;i++){
+                var string = this.allFacility[i].photo;
+                this.allFacility[i].photo = 'data:image/jpeg;base64,' + string;
+                }
+                })
         },
-        // //測試上傳照片到後端-成功
-		// getImage() {
-		// 	const url = 'http://localhost:8080/api/park/get';
-        //     // 要帶入的值
-        //     const queryParams = new URLSearchParams({
-        //         name:"天女散花"
-        //     });
+        //管理設施-搜尋條件遊樂設施
+        searchCondition(){
+            this.openFullScreen2()
+            //假如是否開放有帶到的話用這個三個條件的方法
+            if(this.searchOpen!=""){
+                const url = 'http://localhost:8080/api/park/searchThreeCondition';
+                // 要帶入的值
 
-        //     // 將查詢字串附加到 URL
-        //     const urlWithParams = `${url}?${queryParams}`;
+                const queryParams = new URLSearchParams({
+                    name:this.searchName,
+                    place:this.searchPlace,
+                    published:this.searchOpen
 
-        //     fetch(urlWithParams, {
-        //     method: "GET", 
-        //     headers: new Headers({
-        //         "Accept":"application/json",
-        //         "Content-Type": "application/json",
-        //         "Access-Control-Allow-Origin":"*"
-        //     }),
-        //     })
-        //     .then(response => response.blob()) // 将数据转换为 Blob 对象
-		// 	.then(blob => {
-		// 	const url = URL.createObjectURL(blob); // 创建 URL 对象
+                });
+                
+                // 將查詢字串附加到 URL
+                const urlWithParams = `${url}?${queryParams}`;
 
-		// 	// 将创建的 URL 对象赋值给组件的 imgSrc 变量，以便在页面中显示图片
-		// 	this.imgSrc = url;
-		// 	})
-		// 	.catch(error => {
-		// 	console.error('获取图片失败', error);
-		// 	});
+                fetch(urlWithParams, {
+                method: "GET", 
+                headers: new Headers({
+                    "Accept":"application/json",
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin":"*"
+                }),
+                })
+                .then(response => {
+                // 將API回應轉換為JSON格式
+                return response.json();
+                })
+                .then(data => {
+                // 將API回應的JSON數據設置到組件的responseData數據屬性中
+                    this.allFacility = data
+                    console.log(data)
+                     //將所有陣列裡面照片的字串加上資料型態 讓img可以讀取
+                    for(let i = 0;i<this.allFacility.length;i++){
+                    var string = this.allFacility[i].photo;
+                    this.allFacility[i].photo = 'data:image/jpeg;base64,' + string;
+                    }
+
+                })
+                return;
+            }
+
+
+            const url = 'http://localhost:8080/api/park/searchTwoCondition';
+                // 要帶入的值
+
+                const queryParams = new URLSearchParams({
+                    name:this.searchName,
+                    place:this.searchPlace,
+
+                });
+                
+                // 將查詢字串附加到 URL
+                const urlWithParams = `${url}?${queryParams}`;
+
+                fetch(urlWithParams, {
+                method: "GET", 
+                headers: new Headers({
+                    "Accept":"application/json",
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin":"*"
+                }),
+                })
+                .then(response => {
+                // 將API回應轉換為JSON格式
+                return response.json();
+                })
+                .then(data => {
+                // 將API回應的JSON數據設置到組件的responseData數據屬性中
+                    this.allFacility = data
+                    console.log(data)
+                     //將所有陣列裡面照片的字串加上資料型態 讓img可以讀取
+                    for(let i = 0;i<this.allFacility.length;i++){
+                    var string = this.allFacility[i].photo;
+                    this.allFacility[i].photo = 'data:image/jpeg;base64,' + string;
+                    }
+
+                })
 
             
-		// },
+
+
+
+        },
+        //管理設施-刪除設施
+        delFacility(index){
+            //後端先
+            console.log(this.allFacility[index].name)
+            const url = 'http://localhost:8080/api/park/deleteFacility';
+                // 要帶入的值
+
+                const queryParams = new URLSearchParams({
+                    name:this.allFacility[index].name,
+                });
+                
+                // 將查詢字串附加到 URL
+                const urlWithParams = `${url}?${queryParams}`;
+
+                fetch(urlWithParams, {
+                method: "POST", 
+                headers: new Headers({
+                    "Accept":"application/json",
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin":"*"
+                }),
+                })
+                .then(response => {return response.json();})      // 將API回應轉換為JSON格式
+                .then(data => {console.log(data)})
+
+
+            //前段最後刪
+            this.allFacility.splice(index,1)
+
+        },
+        //管理設施-更新設施
+        updateFacility(){ 
+            const url = 'http://localhost:8080/api/park/updateFacility';
+                // 要帶入的值
+                const queryParams = new URLSearchParams({
+                    oldname:this.editOldName,
+                });
+
+                var data = {
+                "facility":{
+                    "name":this.name,
+                    "description":this.desc,
+                    "place":this.region,
+                    "published":this.published,
+                    "photoS":this.photoS,
+                    "photo":null,
+                    "age":this.age,
+                    "startDate":this.date1,
+                    "endDate":this.date2
+                    }
+                };
+                
+                // 將查詢字串附加到 URL
+                const urlWithParams = `${url}?${queryParams}`;
+
+                fetch(urlWithParams, {
+                method: "POST", 
+                body: JSON.stringify(data), // data can be `string` or {object}!
+                headers: new Headers({
+                    "Accept":"application/json",
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin":"*"
+                }),
+                })
+                .then(response => {return response.json();})      // 將API回應轉換為JSON格式
+                .then(data => {
+                    console.log(data)
+                    return this.searchCondition()
+                })
+                // this.searchCondition()
+                this.showUpdateSucess()
+                this.changePageNum=1
+
+
+        },
+        
+        
 // ================================================================以上功能跟連接方法
 
     },
     mounted(){
-    
+        this.searchAllFacility()
     },
     setup() {
     // 新增表單-的使用 setup() 創建響應式對象
@@ -268,8 +512,7 @@ export default{
                             class="el-menu-vertical-demo"
                             default-active="2"
                             text-color="#fff"
-                            @open="handleOpen"
-                            @close="handleClose"
+
                             
                             >
                             <!-- 後臺標語title -->
@@ -283,7 +526,7 @@ export default{
                                 </template>
                                     <el-menu-item @click="goManageFacility" style="cursor: pointer;" class="child" index="1-1">管理設施</el-menu-item>
                                     <el-menu-item @click="goAddFacility" style="cursor: pointer;" class="child" index="1-2">新增設施</el-menu-item>
-                                    <el-menu-item @click="" style="cursor: pointer;" class="child" index="1-3">刪除設施</el-menu-item>
+                                    <!-- <el-menu-item @click="" style="cursor: pointer;" class="child" index="1-3">刪除設施</el-menu-item> -->
                             </el-sub-menu>
 
 
@@ -312,20 +555,55 @@ export default{
                 <img src="" alt="">
 
                 <!-- 管理設施 -->
-                <div v-if="changePageNum==1" class="manageFacility">
+                <div v-show="changePageNum==1" class="manageFacility">
                     <div class="manageTop">
-                        <h1>123</h1>
+                        <div class="search">
+                            <h4>搜尋名稱</h4>
+                            <input v-model="this.searchName" style="width:10vw ; border-radius: 5px;border: 0;height: 5vh;color: black;" type="text">
+                        </div>
+                        <div class="place">
+                            <h4>搜尋地區</h4>
+                            <select v-model="this.searchPlace" style="border-radius: 5px;border: 0;height: 5vh;color: black;width: 10vw;">
+                                <option value="">請選擇</option>
+                                <option value="慢活樂園島">慢活樂園島</option>
+                                <option value="溫馨親子島">溫馨親子島</option>
+                                <option value="驚險火山島">驚險火山島</option>
+                                <option value="凍骨冰山島">凍骨冰山島</option>
+                                <option value="刺激飛天島">刺激飛天島</option>
+                                <option value="孤島">孤島</option>
+                            </select>
+                        </div>
+                        <div class="openNow">
+                            <h4>搜尋開放</h4>
+                            <select v-model="this.searchOpen" style="border-radius: 5px;border: 0;height: 5vh;color: black;width: 10vw;">
+                                <option value="">請選擇</option>
+                                <option value="true">開放中</option>
+                                <option value="false">停止中</option>
+                            </select>
+                        </div>
+                        <i @click="searchCondition" style="font-size: 20pt;margin-left: 2vw;cursor: pointer;" class="fa-solid fa-magnifying-glass"></i>
                     </div>
 
                     <div class="manageBot" >
-                        <h1>123</h1>
+                        <div class="itemBlock" v-for="facility, index in this.allFacility">
+                            <img :src=facility.photo alt="">
+                            <div class="TextPlace">
+                                <span>{{facility.name}}</span>
+                                <span>{{facility.place}}</span>
+                                <span>{{facility.published==true? "開放中":"停止中"}}</span>
+                            </div>
+                            <div class="BtnPlace">
+                                <button :key="index" @click="goEdit(index)" type="button"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button :key="index" @click="sureDelete(index)" type="button"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+
+                        </div>
                     </div>
                     
                 </div>
 
-
                 <!-- 新增選項 -->
-                <div v-if="changePageNum==2"  class="addFacility">
+                <div v-show="changePageNum==2"  class="addFacility">
                     <h1 style="color: rgb(255, 255, 255); margin-left: 7vw;">新增設施</h1>
 
                     <el-form class="formPlace" :model="form" label-width="120px">
@@ -381,13 +659,81 @@ export default{
                             <div class="photoPlace">
                                 <label for="file-upload" class="custom-file-upload">選擇照片</label>
                                 <input  id="file-upload" type="file" @change="handleFileChange">
-                                <img src="" ref="preview" style="display: none; max-width: 200px; max-height: 200px;">
+                                <img id="addFacilityImg" src="" ref="preview" style="display: none; max-width: 200px; max-height: 200px;">
                             </div>
                         </el-form-item>
                         
                         <el-form-item>
                         <el-button type="primary" @click="onSubmit">Create</el-button>
-                        <el-button @click="">Cancel</el-button>
+                        <el-button @click="goBackHome">Cancel</el-button>
+                        </el-form-item>
+                    </el-form>
+                </div>
+
+                <!-- 編輯選項 -->
+                <div v-show="changePageNum==3"  class="addFacility">
+                    <h1 style="color:rgb(255, 255, 255); margin-left: 7vw;">更新設施</h1>
+
+                    <el-form class="formPlace" :model="form" label-width="120px">
+                        <el-form-item label="設施名稱">
+                            <el-input v-model="this.name" />
+                        </el-form-item>
+
+                        <el-form-item label="設施詳情">
+                            <el-input v-model="this.desc" type="textarea" />
+                        </el-form-item>
+
+                        <el-form-item label="設施位置">
+                            <el-select v-model="this.region" placeholder="請選擇島嶼">
+                                <el-option label="慢活樂園島" value="慢活樂園島" />
+                                <el-option label="溫馨親子島" value="溫馨親子島" />
+                                <el-option label="驚險火山島" value="驚險火山島" />
+                                <el-option label="凍骨冰山島" value="凍骨冰山島" />
+                                <el-option label="刺激飛天島" value="刺激飛天島" />
+                                <el-option label="孤島" value="孤島" />
+                            </el-select>
+                        </el-form-item>
+
+                        <el-form-item label="限制年齡">
+                            <el-input-number v-model="this.age" :min="1" :max="120" @change="handleChange" />
+                        </el-form-item>
+
+                        <el-form-item label="開放時間">
+                            <el-col :span="11">
+                                <input
+                                v-model="this.date1"
+                                type="date"
+                                style="width: 100%"
+                                >
+                            </el-col>
+                            <el-col :span="2" class="text-center">
+                                <span class="text-gray-500">-</span>
+                            </el-col>
+
+                            <el-col :span="11">
+                                <input
+                                type="date"
+                                v-model="this.date2"
+                                style="width: 100%"
+                                >
+                            </el-col>
+                        </el-form-item>
+
+                        <el-form-item label="是否開放">
+                        <el-switch v-model="this.published" />
+                        </el-form-item>
+
+                        <el-form-item label="選擇照片">
+                            <div class="photoPlace">
+                                <label  for="file-upload" class="custom-file-upload">選擇照片</label>
+                                <input  id="file-upload" type="file" @change="handleFileChange">
+                                <img id="edditimgShow" src=""  style="display: none; max-width: 200px; max-height: 200px;">
+                            </div>
+                        </el-form-item>
+                        
+                        <el-form-item>
+                        <el-button style="background-color: rgb(0, 174, 0);" type="primary" @click="updateFacility">Update</el-button>
+                        <el-button @click="goManageFacility">Cancel</el-button>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -442,6 +788,75 @@ export default{
         //管理設施
         .manageFacility{
             position: relative;
+            .manageTop{
+                width: 70vw;
+                margin: 0 5vw;
+                height: 20vh;
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                // background-color: #ccc;
+                border-radius: 10px;
+                backdrop-filter: blur(10px);
+                border: 1px solid black;
+                padding: 0 8vw;
+                option{
+                    font-size: 16pt;
+                }
+            }
+            .manageBot{
+                width: 70vw;
+                margin: 0 5vw;
+                height: 70vh;
+                border-radius: 10px;
+                backdrop-filter: blur(10px);
+                border: 1px solid black;
+                margin-top: 5vh;
+                overflow:auto;
+                
+
+
+                    .itemBlock{
+                        width: 100%; 
+                        height: calc(20%); 
+                        display: flex; 
+                        // border: 1px solid blue;
+                        text-align: center;
+                        
+                        &:hover{
+                            background-color: rgb(157, 157, 157);
+                        }
+                        .TextPlace{
+                            width: 70%;
+                            display: flex;
+                            justify-content:baseline;
+                            align-items: center;
+                            padding:0  1vw;
+
+                            span{
+                                min-width: 10vw;
+                                margin-right: 5vw;
+                            }
+                        }
+                        .BtnPlace{
+                            width: 20%;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            button{
+                                border: 0;
+                                border-radius: 10px;
+                                width: 3vw;
+                                height: 5vh;
+                                margin: 0 0.5vw;
+                                &:hover{
+                                    background-color: black;
+                                    color: white;
+                                }
+                            }
+                        }
+                    }
+            }
 
 
         }
@@ -453,7 +868,7 @@ export default{
             }
             .photoPlace{
                 display: flex;
-                    /* 隐藏默认的文件选择按钮 */
+                    //隱藏預設的外框
                     input[type="file"] {
                         display: none;
                     }
@@ -463,10 +878,10 @@ export default{
                     border: 1px solid #ccc;
                     border-radius: 5px;
                     display: inline-block;
-                    padding: 6px 12px;
+                    padding: 2px 12px;
                     cursor: pointer;
                     background-color: #2669fb;
-                    color: #333;
+                    color: black;
                     }
                     /* 当文件选择按钮被激活（hover 或 focus 时），改变其外观 */
                     .custom-file-upload:hover,

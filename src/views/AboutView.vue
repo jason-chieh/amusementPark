@@ -37,27 +37,6 @@ export default{
 				// 將圖片存儲到專案資料夾中
 				this.saveImageToFolder(reader.result);
 			};
-
-
-
-
-			// this.imageFile = file; // 保存文件对象到组件数据中
-			// console.log(this.imageFile)
-			// console.log(typeof this.imageFile)
-
-			// if (file) {
-			// const reader = new FileReader();
-
-			// reader.onload = (e) => {
-			// 	// 将读取到的图片数据设置为预览图像的 src
-			// 	this.$refs.preview.src = e.target.result;
-			// 	// 显示预览图像
-			// 	this.$refs.preview.style.display = 'block';
-			// };
-
-			// // 读取文件内容
-			// reader.readAsDataURL(file);
-			// }
     	},
 		//測試上傳照片到後端-成功
 		uploadImage() {
@@ -115,7 +94,6 @@ export default{
 			console.error('获取图片失败', error);
 			});
 		},
-
 		//測試設施到後端-成功
 		addfacility(){
 			var url = "http://localhost:8080/api/quiz/create";
@@ -143,54 +121,6 @@ export default{
             .catch((error) => console.error("Error:", error))
             .then((response) => console.log("Success:", response));
 		},
-
-
-
-
-
-
-		test(event){
-			this.testImg = event.target.files[0];
-		},
-		test2(){
-			// const testData = new FormData();
-			// testData.append('image', this.testImg,this.testImg.name);
-			// axios.post('http://localhost:8080/api/quiz/savePhoto1',testData)
-			// .then(res=>{
-			// 	console.log(res)
-			// })
-				const dataToSend = {
-					imageData: this.testImg // 将字节数组作为imageData参数发送到后端
-				};
-				axios.post('http://localhost:8080/api/quiz/savePhoto', dataToSend)
-				.then(response => {
-					// 请求成功处理逻辑
-					console.log('Response:', response.data);
-				})
-				.catch(error => {
-					// 错误处理逻辑
-					console.error('Error:', error);
-				});
-		},
-		selfTest(){
-			var url = "http://localhost:8080/api/quiz/savePhoto";
-            var data = {
-                "imageData":this.base64Image
-            };
-
-            fetch(url, {
-            method: "POST", // or 'PUT'
-            body: JSON.stringify(data), // data can be `string` or {object}!
-            headers: new Headers({
-                "Content-Type": "application/json",
-            }),
-            })
-            .then((res) => res.json())
-            .catch((error) => console.error("Error:", error))
-            .then((response) => console.log("Success:", response));
-		},
-		
-
 		searchFacility(){
             const url = 'http://localhost:8080/api/park/getAllFacility';
             // 要帶入的值
@@ -219,11 +149,6 @@ export default{
 			console.log(this.test123)
             })
         }
-
-
-
-
-
 
 	},
 	mounted(){
@@ -256,13 +181,10 @@ export default{
 </div>
 
 <label for="file-upload" class="custom-file-upload">
-  Custom File Upload
+Custom File Upload		
 </label>
 <input id="file-upload" type="file" @change="handleFileChange">
 <img ref="preview" style="display: none; max-width: 200px; max-height: 200px;">
-
-
-
 
 <div>
     <input type="file" @change="handleFileChange">
@@ -270,16 +192,17 @@ export default{
 </div>
 
 
-
-
-
 <div>
-   <img style="width: 30vw;" :src="this.imgSrc" alt="Fetched Image" v-if="this.imgSrc" />
-    <button @click="getImage">获取图片</button>
-  </div>
+	<img style="width: 30vw;" :src="this.imgSrc" alt="Fetched Image" v-if="this.imgSrc" />
+		<button @click="getImage">获取图片</button>
+</div>
 
 
-  <button @click="searchFacility">測試新增資料到後端</button>
+<button @click="searchFacility">測試新增資料到後端</button>
+
+
+
+
 </template>
 
 <style lang="scss" scoped>
@@ -315,5 +238,7 @@ input[type="file"] {
 .custom-file-upload:focus {
   background-color: #a52c2c;
 }
+
+
 
 </style>
