@@ -1,6 +1,7 @@
 <script >
 import { RouterLink, RouterView } from 'vue-router'
 import HomeHeaderView from '../views/HomeHeaderView.vue'
+//彈跳視窗
 import Swal from 'sweetalert2'
 
 export default{
@@ -27,12 +28,18 @@ export default{
                 footer: ''
             });
         },
+		//玩家跟使用者小頁面切換
 		goAdminLogin(){
 			this.loginChangeNum=1
 		},
 		goplayerLogin(){
 			this.loginChangeNum=2
 		},
+		//前往買票連結
+		goBuyTicket(){
+			this.$router.push("/about")
+		},
+
 
 		//使用者登入
 		adminLogin(){
@@ -108,7 +115,7 @@ export default{
 				<button type="button">login</button>
 				<div class="register">
 					<p>還未購票嗎?
-						<a href="">請前往購票</a>
+						<span @click="goBuyTicket" style="font-weight: bold;">請前往購票</span>
 					</p>
 				</div>
 
@@ -126,6 +133,7 @@ export default{
 					<button @click="adminLogin" type="button">login</button>
 			</div>
 
+			
 	</div>
 </div>
 
@@ -149,6 +157,7 @@ export default{
         align-items: center;
 		background-image: url("../../picture/backView/loginBG.jpg");
 		background-size: cover;
+
 		
 		.area{
 			width: 30vw;
@@ -157,6 +166,7 @@ export default{
 			border-radius: 10px;
 			backdrop-filter: blur(4px);
 			margin-left: 20vh;
+			
 			h1{
 					text-align: center;
 					margin: 5% 0;

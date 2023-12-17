@@ -1,6 +1,7 @@
 <script >
 import { RouterLink, RouterView } from 'vue-router'
 import { ref } from 'vue';
+//彈跳視窗
 import Swal from 'sweetalert2'
 
 //這是新增設施
