@@ -16,6 +16,12 @@ export default{
             loginInfo:{},
             //確定是否有登入
             checkLogin:false,
+
+            //抓出登入者的預約資訊
+            reserveFacilityArr:[],
+
+            //判斷有沒有預約相同
+            checkSameReserve:0
             }
     },
     methods:{
@@ -50,6 +56,25 @@ export default{
                 title: "Oops...",
                 text: "年紀未達規定",
                 footer: ''
+            });
+        },
+        //新增失敗提示窗-預定相同的設施
+        showReserveFail(){
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "你已經預約過囉",
+                footer: ''
+            });
+        },
+        //新增成功提示窗
+        showBlockSucess(){
+            Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "預約成功",
+            showConfirmButton: false,
+            timer: 1500
             });
         },
 
@@ -114,6 +139,7 @@ export default{
                 this.showAgeFail()
                 return
             }
+
             
             const url = 'http://localhost:8080/api/park/reserveFacility';
                 // 要帶入的值
@@ -139,7 +165,45 @@ export default{
                 .then(data => {
                 // 將API回應的JSON數據設置到組件的responseData數據屬性中
                 console.log(data)
+                return this.searchFacility()
                 })
+                this.addReserveFacility(index)
+        },
+        //新增預約細項
+        addReserveFacility(index){
+
+            for (let i = 0; i < this.reserveFacilityArr.length; i++) {
+                if(this.reserveFacilityArr[i].facilityName==this.publishedFacility[index].name){
+                    this.checkSameReserve = 1
+                    this.showReserveFail()
+                    return
+                }
+            }
+
+
+
+            var url = "http://localhost:8080/api/park/addReserveInfo";
+            var data = {
+                "reserveFacility":{
+                    "facilityName":this.publishedFacility[index].name,
+                    "uuid":this.loginInfo.player.uuid,
+                    "facilityPlace":this.publishedFacility[index].place,
+                    "age":this.loginInfo.player.age
+                }
+            };
+
+            fetch(url, {
+            method: "POST", // or 'PUT'
+            body: JSON.stringify(data), // data can be `string` or {object}!
+            headers: new Headers({
+                "Content-Type": "application/json",
+            }),
+            })
+            .then((res) => res.json())
+            .catch((error) => console.error("Error:", error))
+            .then((response) => console.log("Success:", response));
+            this.showBlockSucess()
+
         },
 
         //歡迎使用者
@@ -197,7 +261,39 @@ export default{
 
                     console.log(this.publishedFacility)
                 })
+        },
+
+        // //搜尋登入者的預約細項
+        searchReserveFacility(){
+                const url = 'http://localhost:8080/api/park/searchReserveFacility';
+                // 要帶入的值
+
+                const queryParams = new URLSearchParams({
+                    uuid:this.loginInfo.player.uuid
+                });
+                
+                // 將查詢字串附加到 URL
+                const urlWithParams = `${url}?${queryParams}`;
+
+                fetch(urlWithParams, {
+                method: "GET", 
+                headers: new Headers({
+                    "Accept":"application/json",
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin":"*"
+                }),
+                })
+                .then(response => {
+                // 將API回應轉換為JSON格式
+                return response.json();
+                })
+                .then(data => {
+                // 將API回應的JSON數據設置到組件的responseData數據屬性中
+                    console.log(data)
+                    this.reserveFacilityArr=data
+                })
         }
+        
     },
     components:{
         
@@ -211,9 +307,10 @@ export default{
             const data = JSON.parse(this.$route.query.data);
             // 輸出 'value' 拿取裡面的key
             this.loginInfo = data.key; 
-            console.log(this.loginInfo)
+            // console.log(this.loginInfo)
             this.checkLogin =true
             this.welcomePlayer(this.loginInfo.player.nickname)
+            this.searchReserveFacility();
             return
         }
 
@@ -229,7 +326,15 @@ export default{
                 <img @click="goOrderHome" src="../../picture/logo/logo2.jpg" alt="">
             </div>
             <div class="headerBodyRight">
-                <button type="button">預約資訊列表</button>
+                <div class="dropdownMenu">
+                        <button type="button" class="dropbtn">預約列表</button>
+                        <div class="dropcontent">
+                            <div  class="reserveBlock" v-for="reserve in this.reserveFacilityArr">
+                                <p>{{reserve.facilityName}}</p>
+                                <button class="banBtn" type="button"><i class="fa-solid fa-ban"></i></button>
+                            </div>
+                        </div>
+                </div>
                 <!-- 使用者資訊 -->
                 <div v-if="checkLogin==true" class="UserPlace">
                     <i @click="logoutPlace" class="fa-solid fa-poo"></i>
@@ -895,51 +1000,92 @@ export default{
     background-color:#0779E4;
     padding: 0 10vw;
     border: 1px solid black;
-    .headerBodyLeft{
-        width: 30%;
-        img{
-            width: auto;
-            height: 100%;
-            &:hover{
-                cursor: pointer;
+        .headerBodyLeft{
+            width: 30%;
+            img{
+                width: auto;
+                height: 100%;
+                &:hover{
+                    cursor: pointer;
+                }
             }
-        }
-    }
-    .headerBodyRight{
-        width: 70%;
-        display: flex;
-        justify-content: end;
-        align-items: center;
-        .UserPlace{
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: rgb(255, 255, 255);
-            font-size: 26pt;
-            margin-left: 1vw;
-            // bottom: 2%;
-            // right: 2%;
-        }
-        button{
-            color: white;
-            border: 0;
-            max-width: 200px;
-            background-color: #0779E4;
-            font-weight: bold;
-            font-size: 16pt;
-            // margin-left: 2vw;
-        }
-        i{
-            color: #0779E4;
-            font-weight: bold;
-            font-size: 16pt;
-            margin: 0 1vw;
 
         }
-    }
+        .headerBodyRight{
+            width: 70%;
+            display: flex;
+            justify-content: end;
+            align-items: center;
+            .UserPlace{
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: rgb(255, 255, 255);
+                font-size: 26pt;
+                margin-left: 1vw;
+                &:hover{
+                    background-color: rgb(217, 232, 253);
+                }
+            }
+            .dropdownMenu{
+                position: relative;
+                &:hover{
+                        .dropcontent{
+                            display:block;
+                        }
+                    }
+                button{
+                    color: white;
+                    border: 0;
+                    max-width: 200px;
+                    background-color: #0779E4;
+                    font-weight: bold;
+                    font-size: 16pt;
+                }
+                .dropcontent{
+                    position: absolute;
+                    right: 50%;
+                    width: 30vw;
+                    height: 60vh;
+                    background-color: white;
+                    z-index: 10;
+                    border-radius: 10px;
+                    overflow: auto;
+                    padding: 15% 15%;
+                    display:none;
+                    .reserveBlock{
+                        width: 100%;
+                        height: 20%;
+                        background-color: rgb(231, 230, 230);
+                        border-radius: 10px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        padding: 0 10%;
+                        p{
+                            margin: 0;
+                        }
+                        .banBtn{
+                            width: 50px;
+                            height: 50px;
+                            background-color: transparent;
+                            &:hover{
+                                background-color: rgb(157, 157, 157);
+                            }
+                            i{
+                                color: red;
+                            }
+                        }
+                        &:hover{
+                            background-color: gray;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     .midHeader{

@@ -134,55 +134,40 @@ export default{
 <div class="bg">
 	<div class="imgbg"></div>
 	<div class="content">
-            <span style="--i:11"></span>
-            <span style="--i:12"></span>
-            <span style="--i:18"></span>
-            <span style="--i:24"></span>
-            <span style="--i:10"></span>
-            <span style="--i:14"></span>
-            <span style="--i:23"></span>
-            <span style="--i:18"></span>
-            <span style="--i:16"></span>
-            <span style="--i:19"></span>
-            <span style="--i:12"></span>
-            <span style="--i:22"></span>
-            <span style="--i:25"></span>
-            <span style="--i:18"></span>
-            <span style="--i:21"></span>
-            <span style="--i:13"></span>
-            <span style="--i:15"></span>
-            <span style="--i:11"></span>
-            <span style="--i:12"></span>
-            <span style="--i:18"></span>
-            <span style="--i:24"></span>
-            <span style="--i:10"></span>
-            <span style="--i:14"></span>
-            <span style="--i:22"></span>
-            <span style="--i:18"></span>
-            <span style="--i:16"></span>
-            <span style="--i:19"></span>
-            <span style="--i:12"></span>
-            <span style="--i:22"></span>
-            <span style="--i:25"></span>
-            <span style="--i:18"></span>
-            <span style="--i:21"></span>
-            <span style="--i:13"></span>
-            <span style="--i:15"></span>
-            <span style="--i:14"></span>
-            <span style="--i:21"></span>
-            <span style="--i:13"></span>
-            <span style="--i:17"></span>
-            <span style="--i:11"></span>
-            <span style="--i:12"></span>
-            <span style="--i:18"></span>
-            <span style="--i:18"></span>
-            <span style="--i:21"></span>
-            <span style="--i:11"></span>
-            <span style="--i:15"></span>
-            <span style="--i:11"></span>
-            <span style="--i:19"></span>
-            <span style="--i:12"></span>
+		<i style="--i:11" class="fa-solid fa-star"></i>
+		<i style="--i:21" class="fa-solid fa-star"></i>
+		<i style="--i:12" class="fa-solid fa-star"></i>
+		<i style="--i:17" class="fa-solid fa-star"></i>
+		<i style="--i:22" class="fa-solid fa-star"></i>
+		<i style="--i:33" class="fa-solid fa-star"></i>
+		<i style="--i:15" class="fa-solid fa-star"></i>
+		<i style="--i:12" class="fa-solid fa-star"></i>
+		<i style="--i:11" class="fa-solid fa-star"></i>
+		<i style="--i:2" class="fa-solid fa-star"></i>
+		<i style="--i:8" class="fa-solid fa-star"></i>
+		<i style="--i:11" class="fa-solid fa-star"></i>
+		<i style="--i:20" class="fa-solid fa-star"></i>
+		<i style="--i:11" class="fa-solid fa-star"></i>
+		<i style="--i:16" class="fa-solid fa-star"></i>
+		<i style="--i:17" class="fa-solid fa-star"></i>
+		<i style="--i:14" class="fa-solid fa-star"></i>
+		<i style="--i:11" class="fa-solid fa-star"></i>
+		<i style="--i:23" class="fa-solid fa-star"></i>
+		<i style="--i:11" class="fa-solid fa-star"></i>
+		<i style="--i:17" class="fa-solid fa-star"></i>
+		<i style="--i:29" class="fa-solid fa-star"></i>
+		<i style="--i:24" class="fa-solid fa-star"></i>
+		<i style="--i:22" class="fa-solid fa-star"></i>
+		<i style="--i:11" class="fa-solid fa-star"></i>
+		<i style="--i:26" class="fa-solid fa-star"></i>
+		<i style="--i:11" class="fa-solid fa-star"></i>
+		<i style="--i:20" class="fa-solid fa-star"></i>
+		<i style="--i:15" class="fa-solid fa-star"></i>
+		<i style="--i:25" class="fa-solid fa-star"></i>
+		<i style="--i:11" class="fa-solid fa-star"></i>
+		<i style="--i:11" class="fa-solid fa-star"></i>
     </div>
+	<!-- style="--i:11" -->
 	<div class="buyTicketPlace">
 		<h1 style="color:white;">購票</h1>
 		<form>
@@ -238,24 +223,26 @@ export default{
 	}
 	.content{
 		display: flex;
-		span{
+		i{
 			width: 50px;
 			height: 50px;
-			background: #4fc3dc;
-			box-shadow: 0 0 0 10px #4fc3dc44,
-			0 0 80px #4fc3dc,
-			-250px 0 #4fc3dc99,
-			300px 0 #ff2d7599;
+			background: transparent;
+			font-size: 28pt;
+			color: yellow;
+			// box-shadow: 0 0 0 10px #4fc3dc44,
+			// 0 0 80px #4fc3dc,
+			// -250px 0 #4fc3dc99,
+			// 300px 0 #ff2d7599;
 			border-radius: 50%;
 			animation: animate ease infinite;
 			animation-duration: calc(100s/var(--i));
 
 			&:nth-child(even){
-				background: #ff2d75;
-				box-shadow: 0 0 0 10px #ff2d7544,
-				0 0 100px #ff2d75,
-				-250px 0 #4fc3dc99,
-				400px 0 #4fc3fc99;
+				background: transparent;
+				// box-shadow: 0 0 0 10px #ff2d7544,
+				// 0 0 100px #ff2d75,
+				// -250px 0 #4fc3dc99,
+				// 400px 0 #4fc3fc99;
 			}
 
 			@keyframes animate {
