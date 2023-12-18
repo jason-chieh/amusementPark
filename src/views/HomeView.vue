@@ -2,6 +2,9 @@
 import { RouterLink, RouterView } from 'vue-router'
 import HomeHeaderView from '../views/HomeHeaderView.vue'
 
+//彈跳視窗
+import Swal from 'sweetalert2'
+
 export default{
   data(){
         return{
@@ -10,7 +13,12 @@ export default{
           //暫時性可以把卡片v-for出來的陣列
           Arr:[1,2,3,4,5,6],
           //抓出已經開放的設施
-          publishedFacility:[]
+          publishedFacility:[],
+
+          //登入人的資料
+          loginInfo:{},
+          //確定是否有登入
+          // checkLogin:false,
         }
   },
   methods:{
@@ -32,7 +40,28 @@ export default{
     gomap(){
       this.page=2
     },
-
+    //歡迎使用者
+    welcomePlayer(nickname){
+      const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      }
+    });
+    Toast.fire({
+      icon: "success",
+      title: nickname+"歡迎遊玩!!!"
+    });
+    },
+    //計算設施使用時間
+    calculateMinute(reserveNum){
+      return Math.floor(reserveNum*1.5)
+    },
 
 
     //搜尋所有的已開放遊樂施
@@ -62,7 +91,7 @@ export default{
             // 將API回應的JSON數據設置到組件的responseData數據屬性中
             this.publishedFacility = data;
 
-            console.log(this.publishedFacility)
+            // console.log(this.publishedFacility)
 
             //將所有陣列裡面照片的字串加上資料型態 讓img可以讀取
             for(let i = 0;i<this.publishedFacility.length;i++){
@@ -79,6 +108,22 @@ export default{
   },
   mounted(){
     this.searchFacility()
+
+    // //確定登入人資料是否有資料
+    // if(!(JSON.parse(this.$route.query.data==undefined))){
+    //     //將登入頁傳來的個人資料轉成json可讀取
+    //     const data = JSON.parse(this.$route.query.data);
+    //     // 輸出 'value' 拿取裡面的key
+    //     this.loginInfo = data.key; 
+    //     console.log(this.loginInfo)
+    //     this.checkLogin =true
+    //     this.welcomePlayer(this.loginInfo.player.nickname)
+    //     return
+    // }
+
+
+    console.log("未登入狀態")
+
   }
 }
 </script>
@@ -174,7 +219,10 @@ export default{
                     <div class="card-body">
                       <h5 class="card-title" style="font-size: 20pt;">{{item.name}}</h5>
                       <p class="card-text">{{item.description}}</p>
+                      <span class="card-text reserve">預計等待時間</span>
+                      <span class="card-text reservetime">{{calculateMinute(item.reserveNum)}}分鐘</span>
                     </div>
+                    
                     <button @click="changeCard()" class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next" >
                       <span class="carousel-control-next-icon" aria-hidden="true" ></span>
                       <span class="visually-hidden" >Next</span>
@@ -186,6 +234,7 @@ export default{
                     <p>活動期間:{{item.startDate}}~{{item.endDate}}</p>
                     <p>限制年齡:{{item.age}}</p>
                     <p>地點:{{item.place}}</p>
+                    <p>預約人數:{{item.reserveNum}}</p>
                     <button class="btnMore" type="button">詳細資訊</button>
                     <button  @click="changeCard(index)" class="carousel-control-next " type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next" >
                       <span  class="carousel-control-next-icon" aria-hidden="true"></span>
@@ -767,10 +816,11 @@ export default{
 
 <style lang="scss" scoped>
 //頁面 Header
-.HomeHeaderViewClass{
-  position: fixed;
-  z-index: 99;
-}
+
+// .HomeHeaderViewClass{
+//   position: fixed;
+//   z-index: 99;
+// }
 
 //輪播廣告
 .bootstrapAd{
@@ -865,6 +915,19 @@ export default{
           img{
             width: 100%;
           }
+          .reserve{
+            position: absolute;
+            bottom: 3%;
+            left: 5%;
+            font-weight: bold;
+          }
+          .reservetime{
+            position: absolute;
+            bottom: 3%;
+            left: 35%;
+            font-weight: bold;
+            color: red;
+          }
     }
     .cardBack {
         width: 100%;
@@ -888,7 +951,7 @@ export default{
           color: #0779E4;
         }
         .btnMore{
-          margin-top: 50%;
+          margin-top: 45%;
         }
     }
     .carousel-control-next {
@@ -987,5 +1050,6 @@ hr{
     height: 5vh;
     background-color:#0779E4;
 }
+
 
 </style>

@@ -7,24 +7,59 @@ import Swal from 'sweetalert2'
 export default{
 	data(){
 			return{
+				//玩家跟管理者頁面互換
 				loginChangeNum:1,
 
 				//管理員登入的帳號密碼
 				adminAccount:"",
 				adminPassword:"",
 
-				//登入的結果
+				//管理員登入的結果
 				loginResult:{},
+
+				//玩家登入結果
+				playerLoginResult:{},
+
+				//qrcode登入的
+				qrcodeNum:"",
+
 				
 			}
 	},
 	methods:{
-		//新增失敗提示窗
+		//新增失敗提示窗-帳號密碼有錯誤
 		showLoginFail(){
             Swal.fire({
                 icon: "error",
                 title: "Oops...",
-                text: "請帳號密碼錯誤",
+                text: "帳號密碼錯誤",
+                footer: ''
+            });
+        },
+		//新增失敗提示窗-帳號密碼有空
+		showLoginFailEmpty(){
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "帳號密碼有空",
+                footer: ''
+            });
+        },
+		//新增失敗提示窗-玩家登入失敗通知
+		showPlayerLoginFail(){
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "查無此票卷",
+                footer: ''
+            });
+        },
+		//新增失敗提示窗-玩家登入票卷為空
+		showPlayerLoginEmpty(){
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "不能輸入空票卷",
                 footer: ''
             });
         },
@@ -43,6 +78,13 @@ export default{
 
 		//使用者登入
 		adminLogin(){
+			//判斷是否為空
+			if(this.adminAccount==""||this.adminPassword==""){
+				this.showLoginFailEmpty()
+				return
+			}
+
+
 			var url = "http://localhost:8080/api/addminUser/login";
             var data = {
 				"account":this.adminAccount,
@@ -84,6 +126,55 @@ export default{
 			} else {
 				passwordField.type = "password";
 			}
+		},
+		//玩家登入
+		playerLogin(){
+			if(this.qrcodeNum==""){
+				this.showPlayerLoginEmpty()
+				return
+			}
+
+
+			const url = 'http://localhost:8080/api/player/playerLogin';
+                // 要帶入的值
+
+                const queryParams = new URLSearchParams({
+                    uuid:this.qrcodeNum
+
+                });
+                
+                // 將查詢字串附加到 URL
+                const urlWithParams = `${url}?${queryParams}`;
+
+                fetch(urlWithParams, {
+                method: "POST", 
+                headers: new Headers({
+                    "Accept":"application/json",
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin":"*"
+                }),
+                })
+                .then(response => {
+                // 將API回應轉換為JSON格式
+                return response.json();
+                })
+                .then(data => {
+                // 將API回應的JSON數據設置到組件的responseData數據屬性中
+                    console.log(data)
+					this.playerLoginResult=data
+					return this.checkPlayerLoginSucess()
+                })
+		},
+		checkPlayerLoginSucess(){
+			if(this.playerLoginResult.rtncode=="SUCCESSFUL"){ 
+				sessionStorage.setItem('qrcode', this.playerLoginResult.player.uuid);
+				sessionStorage.setItem('age', this.playerLoginResult.player.age);
+				sessionStorage.setItem('nickname', this.playerLoginResult.player.nickname);
+				this.$router.push({ path: '/PlayerOrder', query: { data: JSON.stringify({ key:this.playerLoginResult }) } });
+				return
+			}
+			//假如失敗的話就跳警告視窗
+			this.showPlayerLoginFail()
 		}
 
 	},
@@ -109,10 +200,10 @@ export default{
 			<!-- 玩家登入區 -->
 			<div   v-show="loginChangeNum==1" class="player LoginPlace">
 					<div class="inputBox">
-				<input type="text" placeholder="Qrcode">
+				<input v-model="this.qrcodeNum" type="text" placeholder="Qrcode">
 				<i class="fa-solid fa-qrcode"></i>
 				</div>
-				<button type="button">login</button>
+				<button @click="playerLogin" type="button">login</button>
 				<div class="register">
 					<p>還未購票嗎?
 						<span @click="goBuyTicket" style="font-weight: bold;">請前往購票</span>
@@ -141,7 +232,7 @@ export default{
 </template>
 
 <style lang="scss" scoped>
-//頁面 Header
+// //頁面 Header
 .HomeHeaderViewClass{
   position: fixed;
   z-index: 99;

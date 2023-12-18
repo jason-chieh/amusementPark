@@ -104,8 +104,6 @@ export default{
 		},	
         //登出提示框-個人資訊欄
         logoutPlace(){
-            
-
             Swal.fire({
             title: this.loginInfo.adminuser.account,
             text: "職位:"+this.checkPeoplePosition(this.loginInfo.adminuser.manageNum),
