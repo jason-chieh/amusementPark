@@ -39,6 +39,9 @@ export default {
     goticket() {
       this.page = 5
     },
+
+
+    
     //歡迎使用者
     welcomePlayer(nickname) {
       const Toast = Swal.mixin({
@@ -62,8 +65,9 @@ export default {
       return Math.floor(reserveNum * 1.5)
     },
 
+    //搜尋遊樂設施
     searchFacility() {
-      const url = 'http://localhost:8080/api/park/getAllFacilty';
+      const url = 'http://localhost:8080/api/park/getAllFacility';
 
       const queryParams = new URLSearchParams({
       });
@@ -921,11 +925,6 @@ export default {
   position: fixed;
   z-index: 99;
 }
-
-// .HomeHeaderViewClass{
-//   position: fixed;
-//   z-index: 99;
-// }
 
 //輪播廣告
 .bootstrapAd {
