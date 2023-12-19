@@ -1,114 +1,88 @@
 <script >
 import { RouterLink, RouterView } from 'vue-router'
-import axios from 'axios'
-
 import HomeHeaderView from '../views/HomeHeaderView.vue'
+
+//彈跳視窗
+import Swal from 'sweetalert2'
+//qrcode
+import { QRious } from "https://cdn.jsdelivr.net/gh/sorcererinferior/qrious-es6@main/qrious.js"
 
 
 export default{
 	data(){
 			return{
-				imageFile: null, // 用于保存选择的文件对象
-				imgSrc:null,
-				testImg:null,
-				test123:[],
+				//購票的資料變數
+				nickname:"",
+				email:"",
+				age:"",
+				playDate:"",
 
 
-				
 			}
 	},
 	methods:{
-		count(){
-		console.log("你好")
-		},
-
-		//測試上傳照片到後端-成功
-		handleFileChange(event) {
-			// 获取选择的文件
-			const file = event.target.files[0];
-
-
-
-			if (!file) return;
-
-			const reader = new FileReader();
-			reader.readAsDataURL(file);
-			reader.onload = () => {
-				// 將圖片存儲到專案資料夾中
-				this.saveImageToFolder(reader.result);
-			};
-    	},
-		//測試上傳照片到後端-成功
-		uploadImage() {
-			const fileInput = document.querySelector('input[type="file"]');
-				const file = fileInput.files[0];
-
-				const formData = new FormData();
-				formData.append('file', file);
-
-				fetch('http://localhost:8080/api/quiz/savePhoto1', {
-					method: 'POST',
-					body: formData
-				})
-				.then(response => {
-					if (response.ok) {
-					console.log('图片上传成功');
-					console.log(formData)
-					console.log(typeof formData)
-					// 可以执行其他操作，比如刷新页面或更新数据等
-					} else {
-					console.error('图片上传失败');
-					}
-				})
-				.catch(error => {
-					console.error('发生错误:', error);
-				});
-    	},
-		//測試上傳照片到後端-成功
-		getImage() {
-			const url = 'http://localhost:8080/api/quiz/getPhotoById';
-            // 要帶入的值
-            const queryParams = new URLSearchParams({
-                photoId:30
-            });
-
-            // 將查詢字串附加到 URL
-            const urlWithParams = `${url}?${queryParams}`;
-
-            fetch(urlWithParams, {
-            method: "GET", 
-            headers: new Headers({
-                "Accept":"application/json",
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin":"*"
-            }),
-            })
-            .then(response => response.blob()) // 将数据转换为 Blob 对象
-			.then(blob => {
-			const url = URL.createObjectURL(blob); // 创建 URL 对象
-
-			// 将创建的 URL 对象赋值给组件的 imgSrc 变量，以便在页面中显示图片
-			this.imgSrc = url;
-			})
-			.catch(error => {
-			console.error('获取图片失败', error);
+		//提視窗請你填購票資料
+		showBuyFail(){
+			Swal.fire({
+				icon: "error",
+				title: "個人資料必填!",
+				text: "請放心個資會妥善保管",		
 			});
 		},
-		//測試設施到後端-成功
-		addfacility(){
-			var url = "http://localhost:8080/api/quiz/create";
+		//產生qrcode
+		showQrcode(uuid){
+			//建立qrcode照片
+			const qr = new QRious(/* could define initial settings here*/); 
+			qr.value = uuid;
+			this.$refs.qrcodepreview.src = qr.toDataURL();
+			console.log(qr.toDataURL());
+
+			//清空前面輸入的資料
+			this.nickname=""
+			this.email=""
+			this.age=""
+			this.playDate=""
+
+			Swal.fire({
+			title: "您的入場QRCODE",
+			text: "入園時將QRCODE掃描閘門",
+			imageUrl: qr.toDataURL(),
+			imageWidth: 300,
+			imageHeight: 300,
+			imageAlt: "Custom image",
+			confirmButtonColor: "#d33",
+			confirmButtonText:  "下載您的入場卷",
+			showCancelButton: true,
+			cancelButtonColor: "#3085d6",
+			cancelButtonText: "返回",
+			}).then((result) => {
+				if (result.isConfirmed) {
+					Swal.fire({
+					title: "成功",
+					// text: "",
+					icon: "success"
+					});
+					this.downloadQRCode(qr.toDataURL())
+				}
+            });
+		},
+		//購買門票向後端請求
+		buyTicket(){
+			if(this.nickname==""||this.email==""||this.age==""||this.playDate==""){
+				this.showBuyFail()
+				return
+			}
+
+			var url = "http://localhost:8080/api/player/buyTicket";
             var data = {
-				"facility":{
-					"name":"測試新增111",
-					"description":"測試新增",
-					"place":"火山島",
-					"published":true,
-					"photo":null,
-					"age":18
+				"player":{
+					"uuid":"",
+					"nickname":this.nickname,
+					"email":this.email,
+					"age":this.age,
+					"playDate":this.playDate
 				}
 			};
-
-
 
             fetch(url, {
             method: "POST", // or 'PUT'
@@ -119,39 +93,34 @@ export default{
             })
             .then((res) => res.json())
             .catch((error) => console.error("Error:", error))
-            .then((response) => console.log("Success:", response));
-		},
-		searchFacility(){
-            const url = 'http://localhost:8080/api/park/getAllFacility';
-            // 要帶入的值
-
-            const queryParams = new URLSearchParams({
+            .then((response) =>{ 
+                console.log("Success:", response,)
+				console.log(response.uuid)  
+				return this.showQrcode(response.uuid)
             });
 
-            // 將查詢字串附加到 URL
-            const urlWithParams = `${url}?${queryParams}`;
 
-            fetch(urlWithParams, {
-            method: "GET", 
-            headers: new Headers({
-                "Accept":"application/json",
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin":"*"
-            }),
-            })
-            .then(response => {
-            // 將API回應轉換為JSON格式
-            return response.json();
-            })
-            .then(data => {
-            // 將API回應的JSON數據設置到組件的responseData數據屬性中
-            this.test123 = data;
-			console.log(this.test123)
-            })
-        }
 
+		},
+		//下載qrcode
+		downloadQRCode(database64) {
+			const base64ImageData = database64; // 这里放置您的 Base64 图片数据
+			// console.log(base64ImageData)
+			// const [, remainingText] = base64ImageData.split(',');
+			// console.log(remainingText)
+
+			// 创建一个临时链接
+			const link = document.createElement('a');
+			link.href = base64ImageData;
+			link.download = 'qrcode.png'; // 下载的文件名
+
+			// 触发点击事件来下载图像
+			link.click();
+		}
 	},
 	mounted(){
+	},
+	setup(){
 		
 	},
 	components:{
@@ -162,46 +131,74 @@ export default{
 
 <template>
 	<HomeHeaderView  class="HomeHeaderViewClass" />
-<h1>sss</h1>
-<img src="../../picture/logo/logo.png" alt="">
-
-
-<div class="container">
-    <form method="post" action="~/login/verify">
-        <label>Account</label>
-        <br />
-        <input type="text" name="account" />
-        <br /><br />
-        <label>Password</label>
-        <br />
-        <input type="text" name="password" />
-        <br /><br />
-        <input type="submit" name="submit" value="Login" class="btn btn-primary" />
-    </form>
+<div class="bg">
+	<div class="imgbg"></div>
+	<div class="content">
+		<i style="--i:11" class="fa-solid fa-star"></i>
+		<i style="--i:21" class="fa-solid fa-star"></i>
+		<i style="--i:12" class="fa-solid fa-star"></i>
+		<i style="--i:17" class="fa-solid fa-star"></i>
+		<i style="--i:22" class="fa-solid fa-star"></i>
+		<i style="--i:33" class="fa-solid fa-star"></i>
+		<i style="--i:15" class="fa-solid fa-star"></i>
+		<i style="--i:12" class="fa-solid fa-star"></i>
+		<i style="--i:11" class="fa-solid fa-star"></i>
+		<i style="--i:2" class="fa-solid fa-star"></i>
+		<i style="--i:8" class="fa-solid fa-star"></i>
+		<i style="--i:11" class="fa-solid fa-star"></i>
+		<i style="--i:20" class="fa-solid fa-star"></i>
+		<i style="--i:11" class="fa-solid fa-star"></i>
+		<i style="--i:16" class="fa-solid fa-star"></i>
+		<i style="--i:17" class="fa-solid fa-star"></i>
+		<i style="--i:14" class="fa-solid fa-star"></i>
+		<i style="--i:11" class="fa-solid fa-star"></i>
+		<i style="--i:23" class="fa-solid fa-star"></i>
+		<i style="--i:11" class="fa-solid fa-star"></i>
+		<i style="--i:17" class="fa-solid fa-star"></i>
+		<i style="--i:29" class="fa-solid fa-star"></i>
+		<i style="--i:24" class="fa-solid fa-star"></i>
+		<i style="--i:22" class="fa-solid fa-star"></i>
+		<i style="--i:11" class="fa-solid fa-star"></i>
+		<i style="--i:26" class="fa-solid fa-star"></i>
+		<i style="--i:11" class="fa-solid fa-star"></i>
+		<i style="--i:20" class="fa-solid fa-star"></i>
+		<i style="--i:15" class="fa-solid fa-star"></i>
+		<i style="--i:25" class="fa-solid fa-star"></i>
+		<i style="--i:11" class="fa-solid fa-star"></i>
+		<i style="--i:11" class="fa-solid fa-star"></i>
+    </div>
+	<!-- style="--i:11" -->
+	<div class="buyTicketPlace">
+		<h1 style="color:white;">購票</h1>
+		<form>
+			<div class="row mb-3">
+				<label for="inputEmail3" class="col-sm-2 col-form-label">別名</label>
+				<div class="col-sm-10">
+					<input v-model="this.nickname" type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+				</div>
+			</div>
+			<div class="row mb-3">
+				<label for="inputPassword3" class="col-sm-2 col-form-label">信箱</label>
+				<div class="col-sm-10">
+					<input v-model="this.email"  type="text" class="form-control" placeholder="email" aria-label="Username" aria-describedby="basic-addon1">
+				</div>
+			</div>
+			
+			<div class="row mb-3">
+				<label for="inputPassword3" class="col-sm-2 col-form-label">年紀</label>
+				<div class="col-sm-2">
+					<input v-model="this.age" type="text" class="form-control" placeholder="age" aria-label="Username" aria-describedby="basic-addon1">
+				</div>
+				<label for="inputPassword3" class="col-sm-2 col-form-label testFInal">日期</label>
+				<div class="col-sm-5">
+					<input v-model="this.playDate" type="date" class="form-control" placeholder="" aria-label="Username" aria-describedby="basic-addon1">
+				</div>
+			</div>
+			<button @click="buyTicket()" type="button" class="btn btn-primary">購買</button>
+			<img id="qrcodeImg" src="" ref="qrcodepreview" style="display: none; max-width: 200px; max-height: 200px;">
+		</form>
+	</div>
 </div>
-
-<label for="file-upload" class="custom-file-upload">
-Custom File Upload		
-</label>
-<input id="file-upload" type="file" @change="handleFileChange">
-<img ref="preview" style="display: none; max-width: 200px; max-height: 200px;">
-
-<div>
-    <input type="file" @change="handleFileChange">
-    <button @click="uploadImage">上传图片</button>
-</div>
-
-
-<div>
-	<img style="width: 30vw;" :src="this.imgSrc" alt="Fetched Image" v-if="this.imgSrc" />
-		<button @click="getImage">获取图片</button>
-</div>
-
-
-<button @click="searchFacility">測試新增資料到後端</button>
-
-
-
 
 </template>
 
@@ -211,32 +208,80 @@ Custom File Upload
   position: fixed;
   z-index: 99;
 }
+.bg{
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+	.imgbg{
+		position: absolute;
+		top: 0;
+  		left: 0;
+		width: 100vw;
+  		height: 85vh;
+		background-image: url("../../picture/backView/pexels-david-geib-3220852.jpg");
+		margin-top: 15vh;
+	}
+	.content{
+		display: flex;
+		i{
+			width: 50px;
+			height: 50px;
+			background: transparent;
+			font-size: 28pt;
+			color: yellow;
+			// box-shadow: 0 0 0 10px #4fc3dc44,
+			// 0 0 80px #4fc3dc,
+			// -250px 0 #4fc3dc99,
+			// 300px 0 #ff2d7599;
+			border-radius: 50%;
+			animation: animate ease infinite;
+			animation-duration: calc(100s/var(--i));
 
+			&:nth-child(even){
+				background: transparent;
+				// box-shadow: 0 0 0 10px #ff2d7544,
+				// 0 0 100px #ff2d75,
+				// -250px 0 #4fc3dc99,
+				// 400px 0 #4fc3fc99;
+			}
 
-img{
-  width: 100px;
-}
+			@keyframes animate {
+				0%{
+					transform: translateY(120vh) scale(0) rotate(0deg);
+				}
+				20%{
+					transform: translateY(100vh) scale(1) rotate(0deg);
+				}
+				100%{
+					transform: translateY(-50vh) scale(0.5) rotate(360deg);
+				}
 
+			}
+		}
+	}
 
-/* 隐藏默认的文件选择按钮 */
-input[type="file"] {
-  display: none;
-}
+	.buyTicketPlace{
+		position: absolute;
+		transform: translate(-50%,-50%);
+		top: 60%;
+		left: 65%;
+		width: 40vw;
+		height: 50vh;
+		border-radius: 20px;
+		backdrop-filter: blur(90px);
+		color: white;
+		padding-top: 3vh;
+		padding-right: 10vw;
+		padding-left: 2vw;
+		.testFInal{
+			margin-left: 2vw;
+		}
+		.btn{
+			margin-top: 5vh;
+			// margin-left: 10vw;
+		}
+	}
 
-/* 自定义文件选择按钮外观 */
-.custom-file-upload {
-  border: 1px solid #ccc;
-  display: inline-block;
-  padding: 6px 12px;
-  cursor: pointer;
-  background-color: #f0f0f0;
-  color: #333;
-}
-
-/* 当文件选择按钮被激活（hover 或 focus 时），改变其外观 */
-.custom-file-upload:hover,
-.custom-file-upload:focus {
-  background-color: #a52c2c;
 }
 
 

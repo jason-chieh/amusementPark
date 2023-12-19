@@ -3,17 +3,24 @@ import { RouterLink, RouterView } from 'vue-router'
 import Swal from 'sweetalert2'
 import HomeHeaderView from '../views/HomeHeaderView.vue'
 
-export default {
-  data() {
-    return {
-      //讓中間midheader可以跳轉頁面的變數
-      page: 1,
-      //暫時性可以把卡片v-for出來的陣列
-      Arr: [1, 2, 3, 4, 5, 6],
-      //抓出已經開放的設施
-      publishedFacility: [],
+//彈跳視窗
+import Swal from 'sweetalert2'
 
-    }
+export default{
+  data(){
+        return{
+          //讓中間midheader可以跳轉頁面的變數
+          page:1,
+          //暫時性可以把卡片v-for出來的陣列
+          Arr:[1,2,3,4,5,6],
+          //抓出已經開放的設施
+          publishedFacility:[],
+
+          //登入人的資料
+          loginInfo:{},
+          //確定是否有登入
+          // checkLogin:false,
+        }
   },
   methods: {
     // 讓卡片們旋轉
@@ -38,11 +45,28 @@ export default {
     goticket() {
       this.page = 5
     },
-
-    //搜尋所有的已開放遊樂設施
-    searchFacility() {
-      const url = 'http://localhost:8080/api/park/getAllFacility';
-      // 要帶入的值
+    //歡迎使用者
+    welcomePlayer(nickname){
+      const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      }
+    });
+    Toast.fire({
+      icon: "success",
+      title: nickname+"歡迎遊玩!!!"
+    });
+    },
+    //計算設施使用時間
+    calculateMinute(reserveNum){
+      return Math.floor(reserveNum*1.5)
+    },
 
       const queryParams = new URLSearchParams({
       });
@@ -74,9 +98,7 @@ export default {
             this.publishedFacility[i].photo = 'data:image/jpeg;base64,' + string;
           }
 
-          console.log(this.publishedFacility)
-        })
-    },
+            // console.log(this.publishedFacility)
 
     // 地圖島嶼要放大與顯示文字框-1218測試
     zoomAndShowText() {
@@ -150,6 +172,22 @@ export default {
     if (this.page == 2) {
       this.zoomAndShowText()
     }
+
+    // //確定登入人資料是否有資料
+    // if(!(JSON.parse(this.$route.query.data==undefined))){
+    //     //將登入頁傳來的個人資料轉成json可讀取
+    //     const data = JSON.parse(this.$route.query.data);
+    //     // 輸出 'value' 拿取裡面的key
+    //     this.loginInfo = data.key; 
+    //     console.log(this.loginInfo)
+    //     this.checkLogin =true
+    //     this.welcomePlayer(this.loginInfo.player.nickname)
+    //     return
+    // }
+
+
+    console.log("未登入狀態")
+
   }
 }
 </script>
@@ -286,7 +324,6 @@ export default {
 
     <!-- Generator: Adobe Illustrator 21.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
     <svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-      y="0px" viewBox="0 0 841.9 595.3" style="enable-background:new 0 0 841.9 595.3;" xml:space="preserve">
       <g>
         <defs>
           <rect id="SVGID_1_" width="841.9" height="595.3" />
@@ -296,9 +333,53 @@ export default {
         </clipPath>
         <rect x="0.2" y="0.1" class="st0" width="841.2" height="595.2" />
         <g class="st1 botmap">
+      <!-- ========================================================================================= -->
+
+      <div v-if="page==1"  class="bootstrapCard">
+        <h1>遊樂設施</h1>
+        <div class="cardPlace">
+              <div class="card" v-for="item, index in this.publishedFacility"  >
+                  <div class="cardFront"  >
+                    <img :src=item.photo class="card-img-top" alt="..." >
+                    <div class="card-body">
+                      <h5 class="card-title" style="font-size: 20pt;">{{item.name}}</h5>
+                      <p class="card-text">{{item.description}}</p>
+                      <span class="card-text reserve">預計等待時間</span>
+                      <span class="card-text reservetime">{{calculateMinute(item.reserveNum)}}分鐘</span>
+                    </div>
+                    
+                    <button @click="changeCard()" class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next" >
+                      <span class="carousel-control-next-icon" aria-hidden="true" ></span>
+                      <span class="visually-hidden" >Next</span>
+                    </button>
+                  </div>
+                  <!-- //===================================================== -->
+                  <div class="cardBack">
+                    <h3>{{item.name}}</h3>
+                    <p>活動期間:{{item.startDate}}~{{item.endDate}}</p>
+                    <p>限制年齡:{{item.age}}</p>
+                    <p>地點:{{item.place}}</p>
+                    <p>預約人數:{{item.reserveNum}}</p>
+                    <button class="btnMore" type="button">詳細資訊</button>
+                    <button  @click="changeCard(index)" class="carousel-control-next " type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next" >
+                      <span  class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Next</span>
+                    </button>
+                  </div>
+              </div>
+        </div>
+      </div>
+
+      <!-- 地圖資訊 -->
+      <div v-if="page==2" class="mapByMyself">
+        <h1>地圖資訊</h1>
+        
+<!-- Generator: Adobe Illustrator 21.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+        <svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+          viewBox="0 0 841.9 595.3" style="enable-background:new 0 0 841.9 595.3;" xml:space="preserve">
+        <g>
           <defs>
             <rect id="SVGID_3_" width="841.9" height="595.3" />
-          </defs>
           <clipPath id="SVGID_4_">
             <use xlink:href="#SVGID_3_" style="overflow:visible;" />
           </clipPath>
@@ -923,6 +1004,11 @@ export default {
   z-index: 99;
 }
 
+// .HomeHeaderViewClass{
+//   position: fixed;
+//   z-index: 99;
+// }
+
 //輪播廣告
 .bootstrapAd {
   z-index: -10;
@@ -1027,10 +1113,47 @@ export default {
       position: absolute;
       // /* 隐藏卡片背面 */
       backface-visibility: hidden;
-
-      img {
+          img{
+            width: 100%;
+          }
+          .reserve{
+            position: absolute;
+            bottom: 3%;
+            left: 5%;
+            font-weight: bold;
+          }
+          .reservetime{
+            position: absolute;
+            bottom: 3%;
+            left: 35%;
+            font-weight: bold;
+            color: red;
+          }
+    }
+    .cardBack {
         width: 100%;
-      }
+        height: 100%;
+        background-color: #0779E4;
+        color: white;
+        font-size: 26px;
+        /* 让在背面显示的内容转到背面 */
+        transform: rotateY(180deg);
+        /* 让卡片背面与正面重合 */
+        position: absolute;
+        backface-visibility: hidden;
+        padding: 5% 5%;
+        p{
+          font-size: 12pt;
+        }
+        button{
+          border: 0;
+          border-radius: 10px;
+          font-size: 14pt;
+          color: #0779E4;
+        }
+        .btnMore{
+          margin-top: 45%;
+        }
     }
 
     .cardBack {
@@ -1356,4 +1479,5 @@ hr {
 
 //   }
 // }
+
 </style>
