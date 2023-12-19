@@ -3,24 +3,21 @@ import { RouterLink, RouterView } from 'vue-router'
 import Swal from 'sweetalert2'
 import HomeHeaderView from '../views/HomeHeaderView.vue'
 
-//彈跳視窗
-import Swal from 'sweetalert2'
+export default {
+  data() {
+    return {
+      //讓中間midheader可以跳轉頁面的變數
+      page: 1,
+      //暫時性可以把卡片v-for出來的陣列
+      Arr: [1, 2, 3, 4, 5, 6],
+      //抓出已經開放的設施
+      publishedFacility: [],
 
-export default{
-  data(){
-        return{
-          //讓中間midheader可以跳轉頁面的變數
-          page:1,
-          //暫時性可以把卡片v-for出來的陣列
-          Arr:[1,2,3,4,5,6],
-          //抓出已經開放的設施
-          publishedFacility:[],
-
-          //登入人的資料
-          loginInfo:{},
-          //確定是否有登入
-          // checkLogin:false,
-        }
+      //登入人的資料
+      loginInfo: {},
+      //確定是否有登入
+      // checkLogin:false,
+    }
   },
   methods: {
     // 讓卡片們旋轉
@@ -43,30 +40,31 @@ export default{
       this.page = 5
     },
     //歡迎使用者
-    welcomePlayer(nickname){
+    welcomePlayer(nickname) {
       const Toast = Swal.mixin({
-      toast: true,
-      position: "top-end",
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
-      }
-    });
-    Toast.fire({
-      icon: "success",
-      title: nickname+"歡迎遊玩!!!"
-    });
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
+      Toast.fire({
+        icon: "success",
+        title: nickname + "歡迎遊玩!!!"
+      });
     },
     //計算設施使用時間
-    calculateMinute(reserveNum){
-      return Math.floor(reserveNum*1.5)
+    calculateMinute(reserveNum) {
+      return Math.floor(reserveNum * 1.5)
     },
-    searchAllFaclity(){
-      const url = 'http://localhost/api/park/searchAllFaclity'
-      
+
+    searchFacility() {
+      const url = 'http://localhost:8080/api/park/getAllFacilty';
+
       const queryParams = new URLSearchParams({
       });
 
@@ -97,9 +95,9 @@ export default{
             this.publishedFacility[i].photo = 'data:image/jpeg;base64,' + string;
           }
 
-            // console.log(this.publishedFacility)
-    })
-  },      
+          console.log(this.publishedFacility)
+        })
+    },
 
     // 地圖島嶼要放大與顯示文字框-1218測試
     zoomAndShowText() {
@@ -313,15 +311,8 @@ export default{
           <g class="st2">
             <g>
               <defs>
-                <rect id="SVGID_5_" x="0" width="841.9" height="595.2" />
-              </defs>
-              <clipPath id="SVGID_6_">
-                <use xlink:href="#SVGID_5_" style="overflow:visible;" />
-              </clipPath>
-              <g class="st3">
-                <defs>
-                  <path id="SVGID_7_"
-                    d="M837.3,0.8V0H0.2v15v29v347.2c0,64.3,0,128.6,0,193l-0.2,11h820.9h21v-11V0.8H837.3z M782.6,584.1
+                <path id="SVGID_7_"
+                  d="M837.3,0.8V0H0.2v15v29v347.2c0,64.3,0,128.6,0,193l-0.2,11h820.9h21v-11V0.8H837.3z M782.6,584.1
                       c-12.1-2.8-24.4-5.1-36.6-3.7c-6,0.7-11.9,2.2-17.8,3.7h-52c-17.4-4.8-34.7-11.8-52.7-11c-16.6,0.6-32.1,7.8-48.4,11
                       c0,0,0,0,0,0h-90.5c-16-0.7-32.1-1.5-48.1-2.2c-27.5,0.9-55.1,1.7-82.7,2.2H264c-12-0.3-24-0.7-36-1.2
                       c-23-1.1-46-2.7-68.9-0.7c-5.8,0.5-11.6,1.3-17.5,1.9h-33.9c-6.9-1.2-13.7-3.2-20.8-3.4c-7.9-0.2-15.9,1.8-23.8,3.4
@@ -338,53 +329,53 @@ export default{
                       c6.9,19.7,9.5,40.7,9.6,61.5c0.1,15.5-1.2,37.8-8.3,51.6c-3,5.9-7.6,10.8-11,16.5c-5.6,9.4-7.8,20.9-6,31.7
                       c3.5,20.6,20.4,33.6,23.4,54c2.9,19.9,1.2,44.8-7.3,63.1c-6.3,13.6-3.8,23.1,1.4,36.4c5.7,14.3,9.1,30.6,11,46
                       c3.7,31.3-3.4,59.9-7.8,90.6c-1.6,11.1-1.3,18.5-5.6,29c-2.5,6.1-3.5,12.5-3.2,18.9c0.4,10.2-7.9,18.6-18.1,18.6H782.6z" />
-                </defs>
-                <clipPath id="SVGID_8_">
-                  <use xlink:href="#SVGID_7_" style="overflow:visible;" />
-                </clipPath>
+              </defs>
+              <clipPath id="SVGID_8_">
+                <use xlink:href="#SVGID_7_" style="overflow:visible;" />
+              </clipPath>
 
-                <linearGradient id="SVGID_9_" gradientUnits="userSpaceOnUse" x1="-1.449462e-08" y1="595.3" x2="1"
-                  y2="595.3" gradientTransform="matrix(841.9 0 0 -841.9 1.220312e-05 501480.6563)">
-                  <stop offset="0" style="stop-color:#885C3B" />
-                  <stop offset="1" style="stop-color:#3C2315" />
-                </linearGradient>
-                <rect x="0" y="0" class="st4" width="841.9" height="595.2" />
-              </g>
-              <g class="st3">
-                <defs>
-                  <path id="SVGID_10_"
-                    d="M436.1,581.9c0.1,0,0.2,0,0.3,0c1.3,0,2.6-0.1,3.9-0.1C438.9,581.9,437.5,581.9,436.1,581.9" />
-                </defs>
-                <clipPath id="SVGID_11_">
-                  <use xlink:href="#SVGID_10_" style="overflow:visible;" />
-                </clipPath>
+              <linearGradient id="SVGID_9_" gradientUnits="userSpaceOnUse" x1="-1.449462e-08" y1="595.3" x2="1" y2="595.3"
+                gradientTransform="matrix(841.9 0 0 -841.9 1.220312e-05 501480.6563)">
+                <stop offset="0" style="stop-color:#885C3B" />
+                <stop offset="1" style="stop-color:#3C2315" />
+              </linearGradient>
+              <rect x="0" y="0" class="st4" width="841.9" height="595.2" />
+            </g>
+            <g class="st3">
+              <defs>
+                <path id="SVGID_10_"
+                  d="M436.1,581.9c0.1,0,0.2,0,0.3,0c1.3,0,2.6-0.1,3.9-0.1C438.9,581.9,437.5,581.9,436.1,581.9" />
+              </defs>
+              <clipPath id="SVGID_11_">
+                <use xlink:href="#SVGID_10_" style="overflow:visible;" />
+              </clipPath>
 
-                <linearGradient id="SVGID_12_" gradientUnits="userSpaceOnUse" x1="-1.914903e-04" y1="595.3" x2="0.9999"
-                  y2="595.3" gradientTransform="matrix(4.1436 0 0 -4.1436 436.1468 3048.5647)">
-                  <stop offset="0" style="stop-color:#885C3B" />
-                  <stop offset="1" style="stop-color:#3C2315" />
-                </linearGradient>
-                <rect x="436.1" y="581.8" class="st5" width="4.1" height="0.1" />
-              </g>
+              <linearGradient id="SVGID_12_" gradientUnits="userSpaceOnUse" x1="-1.914903e-04" y1="595.3" x2="0.9999"
+                y2="595.3" gradientTransform="matrix(4.1436 0 0 -4.1436 436.1468 3048.5647)">
+                <stop offset="0" style="stop-color:#885C3B" />
+                <stop offset="1" style="stop-color:#3C2315" />
+              </linearGradient>
+              <rect x="436.1" y="581.8" class="st5" width="4.1" height="0.1" />
             </g>
           </g>
-          <path class="st6" d="M769.4,518.5l-4.4-19.8l-4.4,19.8l-19.9,4.4l19.9,4.4l4.4,20l4.4-20l19.9-4.4L769.4,518.5z M765,527.6
+        </g>
+        <path class="st6" d="M769.4,518.5l-4.4-19.8l-4.4,19.8l-19.9,4.4l19.9,4.4l4.4,20l4.4-20l19.9-4.4L769.4,518.5z M765,527.6
               c-2.3,0-4.1-1.8-4.1-4.1c0-0.2,0-0.3,0-0.5c0.1-0.5,0.2-0.9,0.4-1.3h-0.1l3.8-17l3.8,17h-0.1c0.2,0.4,0.3,0.8,0.4,1.3
               c0,0.2,0,0.3,0,0.5C769.1,525.7,767.3,527.6,765,527.6" />
-          <path class="st6" d="M765,520.1c-0.9,0-1.8,0.4-2.4,1c-0.6,0.6-1,1.5-1,2.4c0,0.9,0.4,1.8,1,2.4c0.6,0.6,1.5,1,2.4,1
+        <path class="st6" d="M765,520.1c-0.9,0-1.8,0.4-2.4,1c-0.6,0.6-1,1.5-1,2.4c0,0.9,0.4,1.8,1,2.4c0.6,0.6,1.5,1,2.4,1
               c0.9,0,1.8-0.4,2.4-1c0.6-0.6,1-1.5,1-2.4c0-0.9-0.4-1.8-1-2.4C766.8,520.5,765.9,520.1,765,520.1" />
-          <polygon class="st6" points="767.9,487 769.1,487 769.1,496.3 767.9,496.3 762.9,488.9 762.9,496.3 761.7,496.3 761.7,487 
+        <polygon class="st6" points="767.9,487 769.1,487 769.1,496.3 767.9,496.3 762.9,488.9 762.9,496.3 761.7,496.3 761.7,487 
               762.9,487 767.9,494.4 		" />
-          <path class="st6" d="M763.5,553.7c0,0.3,0.1,0.6,0.3,0.8s0.4,0.4,0.7,0.5c0.3,0.1,0.6,0.2,1,0.3c0.4,0.1,0.7,0.2,1.1,0.3
+        <path class="st6" d="M763.5,553.7c0,0.3,0.1,0.6,0.3,0.8s0.4,0.4,0.7,0.5c0.3,0.1,0.6,0.2,1,0.3c0.4,0.1,0.7,0.2,1.1,0.3
               c0.4,0.1,0.7,0.2,1,0.4c0.3,0.2,0.5,0.4,0.7,0.7c0.2,0.3,0.3,0.7,0.3,1.2c0,0.7-0.3,1.4-0.8,1.9c-0.6,0.5-1.3,0.8-2.3,0.8
               c-0.9,0-1.7-0.2-2.3-0.7c-0.6-0.4-0.9-1-0.9-1.8h1.3c0,0.4,0.2,0.8,0.5,1c0.3,0.3,0.7,0.4,1.3,0.4c0.6,0,1.1-0.2,1.4-0.5
               c0.3-0.3,0.5-0.7,0.5-1.1c0-0.4-0.1-0.7-0.3-0.9c-0.2-0.2-0.4-0.4-0.7-0.5c-0.3-0.1-0.6-0.2-1-0.3c-0.4-0.1-0.7-0.2-1.1-0.3
               c-0.4-0.1-0.7-0.2-1-0.4c-0.3-0.2-0.5-0.4-0.7-0.7c-0.2-0.3-0.3-0.7-0.3-1.2c0-0.8,0.3-1.4,0.8-1.9c0.6-0.5,1.3-0.7,2.2-0.7
               c0.9,0,1.6,0.2,2.1,0.6c0.5,0.4,0.8,1,0.9,1.7H767c0-0.4-0.2-0.7-0.5-0.9c-0.3-0.3-0.7-0.4-1.2-0.4c-0.5,0-1,0.1-1.3,0.4
               C763.6,552.8,763.5,553.2,763.5,553.7" />
-          <polygon class="st6" points="799.1,517.5 799.1,518.5 795.4,518.5 795.4,521.7 798.7,521.7 798.7,522.6 795.4,522.6 795.4,525.9 
+        <polygon class="st6" points="799.1,517.5 799.1,518.5 795.4,518.5 795.4,521.7 798.7,521.7 798.7,522.6 795.4,522.6 795.4,525.9 
               799.1,525.9 799.1,526.8 794.2,526.8 794.2,517.5 		" />
-          <polygon class="st6" points="737,517.5 738.3,517.5 735.5,526.8 734.1,526.8 732,519.3 729.7,526.8 728.4,526.9 725.8,517.5 
+        <polygon class="st6" points="737,517.5 738.3,517.5 735.5,526.8 734.1,526.8 732,519.3 729.7,526.8 728.4,526.9 725.8,517.5 
               727,517.5 729.1,525.4 731.4,517.5 732.7,517.5 734.8,525.4 		" />
         
         <g class="st1 botmap">
@@ -870,7 +861,7 @@ export default{
               c5.1,3.1,10.4,3.7,13.9,3.7c1.9,0,3.2-0.2,3.7-0.2c7.5-1,13-5.1,20.2-12.4c13.7-13.7,33.7-33.9,27.6-45.7c-2.6-5.1-9.3-7.1-15.7-9
               C223.6,501.6,219.6,501.2,215.8,501.2" />
         </g>
-      </g>    
+          
     </svg>
 
   </div>
@@ -1040,47 +1031,54 @@ export default{
       position: absolute;
       // /* 隐藏卡片背面 */
       backface-visibility: hidden;
-          img{
-            width: 100%;
-          }
-          .reserve{
-            position: absolute;
-            bottom: 3%;
-            left: 5%;
-            font-weight: bold;
-          }
-          .reservetime{
-            position: absolute;
-            bottom: 3%;
-            left: 35%;
-            font-weight: bold;
-            color: red;
-          }
-    }
-    .cardBack {
+
+      img {
         width: 100%;
-        height: 100%;
-        background-color: #0779E4;
-        color: white;
-        font-size: 26px;
-        /* 让在背面显示的内容转到背面 */
-        transform: rotateY(180deg);
-        /* 让卡片背面与正面重合 */
+      }
+
+      .reserve {
         position: absolute;
-        backface-visibility: hidden;
-        padding: 5% 5%;
-        p{
-          font-size: 12pt;
-        }
-        button{
-          border: 0;
-          border-radius: 10px;
-          font-size: 14pt;
-          color: #0779E4;
-        }
-        .btnMore{
-          margin-top: 45%;
-        }
+        bottom: 3%;
+        left: 5%;
+        font-weight: bold;
+      }
+
+      .reservetime {
+        position: absolute;
+        bottom: 3%;
+        left: 35%;
+        font-weight: bold;
+        color: red;
+      }
+    }
+
+    .cardBack {
+      width: 100%;
+      height: 100%;
+      background-color: #0779E4;
+      color: white;
+      font-size: 26px;
+      /* 让在背面显示的内容转到背面 */
+      transform: rotateY(180deg);
+      /* 让卡片背面与正面重合 */
+      position: absolute;
+      backface-visibility: hidden;
+      padding: 5% 5%;
+
+      p {
+        font-size: 12pt;
+      }
+
+      button {
+        border: 0;
+        border-radius: 10px;
+        font-size: 14pt;
+        color: #0779E4;
+      }
+
+      .btnMore {
+        margin-top: 45%;
+      }
     }
 
     .cardBack {
@@ -1365,46 +1363,5 @@ hr {
   height: 5vh;
   background-color: #0779E4;
 }
-
-// 1215測試用
-// .picTestArea {
-//   width: 60vw;
-//   height: 70vh;
-//   transition: 0.5s;
-//   cursor: pointer;
-//   overflow: hidden;
-
-//   background: url('https://im.marieclaire.com.tw/m800c533h100b0/assets/mc/202110/616570CE0B5FD1634037966.png');
-//   background-size: 100%;
-//   background-position: center;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-
-//   .text {
-//     width: 80%;
-//     text-align: center;
-//     background: rgba(34, 49, 63, .6);
-//     padding: 10px 0;
-//     transform: rotateX(-90deg);
-//     //主要是動這邊, 相當於rotate3d(1, 0, 0, -90).
-//     transform-origin: 50% 50%;
-//     transition: 0.5s;
-//     opacity: 0;
-
-//     p {
-//       font-size: 14px;
-//     }
-//   }
-
-//   &:hover {
-//     .text {
-//       transform: rotateX(0deg); //轉出來！
-//       opacity: 0.8;
-//     }
-
-
-//   }
-// }
 
 </style>

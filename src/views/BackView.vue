@@ -56,6 +56,7 @@ export default {
             searchNameRest: "",
             searchPlaceRest: "",
             searchOpenRest: "",
+
         }
     },
     components: {
@@ -233,17 +234,17 @@ export default {
             this.changePageNum = 3
             this.openFullScreen2()
         },
-        // ================================================================以上頁面跳轉框
-        handleChange(value) {
-            console.log(value)
-        },
         goaddmanager() {
             this.changePageNum = 4
         },
         goManageManager() {
             this.changePageNum = 5
         },
+        handleChange(value) {
+            console.log(value)
+        },
         // ================================================================以上頁面跳轉框
+
         //新增設施---選擇照片
         handleFileChange(event) {
             // 獲取文件資料
@@ -286,8 +287,6 @@ export default {
                     return
                 }
             }
-
-
             var url = "http://localhost:8080/api/park/create";
             var data = {
                 "facility": {
@@ -408,6 +407,7 @@ export default {
             const queryParams = new URLSearchParams({
                 name: this.searchName,
                 place: this.searchPlace,
+                published: this.searchOpen
             });
 
             // 將查詢字串附加到 URL
@@ -435,7 +435,7 @@ export default {
                         this.allFacility[i].photo = 'data:image/jpeg;base64,' + string;
                     }
                 })
-
+            return;
         },
         //管理設施---刪除設施
         delFacility(index) {
@@ -448,8 +448,6 @@ export default {
                     return
                 }
             }
-
-
 
             //後端先
             console.log(this.allFacility[index].name)
@@ -881,8 +879,6 @@ export default {
             this.showUpdateSucess();
             this.changePageNum = 4;
         },
-
-        // ================================================================以上功能跟連接方法
         // method: "GET",
         //     headers: new Headers({
         //         "Accept": "application/json",
@@ -1524,7 +1520,6 @@ export default {
             padding: 2% 2%;
             margin: 0 2vw;
             font-size: 25pt;
-
         }
 
         .el-menu-vertical-demo {
