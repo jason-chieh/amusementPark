@@ -1,215 +1,268 @@
 <script >
 import { RouterLink, RouterView } from 'vue-router'
+import Swal from 'sweetalert2'
 import HomeHeaderView from '../views/HomeHeaderView.vue'
 
-//彈跳視窗
-import Swal from 'sweetalert2'
+export default {
+  data() {
+    return {
+      //讓中間midheader可以跳轉頁面的變數
+      page: 1,
+      //暫時性可以把卡片v-for出來的陣列
+      Arr: [1, 2, 3, 4, 5, 6],
+      //抓出已經開放的設施
+      publishedFacility: [],
 
-export default{
-  data(){
-        return{
-          //讓中間midheader可以跳轉頁面的變數
-          page:1,
-          //暫時性可以把卡片v-for出來的陣列
-          Arr:[1,2,3,4,5,6],
-          //抓出已經開放的設施
-          publishedFacility:[],
-
-          //登入人的資料
-          loginInfo:{},
-          //確定是否有登入
-          // checkLogin:false,
-        }
-  },
-  methods:{
-    // 讓卡片們旋轉
-    changeCard(){
-
-      // 獲取所有的 .card 元素
-      const card = event.currentTarget.closest('.card');
-
-      // 對該卡片元素應用旋轉樣式
-      card.classList.toggle('rotate');
-
-    },
-    // 跳轉到精選頁
-    gofacility(){
-      this.page=1
-    },
-    // 跳轉到地圖頁
-    gomap(){
-      this.page=2
-    },
-    //歡迎使用者
-    welcomePlayer(nickname){
-      const Toast = Swal.mixin({
-      toast: true,
-      position: "top-end",
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
-      }
-    });
-    Toast.fire({
-      icon: "success",
-      title: nickname+"歡迎遊玩!!!"
-    });
-    },
-    //計算設施使用時間
-    calculateMinute(reserveNum){
-      return Math.floor(reserveNum*1.5)
-    },
-
-
-    //搜尋所有的已開放遊樂施
-    searchFacility(){
-            const url = 'http://localhost:8080/api/park/getAllFacility';
-            // 要帶入的值
-
-            const queryParams = new URLSearchParams({
-            });
-
-            // 將查詢字串附加到 URL
-            const urlWithParams = `${url}?${queryParams}`;
-
-            fetch(urlWithParams, {
-            method: "GET", 
-            headers: new Headers({
-                "Accept":"application/json",
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin":"*"
-            }),
-            })
-            .then(response => {
-            // 將API回應轉換為JSON格式
-            return response.json();
-            })
-            .then(data => {
-            // 將API回應的JSON數據設置到組件的responseData數據屬性中
-            this.publishedFacility = data;
-
-            // console.log(this.publishedFacility)
-
-            //將所有陣列裡面照片的字串加上資料型態 讓img可以讀取
-            for(let i = 0;i<this.publishedFacility.length;i++){
-              var string = this.publishedFacility[i].photo;
-              this.publishedFacility[i].photo = 'data:image/jpeg;base64,' + string;
-            }
-
-			      console.log(this.publishedFacility)
-            })
+      //登入人的資料
+      loginInfo: {},
+      //確定是否有登入
+      // checkLogin:false,
     }
   },
-  components:{
+  methods: {
+    // 讓卡片們旋轉
+    changeCard() {
+      // 獲取所有的 .card 元素
+      const card = event.currentTarget.closest('.card');
+      // 對該卡片元素應用旋轉樣式
+      card.classList.toggle('rotate');
+    },
+    // 跳轉到精選頁
+    gofacility() {
+      this.page = 1
+    },
+    // 跳轉到地圖頁
+    gomap() {
+      this.page = 2
+    },
+    // 跳轉到門票頁
+    goticket() {
+      this.page = 5
+    },
+
+
+    
+    //歡迎使用者
+    welcomePlayer(nickname) {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
+      Toast.fire({
+        icon: "success",
+        title: nickname + "歡迎遊玩!!!"
+      });
+    },
+    //計算設施使用時間
+    calculateMinute(reserveNum) {
+      return Math.floor(reserveNum * 1.5)
+    },
+
+    //搜尋遊樂設施
+    searchFacility() {
+      const url = 'http://localhost:8080/api/park/getAllFacility';
+
+      const queryParams = new URLSearchParams({
+      });
+
+      // 將查詢字串附加到 URL
+      const urlWithParams = `${url}?${queryParams}`;
+
+      fetch(urlWithParams, {
+        method: "GET",
+        headers: new Headers({
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        }),
+      })
+        .then(response => {
+          // 將API回應轉換為JSON格式
+          return response.json();
+        })
+        .then(data => {
+          // 將API回應的JSON數據設置到組件的responseData數據屬性中
+          this.publishedFacility = data;
+
+          console.log(this.publishedFacility)
+
+          //將所有陣列裡面照片的字串加上資料型態 讓img可以讀取
+          for (let i = 0; i < this.publishedFacility.length; i++) {
+            var string = this.publishedFacility[i].photo;
+            this.publishedFacility[i].photo = 'data:image/jpeg;base64,' + string;
+          }
+
+          console.log(this.publishedFacility)
+        })
+    },
+
+    // 地圖島嶼要放大與顯示文字框-1218測試
+    zoomAndShowText() {
+      const svgElements = document.querySelectorAll(".st1.island");
+
+      svgElements.forEach(item => {
+        // 設置文字元素的初始狀態
+        let textElement = null;
+        // let swalInstance = null;        
+
+        item.addEventListener('mouseover', (event) => {
+          item.classList.add('hovered');
+
+          // 如果文字元素不存在，則新建文字
+          if (!textElement) {
+            // 建立了一個 SVG 的文字元素。document.createElementNS：在 XML 命名空間中建立元素的方法，並指定了 SVG 的 XML 命名空間
+            textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            // getBBox：取得svg text 的位置、寬度和高度
+            const bbox = item.getBBox();
+            const x = bbox.x + bbox.width / 2;    // 計算文字應該放置的位置 → SVG 的中心點
+            const y = bbox.y + bbox.height / 2;   // 計算文字應該放置的位置 → SVG 的中心點
+
+            textElement.setAttribute('x', x);     // 將文字的位置（x和y）設置為計算得到的中心點
+            textElement.setAttribute('y', y);     // 將文字的位置（x和y）設置為計算得到的中心點
+            textElement.setAttribute('font-size', '20');
+            textElement.setAttribute('fill', 'blue');
+
+            const message = item.getAttribute("data-message");
+            textElement.textContent = message || "歡迎來到AirTime樂園";
+
+            item.appendChild(textElement);
+
+            // 彈跳 SweetAlert 資訊框
+            // swalInstance = Swal.fire({
+            //   title: '資訊',
+            //   text: message || "歡迎來到環球影城",
+            //   icon: 'info',
+            //   showConfirmButton: false, // 隱藏確認按鈕
+            // });
+
+          }
+        });
+
+        item.addEventListener('mouseout', () => {
+          item.classList.remove('hovered');
+
+          // 如果文字元素存在，則移除
+          if (textElement) {
+            item.removeChild(textElement);
+            textElement = null;   // 重置為 null，以便下次建立
+          }
+
+          // 關閉 SweetAlert 資訊框
+          // if (swalInstance) {
+          //   swalInstance.close();
+          //   swalInstance = null;
+          // }
+        });
+      });
+    }
+
+  },
+  components: {
     HomeHeaderView
   },
-  mounted(){
+  mounted() {
     this.searchFacility()
-
-    // //確定登入人資料是否有資料
-    // if(!(JSON.parse(this.$route.query.data==undefined))){
-    //     //將登入頁傳來的個人資料轉成json可讀取
-    //     const data = JSON.parse(this.$route.query.data);
-    //     // 輸出 'value' 拿取裡面的key
-    //     this.loginInfo = data.key; 
-    //     console.log(this.loginInfo)
-    //     this.checkLogin =true
-    //     this.welcomePlayer(this.loginInfo.player.nickname)
-    //     return
-    // }
-
-
+  },
+  // 更新頁面後，重新渲染
+  updated() {
+    if (this.page == 2) {
+      this.zoomAndShowText()
+    }
     console.log("未登入狀態")
-
   }
 }
 </script>
 
 <template>
-      <HomeHeaderView  class="HomeHeaderViewClass" />
-      <!-- 上方bootstrap輪播 -->
-      <div class="bootstrapAd">
-        <div id="carouselExampleControls" class="carousel slide " data-bs-ride="carousel" data-interval="3000">
-          <div class="carousel-inner" >
-            <div class="carousel-item active">
-                <img src="../../picture/ad/sky.jpg" class="d-block w-100" alt="...">
-                <div class="carousel-caption d-none d-md-block">
-                  <h1>浪漫遨遊~天空比鄰</h1>
-                  <p>Some representative placeholder content for the first slide.</p>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <img src="../../picture/ad/flash.jpg" class="d-block w-100" alt="...">
-                <div class="carousel-caption d-none d-md-block">
-                    <h1>玩水世界~驚喜冒險~</h1>
-                    <p>Some representative placeholder content for the first slide.</p>
-                </div>
-            </div>
-            <div class="carousel-item">
-              <img src="../../picture/ad/roller.jpg" class="d-block w-100" alt="...">
-              <div class="carousel-caption d-none d-md-block">
-                    <h1>一飛衝天!突破天際!</h1>
-                    <p>Some representative placeholder content for the first slide.</p>
-              </div>
-            </div>
+  <HomeHeaderView class="HomeHeaderViewClass" />
+  <!-- 上方bootstrap輪播 -->
+  <div class="bootstrapAd">
+    <div id="carouselExampleControls" class="carousel slide " data-bs-ride="carousel" data-interval="3000">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="../../picture/ad/sky.jpg" class="d-block w-100" alt="...">
+          <div class="carousel-caption d-none d-md-block">
+            <h1>浪漫遨遊~天空比鄰</h1>
+            <p>Some representative placeholder content for the first slide.</p>
           </div>
-          <button class="carousel-control-prev change" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button class="carousel-control-next change" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
+        </div>
+        <div class="carousel-item">
+          <img src="../../picture/ad/flash.jpg" class="d-block w-100" alt="...">
+          <div class="carousel-caption d-none d-md-block">
+            <h1>玩水世界~驚喜冒險~</h1>
+            <p>Some representative placeholder content for the first slide.</p>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img src="../../picture/ad/roller.jpg" class="d-block w-100" alt="...">
+          <div class="carousel-caption d-none d-md-block">
+            <h1>一飛衝天!突破天際!</h1>
+            <p>Some representative placeholder content for the first slide.</p>
+          </div>
         </div>
       </div>
-      
-      <!-- 中間變色功能列 -->
-      <div class="midHeader">
-        <div @click="gofacility" class="facility   block">
-            <div class="iconPlace">
-              <i class="fa-solid fa-brands fa-fort-awesome-alt"></i>
-            </div>
-            <span>遊樂設施</span>
-        </div>
-        <div @click="gomap" class="map        block">
-            <div class="iconPlace">
-              <i class="fa-solid fa-map-location-dot"></i>
-            </div>
-            <span>地圖資訊</span>
-        </div>
-        <div  class="tour       block">
-            <div class="iconPlace">
-              <i class="fa-solid fa-fire"></i>
-            </div>
-            <span>熱門精選</span>
-        </div>
-        <div class="Activity   block">
-            <div class="iconPlace">
-              <i class="fa-solid fa-shoe-prints"></i>
-            </div>
-            <span>特別活動</span>
-        </div>
-        <div class="ticket     block">
-            <div class="iconPlace">
-              <i class="fa-solid fa-ticket"></i>
-            </div>
-            <span>門票通路</span>
-        </div>
-        <div class="restaurant block">
-            <div class="iconPlace">
-              <i class="fa-solid fa-utensils"></i>
-            </div>
-            <span>美食餐廳</span>
-        </div>
+      <button class="carousel-control-prev change" type="button" data-bs-target="#carouselExampleControls"
+        data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next change" type="button" data-bs-target="#carouselExampleControls"
+        data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 中間變色功能列 -->
+  <div class="midHeader">
+    <div @click="gofacility" class="facility block">
+      <div class="iconPlace">
+        <i class="fa-solid fa-brands fa-fort-awesome-alt"></i>
       </div>
+      <span>遊樂設施</span>
+    </div>
+    <div @click="gomap" class="map  block">
+      <div class="iconPlace">
+        <i class="fa-solid fa-map-location-dot"></i>
+      </div>
+      <span>地圖資訊</span>
+    </div>
+    <div class="tour  block">
+      <div class="iconPlace">
+        <i class="fa-solid fa-fire"></i>
+      </div>
+      <span>熱門精選</span>
+    </div>
+    <div class="Activity  block">
+      <div class="iconPlace">
+        <i class="fa-solid fa-shoe-prints"></i>
+      </div>
+      <span>特別活動</span>
+    </div>
+    <div @click="goticket" class="ticket  block">
+      <div class="iconPlace">
+        <i class="fa-solid fa-ticket"></i>
+      </div>
+      <span>門票通路</span>
+    </div>
+    <div class="restaurant  block">
+      <div class="iconPlace">
+        <i class="fa-solid fa-utensils"></i>
+      </div>
+      <span>美食餐廳</span>
+    </div>
+  </div>
 
       <!-- ========================================================================================= -->
 
-      <!-- 遊樂設施資訊 -->
       <div v-if="page==1"  class="bootstrapCard">
         <h1>遊樂設施</h1>
         <div class="cardPlace">
@@ -254,30 +307,16 @@ export default{
           viewBox="0 0 841.9 595.3" style="enable-background:new 0 0 841.9 595.3;" xml:space="preserve">
         <g>
           <defs>
-            <rect id="SVGID_1_" width="841.9" height="595.3"/>
-          </defs>
-          <clipPath id="SVGID_2_">
-            <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
-          </clipPath>
-          <rect x="0.2" y="0.1" class="st0" width="841.2" height="595.2"/>
-          <g class="st1 botmap">
-            <defs>
-              <rect id="SVGID_3_" width="841.9" height="595.3"/>
+            <rect id="SVGID_3_" width="841.9" height="595.3" />
             </defs>
-            <clipPath id="SVGID_4_">
-              <use xlink:href="#SVGID_3_"  style="overflow:visible;"/>
-            </clipPath>
-            <g class="st2">
-              <g>
-                <defs>
-                  <rect id="SVGID_5_" x="0" width="841.9" height="595.2"/>
-                </defs>
-                <clipPath id="SVGID_6_">
-                  <use xlink:href="#SVGID_5_"  style="overflow:visible;"/>
-                </clipPath>
-                <g class="st3">
-                  <defs>
-                    <path id="SVGID_7_" d="M837.3,0.8V0H0.2v15v29v347.2c0,64.3,0,128.6,0,193l-0.2,11h820.9h21v-11V0.8H837.3z M782.6,584.1
+          <clipPath id="SVGID_4_">
+            <use xlink:href="#SVGID_3_" style="overflow:visible;" />
+          </clipPath>
+          <g class="st2">
+            <g>
+              <defs>
+                <path id="SVGID_7_"
+                  d="M837.3,0.8V0H0.2v15v29v347.2c0,64.3,0,128.6,0,193l-0.2,11h820.9h21v-11V0.8H837.3z M782.6,584.1
                       c-12.1-2.8-24.4-5.1-36.6-3.7c-6,0.7-11.9,2.2-17.8,3.7h-52c-17.4-4.8-34.7-11.8-52.7-11c-16.6,0.6-32.1,7.8-48.4,11
                       c0,0,0,0,0,0h-90.5c-16-0.7-32.1-1.5-48.1-2.2c-27.5,0.9-55.1,1.7-82.7,2.2H264c-12-0.3-24-0.7-36-1.2
                       c-23-1.1-46-2.7-68.9-0.7c-5.8,0.5-11.6,1.3-17.5,1.9h-33.9c-6.9-1.2-13.7-3.2-20.8-3.4c-7.9-0.2-15.9,1.8-23.8,3.4
@@ -293,83 +332,89 @@ export default{
                       c5.7-1,11.6-4.9,16.8-2.9c6.4,2.4,12.6,8.1,17.1,13c4.6,5,9,7.3,12.5,13.5c3.8,6.7,6.5,13.9,9.1,21.1
                       c6.9,19.7,9.5,40.7,9.6,61.5c0.1,15.5-1.2,37.8-8.3,51.6c-3,5.9-7.6,10.8-11,16.5c-5.6,9.4-7.8,20.9-6,31.7
                       c3.5,20.6,20.4,33.6,23.4,54c2.9,19.9,1.2,44.8-7.3,63.1c-6.3,13.6-3.8,23.1,1.4,36.4c5.7,14.3,9.1,30.6,11,46
-                      c3.7,31.3-3.4,59.9-7.8,90.6c-1.6,11.1-1.3,18.5-5.6,29c-2.5,6.1-3.5,12.5-3.2,18.9c0.4,10.2-7.9,18.6-18.1,18.6H782.6z"/>
-                  </defs>
-                  <clipPath id="SVGID_8_">
-                    <use xlink:href="#SVGID_7_"  style="overflow:visible;"/>
-                  </clipPath>
-                  
-                    <linearGradient id="SVGID_9_" gradientUnits="userSpaceOnUse" x1="-1.449462e-08" y1="595.3" x2="1" y2="595.3" gradientTransform="matrix(841.9 0 0 -841.9 1.220312e-05 501480.6563)">
-                    <stop  offset="0" style="stop-color:#885C3B"/>
-                    <stop  offset="1" style="stop-color:#3C2315"/>
-                  </linearGradient>
-                  <rect x="0" y="0" class="st4" width="841.9" height="595.2"/>
-                </g>
-                <g class="st3">
-                  <defs>
-                    <path id="SVGID_10_" d="M436.1,581.9c0.1,0,0.2,0,0.3,0c1.3,0,2.6-0.1,3.9-0.1C438.9,581.9,437.5,581.9,436.1,581.9"/>
-                  </defs>
-                  <clipPath id="SVGID_11_">
-                    <use xlink:href="#SVGID_10_"  style="overflow:visible;"/>
-                  </clipPath>
-                  
-                    <linearGradient id="SVGID_12_" gradientUnits="userSpaceOnUse" x1="-1.914903e-04" y1="595.3" x2="0.9999" y2="595.3" gradientTransform="matrix(4.1436 0 0 -4.1436 436.1468 3048.5647)">
-                    <stop  offset="0" style="stop-color:#885C3B"/>
-                    <stop  offset="1" style="stop-color:#3C2315"/>
-                  </linearGradient>
-                  <rect x="436.1" y="581.8" class="st5" width="4.1" height="0.1"/>
-                </g>
-              </g>
+                      c3.7,31.3-3.4,59.9-7.8,90.6c-1.6,11.1-1.3,18.5-5.6,29c-2.5,6.1-3.5,12.5-3.2,18.9c0.4,10.2-7.9,18.6-18.1,18.6H782.6z" />
+              </defs>
+              <clipPath id="SVGID_8_">
+                <use xlink:href="#SVGID_7_" style="overflow:visible;" />
+              </clipPath>
+
+              <linearGradient id="SVGID_9_" gradientUnits="userSpaceOnUse" x1="-1.449462e-08" y1="595.3" x2="1" y2="595.3"
+                gradientTransform="matrix(841.9 0 0 -841.9 1.220312e-05 501480.6563)">
+                <stop offset="0" style="stop-color:#885C3B" />
+                <stop offset="1" style="stop-color:#3C2315" />
+              </linearGradient>
+              <rect x="0" y="0" class="st4" width="841.9" height="595.2" />
             </g>
-            <path class="st6" d="M769.4,518.5l-4.4-19.8l-4.4,19.8l-19.9,4.4l19.9,4.4l4.4,20l4.4-20l19.9-4.4L769.4,518.5z M765,527.6
+            <g class="st3">
+              <defs>
+                <path id="SVGID_10_"
+                  d="M436.1,581.9c0.1,0,0.2,0,0.3,0c1.3,0,2.6-0.1,3.9-0.1C438.9,581.9,437.5,581.9,436.1,581.9" />
+              </defs>
+              <clipPath id="SVGID_11_">
+                <use xlink:href="#SVGID_10_" style="overflow:visible;" />
+              </clipPath>
+
+              <linearGradient id="SVGID_12_" gradientUnits="userSpaceOnUse" x1="-1.914903e-04" y1="595.3" x2="0.9999"
+                y2="595.3" gradientTransform="matrix(4.1436 0 0 -4.1436 436.1468 3048.5647)">
+                <stop offset="0" style="stop-color:#885C3B" />
+                <stop offset="1" style="stop-color:#3C2315" />
+              </linearGradient>
+              <rect x="436.1" y="581.8" class="st5" width="4.1" height="0.1" />
+            </g>
+          </g>
+        </g>
+        <path class="st6" d="M769.4,518.5l-4.4-19.8l-4.4,19.8l-19.9,4.4l19.9,4.4l4.4,20l4.4-20l19.9-4.4L769.4,518.5z M765,527.6
               c-2.3,0-4.1-1.8-4.1-4.1c0-0.2,0-0.3,0-0.5c0.1-0.5,0.2-0.9,0.4-1.3h-0.1l3.8-17l3.8,17h-0.1c0.2,0.4,0.3,0.8,0.4,1.3
-              c0,0.2,0,0.3,0,0.5C769.1,525.7,767.3,527.6,765,527.6"/>
-            <path class="st6" d="M765,520.1c-0.9,0-1.8,0.4-2.4,1c-0.6,0.6-1,1.5-1,2.4c0,0.9,0.4,1.8,1,2.4c0.6,0.6,1.5,1,2.4,1
-              c0.9,0,1.8-0.4,2.4-1c0.6-0.6,1-1.5,1-2.4c0-0.9-0.4-1.8-1-2.4C766.8,520.5,765.9,520.1,765,520.1"/>
-            <polygon class="st6" points="767.9,487 769.1,487 769.1,496.3 767.9,496.3 762.9,488.9 762.9,496.3 761.7,496.3 761.7,487 
-              762.9,487 767.9,494.4 		"/>
-            <path class="st6" d="M763.5,553.7c0,0.3,0.1,0.6,0.3,0.8s0.4,0.4,0.7,0.5c0.3,0.1,0.6,0.2,1,0.3c0.4,0.1,0.7,0.2,1.1,0.3
+              c0,0.2,0,0.3,0,0.5C769.1,525.7,767.3,527.6,765,527.6" />
+        <path class="st6" d="M765,520.1c-0.9,0-1.8,0.4-2.4,1c-0.6,0.6-1,1.5-1,2.4c0,0.9,0.4,1.8,1,2.4c0.6,0.6,1.5,1,2.4,1
+              c0.9,0,1.8-0.4,2.4-1c0.6-0.6,1-1.5,1-2.4c0-0.9-0.4-1.8-1-2.4C766.8,520.5,765.9,520.1,765,520.1" />
+        <polygon class="st6" points="767.9,487 769.1,487 769.1,496.3 767.9,496.3 762.9,488.9 762.9,496.3 761.7,496.3 761.7,487 
+              762.9,487 767.9,494.4 		" />
+        <path class="st6" d="M763.5,553.7c0,0.3,0.1,0.6,0.3,0.8s0.4,0.4,0.7,0.5c0.3,0.1,0.6,0.2,1,0.3c0.4,0.1,0.7,0.2,1.1,0.3
               c0.4,0.1,0.7,0.2,1,0.4c0.3,0.2,0.5,0.4,0.7,0.7c0.2,0.3,0.3,0.7,0.3,1.2c0,0.7-0.3,1.4-0.8,1.9c-0.6,0.5-1.3,0.8-2.3,0.8
               c-0.9,0-1.7-0.2-2.3-0.7c-0.6-0.4-0.9-1-0.9-1.8h1.3c0,0.4,0.2,0.8,0.5,1c0.3,0.3,0.7,0.4,1.3,0.4c0.6,0,1.1-0.2,1.4-0.5
               c0.3-0.3,0.5-0.7,0.5-1.1c0-0.4-0.1-0.7-0.3-0.9c-0.2-0.2-0.4-0.4-0.7-0.5c-0.3-0.1-0.6-0.2-1-0.3c-0.4-0.1-0.7-0.2-1.1-0.3
               c-0.4-0.1-0.7-0.2-1-0.4c-0.3-0.2-0.5-0.4-0.7-0.7c-0.2-0.3-0.3-0.7-0.3-1.2c0-0.8,0.3-1.4,0.8-1.9c0.6-0.5,1.3-0.7,2.2-0.7
               c0.9,0,1.6,0.2,2.1,0.6c0.5,0.4,0.8,1,0.9,1.7H767c0-0.4-0.2-0.7-0.5-0.9c-0.3-0.3-0.7-0.4-1.2-0.4c-0.5,0-1,0.1-1.3,0.4
-              C763.6,552.8,763.5,553.2,763.5,553.7"/>
-            <polygon class="st6" points="799.1,517.5 799.1,518.5 795.4,518.5 795.4,521.7 798.7,521.7 798.7,522.6 795.4,522.6 795.4,525.9 
-              799.1,525.9 799.1,526.8 794.2,526.8 794.2,517.5 		"/>
-            <polygon class="st6" points="737,517.5 738.3,517.5 735.5,526.8 734.1,526.8 732,519.3 729.7,526.8 728.4,526.9 725.8,517.5 
-              727,517.5 729.1,525.4 731.4,517.5 732.7,517.5 734.8,525.4 		"/>
-          </g>
-          <g class="st1 botmap">
-            <defs>
-              <rect id="SVGID_13_" width="841.9" height="595.3"/>
-            </defs>
-            <clipPath id="SVGID_14_">
-              <use xlink:href="#SVGID_13_"  style="overflow:visible;"/>
-            </clipPath>
-          </g>
-          <g class="st1 island">
-            <defs>
-              <path id="SVGID_15_" d="M266,81l-82.3,102.5c-0.7,0.8-1.5,1.5-2.5,1.9L90,227.2c-26.1,12-37.8,42-26.7,68.5l48.1,114.5
+              C763.6,552.8,763.5,553.2,763.5,553.7" />
+        <polygon class="st6" points="799.1,517.5 799.1,518.5 795.4,518.5 795.4,521.7 798.7,521.7 798.7,522.6 795.4,522.6 795.4,525.9 
+              799.1,525.9 799.1,526.8 794.2,526.8 794.2,517.5 		" />
+        <polygon class="st6" points="737,517.5 738.3,517.5 735.5,526.8 734.1,526.8 732,519.3 729.7,526.8 728.4,526.9 725.8,517.5 
+              727,517.5 729.1,525.4 731.4,517.5 732.7,517.5 734.8,525.4 		" />
+        
+        <g class="st1 botmap">
+          <defs>
+            <rect id="SVGID_13_" width="841.9" height="595.3" />
+          </defs>
+          <clipPath id="SVGID_14_">
+            <use xlink:href="#SVGID_13_" style="overflow:visible;" />
+          </clipPath>
+        </g>
+        <!-- 測試點選地圖後，顯示地圖資訊 -->
+        <!-- 島嶼1 刺激飛天島-->
+        <g class="st1 island" @mouseover="this.zoomAndShowText" @mouseout="this.zoomAndShowText" data-message="刺激飛天島">
+
+          <defs>
+            <path id="SVGID_15_" d="M266,81l-82.3,102.5c-0.7,0.8-1.5,1.5-2.5,1.9L90,227.2c-26.1,12-37.8,42-26.7,68.5l48.1,114.5
                 c5.5,13,4.3,28-2.9,40.1l-2.1,3.5c-2.5,4.2-3,9.2-1.5,13.8c1.6,4.6,5,8.4,9.5,10.2c6.7,2.8,13.8,4.2,21,4.2c8,0,15.8-1.7,23-5
                 l71.8-33c8.8-4,17.8-7.6,27-10.7l70.7-23.9L313.8,78.8c-5.7-0.3-11.3-1.9-16.3-4.5c-3.6-1.8-7.7-2.8-11.7-2.8
-                C278,71.5,270.9,75,266,81"/>
-            </defs>
-            <clipPath id="SVGID_16_">
-              <use xlink:href="#SVGID_15_"  style="overflow:visible;"/>
-            </clipPath>
-            <path class="st7" d="M135.4,480.5c-7.1,0-13.9-1.4-20.4-4.1c-4-1.6-7.2-5-8.7-9.3c-1.4-4.2-0.9-8.8,1.4-12.5l2.1-3.5
+                C278,71.5,270.9,75,266,81" />
+          </defs>
+          <clipPath id="SVGID_16_">
+            <use xlink:href="#SVGID_15_" style="overflow:visible;" />
+          </clipPath>
+          <path class="st7" d="M135.4,480.5c-7.1,0-13.9-1.4-20.4-4.1c-4-1.6-7.2-5-8.7-9.3c-1.4-4.2-0.9-8.8,1.4-12.5l2.1-3.5
               c7.5-12.6,8.6-28.1,3-41.5L64.6,295.1c-10.8-25.7,0.6-54.9,25.9-66.6l91.2-41.8c1-0.4,2-1.1,3-2.3l82.3-102.5
               c4.6-5.7,11.4-8.9,18.6-8.9c3.7,0,7.6,0.9,11,2.6c4.9,2.5,10.2,4.1,15.5,4.6l14,328.1l-69.6,23.5c-8.9,3-18.1,6.6-27.1,10.8
-              l-71.8,33C150.7,478.9,143.2,480.5,135.4,480.5"/>
-            <path class="st8" d="M285.8,74.5c3.5,0,7.2,0.9,10.3,2.5c4.6,2.4,9.7,4,14.8,4.6l13.9,325.7l-68.6,23.2c-9,3-18.1,6.7-27.3,10.8
+              l-71.8,33C150.7,478.9,143.2,480.5,135.4,480.5" />
+          <path class="st8" d="M285.8,74.5c3.5,0,7.2,0.9,10.3,2.5c4.6,2.4,9.7,4,14.8,4.6l13.9,325.7l-68.6,23.2c-9,3-18.1,6.7-27.3,10.8
               l-71.8,33c-6.8,3.1-14.2,4.7-21.8,4.7c-6.9,0-13.5-1.3-19.9-4c-3.6-1.4-6.4-4.5-7.8-8.4c-1.2-3.8-0.8-7.9,1.2-11.3l2.1-3.5
               c7.8-13,8.9-29,3.1-42.8L66,294.5c-10.4-24.9,0.6-53.3,25.2-64.6l91.1-41.8c1.3-0.5,2.5-1.4,3.6-2.7c0,0,0.1-0.1,0.1-0.1
               l82.3-102.5C272.7,77.5,278.9,74.5,285.8,74.5 M285.8,71.5c-7.8,0-14.9,3.5-19.8,9.5l-82.3,102.5c-0.7,0.8-1.5,1.5-2.5,1.9
               L90,227.2c-26.1,12-37.8,42-26.7,68.5l48.1,114.5c5.5,13,4.3,28-2.9,40.1l-2.1,3.5c-2.5,4.2-3,9.2-1.5,13.8
               c1.6,4.6,5,8.4,9.5,10.2c6.7,2.8,13.8,4.2,21,4.2c8,0,15.8-1.7,23-5l71.8-33c8.8-4,17.8-7.6,27-10.7l70.7-23.9L313.8,78.8
-              c-5.7-0.3-11.3-1.9-16.3-4.5C293.9,72.5,289.8,71.5,285.8,71.5"/>
-            <path class="st9" d="M171.1,276.1c0.5-0.7,1.1-0.9,1.9-0.8c5.2,0.1,10.3,0.1,15.5,0.1c0.2,0,0.3,0,0.5,0c0-0.7,0-1.3,0-1.9
+              c-5.7-0.3-11.3-1.9-16.3-4.5C293.9,72.5,289.8,71.5,285.8,71.5" />
+          <path class="st9" d="M171.1,276.1c0.5-0.7,1.1-0.9,1.9-0.8c5.2,0.1,10.3,0.1,15.5,0.1c0.2,0,0.3,0,0.5,0c0-0.7,0-1.3,0-1.9
               c0-0.2,0-0.4-0.1-0.5c-0.6-0.6-0.5-1.2-0.3-1.9c0.6-2.1,1.2-4.3,1.8-6.4c0.4-1.2,0.9-1.5,2.1-1.2c1.2,0.3,2.5,0.7,3.8,1.1
               c0-2.5,1-4.3,3.4-4.9c1.7-0.4,3.2,0.1,4.4,1.5c1.3,1.6,1.3,3.1,0,5.6c0.9,0.3,1.8,0.5,2.6,0.8c3.7,1.1,5.3,4,4.2,7.6
               c-0.2,0.6-0.3,1.1-0.5,1.7c0.3,0.2,0.6,0.4,0.9,0.6c1.4-1.3,2.7-2.7,4.1-4c1.3-1.3,1.7-1.3,3,0c0.8,0.8,1.7,1.6,2.5,2.4
@@ -406,33 +451,37 @@ export default{
               C193.3,274.3,192.4,274.1,191.5,273.8 M203.1,277.2c-0.1,1,0.4,1.7,1.2,1.9c0.7,0.2,1.4-0.2,1.8-1
               C205.2,277.8,204.2,277.5,203.1,277.2 M214.5,284.2c-0.8-0.7-1.5-1.5-2.3-2.2c-0.4,0.7-0.3,1.4,0.2,2
               C213,284.6,213.7,284.7,214.5,284.2 M222.9,292.9c-0.8-0.7-1.5-1.4-2.3-2.1c-0.4,0.7-0.3,1.4,0.2,1.9
-              C221.5,293.2,222.1,293.3,222.9,292.9"/>
-            <path class="st9" d="M179.9,346c-0.9-0.4-1.2-1-1.2-2c0-15.7,0-31.3,0-47c0-0.3,0-0.6,0-0.8c0.2-0.7,0.6-1.1,1.3-1.1
-              c0.7,0,1.1,0.5,1.2,1.2c0,0.2,0,0.4,0,0.6c0,15.7,0,31.4,0,47.1c0,1-0.3,1.6-1.2,1.9H179.9z"/>
-            <path class="st9" d="M218.1,346c-1-0.3-1.3-0.9-1.2-1.9c0-3,0-6,0-9c0-0.5,0.2-1.1,0.6-1.4c0.2-0.2,1-0.3,1.2-0.1
-              c0.4,0.3,0.7,0.8,0.7,1.3c0.1,1.3,0,2.6,0,4c0,1.7,0,3.4,0,5.1c0,1-0.3,1.6-1.2,2H218.1z"/>
-            <path class="st9" d="M176.4,263.2c2.7,0.4,5.3,0.7,8,1.1c0.4,0.1,0.9,0.1,1.3,0.2c0.9,0.2,1.3,0.7,1.1,1.5c-0.1,0.7-0.7,1.1-1.6,1
-              c-2-0.3-4.1-0.5-6.1-0.8c-1-0.1-2.1-0.3-3.1-0.4c-0.9-0.1-1.3-0.7-1.3-1.4C174.9,263.6,175.5,263.2,176.4,263.2"/>
-            <path class="st9" d="M176.7,267.8c2.9,0.4,6,0.8,9.1,1.2c0.8,0.1,1.3,0.7,1.2,1.5c-0.1,0.7-0.6,1.1-1.5,1c-2.3-0.3-4.7-0.6-7-0.9
-              c-0.8-0.1-1.5-0.2-2.3-0.3c-0.9-0.1-1.3-0.7-1.3-1.4C174.9,268.1,175.5,267.7,176.7,267.8"/>
-          </g>
-          <g class="st1 island">
-            <defs>
-              <path id="SVGID_17_" d="M401.8,25.2l-52.6,43.7c-4.3,3.7-9.3,6.3-14.7,7.5l9.3,220.1l146.7,3.5l6.2-184l-24.9-16.8
+              C221.5,293.2,222.1,293.3,222.9,292.9" />
+          <path class="st9" d="M179.9,346c-0.9-0.4-1.2-1-1.2-2c0-15.7,0-31.3,0-47c0-0.3,0-0.6,0-0.8c0.2-0.7,0.6-1.1,1.3-1.1
+              c0.7,0,1.1,0.5,1.2,1.2c0,0.2,0,0.4,0,0.6c0,15.7,0,31.4,0,47.1c0,1-0.3,1.6-1.2,1.9H179.9z" />
+          <path class="st9" d="M218.1,346c-1-0.3-1.3-0.9-1.2-1.9c0-3,0-6,0-9c0-0.5,0.2-1.1,0.6-1.4c0.2-0.2,1-0.3,1.2-0.1
+              c0.4,0.3,0.7,0.8,0.7,1.3c0.1,1.3,0,2.6,0,4c0,1.7,0,3.4,0,5.1c0,1-0.3,1.6-1.2,2H218.1z" />
+          <path class="st9"
+            d="M176.4,263.2c2.7,0.4,5.3,0.7,8,1.1c0.4,0.1,0.9,0.1,1.3,0.2c0.9,0.2,1.3,0.7,1.1,1.5c-0.1,0.7-0.7,1.1-1.6,1
+              c-2-0.3-4.1-0.5-6.1-0.8c-1-0.1-2.1-0.3-3.1-0.4c-0.9-0.1-1.3-0.7-1.3-1.4C174.9,263.6,175.5,263.2,176.4,263.2" />
+          <path class="st9" d="M176.7,267.8c2.9,0.4,6,0.8,9.1,1.2c0.8,0.1,1.3,0.7,1.2,1.5c-0.1,0.7-0.6,1.1-1.5,1c-2.3-0.3-4.7-0.6-7-0.9
+              c-0.8-0.1-1.5-0.2-2.3-0.3c-0.9-0.1-1.3-0.7-1.3-1.4C174.9,268.1,175.5,267.7,176.7,267.8" />
+        </g>
+        <!-- 島嶼2 溫馨親子島-->
+        <g class="st1 island" @mouseover="this.zoomAndShowText" @mouseout="this.zoomAndShowText" data-message="溫馨親子島">
+          <defs>
+            <path id="SVGID_17_" d="M401.8,25.2l-52.6,43.7c-4.3,3.7-9.3,6.3-14.7,7.5l9.3,220.1l146.7,3.5l6.2-184l-24.9-16.8
                 c-13.2-9.1-18-26.2-11.3-40.8c2.2-4.7,2.2-10.1,0.3-15c-2.1-4.8-5.9-8.6-10.9-10.4l-29.4-11c-2.1-0.7-4.3-1.1-6.5-1.1
-                C409.6,20.9,405.2,22.3,401.8,25.2"/>
-            </defs>
-            <clipPath id="SVGID_18_">
-              <use xlink:href="#SVGID_17_"  style="overflow:visible;"/>
-            </clipPath>
-            <path class="st10" d="M345.2,295L336,77.6c5.1-1.3,9.9-3.9,14.1-7.5l52.6-43.7c3.1-2.6,7.1-4,11.2-4c2.1,0,4.1,0.3,6,1l29.4,11
-              c4.5,1.6,8.1,5,10.1,9.6c1.8,4.6,1.7,9.5-0.3,13.8c-7,15.2-2,33.1,11.8,42.7l24.2,16.3L489,298.5L345.2,295z"/>
-            <path class="st11" d="M413.9,23.9L413.9,23.9c1.9,0,3.7,0.3,5.5,0.9l29.4,11c4.1,1.5,7.3,4.6,9.1,8.7c1.6,4.3,1.6,8.7-0.3,12.6
+                C409.6,20.9,405.2,22.3,401.8,25.2" />
+          </defs>
+          <clipPath id="SVGID_18_">
+            <use xlink:href="#SVGID_17_" style="overflow:visible;" />
+          </clipPath>
+          <path class="st10"
+            d="M345.2,295L336,77.6c5.1-1.3,9.9-3.9,14.1-7.5l52.6-43.7c3.1-2.6,7.1-4,11.2-4c2.1,0,4.1,0.3,6,1l29.4,11
+              c4.5,1.6,8.1,5,10.1,9.6c1.8,4.6,1.7,9.5-0.3,13.8c-7,15.2-2,33.1,11.8,42.7l24.2,16.3L489,298.5L345.2,295z" />
+          <path class="st11" d="M413.9,23.9L413.9,23.9c1.9,0,3.7,0.3,5.5,0.9l29.4,11c4.1,1.5,7.3,4.6,9.1,8.7c1.6,4.3,1.6,8.7-0.3,12.6
               c-7.3,15.9-2.1,34.6,12.3,44.5l23.5,15.9l-6,179.4l-140.9-3.4l-9.1-214.9c4.9-1.5,9.5-4,13.5-7.5l52.6-43.7
               C406.5,25.2,410.1,23.9,413.9,23.9 M413.9,20.9c-4.4,0-8.7,1.4-12.2,4.3l-52.6,43.7c-4.3,3.7-9.3,6.3-14.7,7.5l9.3,220.1
               l146.7,3.5l6.2-184l-24.9-16.8c-13.2-9.1-18-26.2-11.3-40.8c2.2-4.7,2.2-10.1,0.3-15c-2.1-4.8-5.9-8.6-10.9-10.4l-29.4-11
-              C418.4,21.3,416.1,20.9,413.9,20.9"/>
-            <path class="st12" d="M412,224v-44c-1.3,0.5-2.5,0.8-3.8,0.4c-1.3-0.3-2.3-1.1-3.1-2.1c-2.9,3.3-6.8,2.6-8.9,0
+              C418.4,21.3,416.1,20.9,413.9,20.9" />
+          <path class="st12"
+            d="M412,224v-44c-1.3,0.5-2.5,0.8-3.8,0.4c-1.3-0.3-2.3-1.1-3.1-2.1c-2.9,3.3-6.8,2.6-8.9,0
               c-1.9,2-3.6,2.5-6.1,2v22.2c0.7,0.3,0.9,0,1.1-0.7c0.5-1.9,1.1-3.8,1.7-5.7c1.4-4.1,5.3-7,9.6-7c2,0,3.6,1.4,3.5,3.4
               c-0.1,1.3,0.3,2,1.5,2.4c0.2,0.1,0.4,0.2,0.6,0.3c2,1,2.5,2.6,1.3,4.5c-0.8,1.3-1.9,2-3.4,2c-0.4,0-0.8,0-1.3,0v1
               c0,5.4,0,10.8,0,16.2c0,1.3-0.3,1.5-1.5,1.5c-0.5,0-1,0-1.5,0c-1.3,0-1.4-0.1-1.8-1.3c-0.7-2-1.4-3.9-2.2-5.9
@@ -486,38 +535,43 @@ export default{
               C439.5,177,439.8,175.6,439.6,173.9 M379.3,173.9c-0.2,1.7,0.1,3.2,1.7,4.1c1.2,0.7,2.5,0.7,3.7-0.2c1.4-0.9,1.6-2.3,1.4-3.9
               H379.3z M397.2,173.9c-0.2,1.7,0.1,3.2,1.6,4.1c1.2,0.7,2.7,0.6,3.8-0.2c1.1-0.9,1.6-2.4,1.2-3.9H397.2z M382.8,204.8
               c-1.6,0.1-3.2,1.5-3.4,3.3c-0.2,1.6,0,3.2,0,4.9c1.2-0.4,1.9-1.4,1.9-2.8C381.2,208.2,381.5,206.4,382.8,204.8 M428.7,213
-              c1.3-0.5,2-1.4,2-2.8c-0.1-2,0.2-3.8,1.6-5.4c-1.8,0.1-3.4,1.9-3.5,3.8C428.7,210.1,428.7,211.5,428.7,213"/>
-            <path class="st12" d="M388.6,152.2c0,1.7-1.4,3-3,3c-1.6,0-3-1.4-3-3c0-1.7,1.4-3,3-3C387.3,149.2,388.6,150.5,388.6,152.2
-              M385.7,153.2c0.6-0.1,1-0.4,1-1c0-0.6-0.4-1-1-0.9c-0.6,0-0.9,0.4-0.9,1C384.7,152.8,385,153.1,385.7,153.2"/>
-            <path class="st12" d="M380.3,185.3c1.7,0,3,1.3,3,3c0,1.6-1.3,3-3,3c-1.7,0-3-1.3-3-3C377.3,186.6,378.6,185.3,380.3,185.3
-              M380.3,187.3c-0.6,0.1-1,0.4-1,1c0,0.6,0.3,1,0.9,1c0.6,0,1-0.3,1.1-0.9C381.3,187.7,380.9,187.4,380.3,187.3"/>
-            <path class="st12" d="M460.8,157.5c0,1.7-1.4,3-3.1,3c-1.6,0-3-1.4-3-3c0-1.7,1.4-3,3.1-3C459.4,154.6,460.8,155.9,460.8,157.5
-              M458.8,157.5c-0.1-0.6-0.4-1-1-0.9c-0.6,0-0.9,0.4-1,0.9c0,0.6,0.3,1,1,1C458.4,158.5,458.7,158.1,458.8,157.5"/>
-            <path class="st12" d="M443.1,145.2c1.6,0,3,1.4,3,3c0,1.7-1.4,3-3,3c-1.6,0-3-1.4-3-3C440.1,146.5,441.4,145.2,443.1,145.2
-              M443.2,147.2c-0.6,0-1,0.3-1.1,0.9c0,0.6,0.3,1,0.9,1c0.6,0.1,1-0.3,1.1-0.9C444.1,147.7,443.7,147.3,443.2,147.2"/>
-          </g>
-          <g class="st1 island">
-            <defs>
-              <path id="SVGID_19_" d="M347.3,417.1c6.4-1.9,13.1-2.9,19.9-2.9c24.7,0,47.6,13.4,59.9,34.8l14.4,25.4c1.2,1.8,3,2.9,5.2,2.9
+              c1.3-0.5,2-1.4,2-2.8c-0.1-2,0.2-3.8,1.6-5.4c-1.8,0.1-3.4,1.9-3.5,3.8C428.7,210.1,428.7,211.5,428.7,213" />
+          <path class="st12"
+            d="M388.6,152.2c0,1.7-1.4,3-3,3c-1.6,0-3-1.4-3-3c0-1.7,1.4-3,3-3C387.3,149.2,388.6,150.5,388.6,152.2
+              M385.7,153.2c0.6-0.1,1-0.4,1-1c0-0.6-0.4-1-1-0.9c-0.6,0-0.9,0.4-0.9,1C384.7,152.8,385,153.1,385.7,153.2" />
+          <path class="st12"
+            d="M380.3,185.3c1.7,0,3,1.3,3,3c0,1.6-1.3,3-3,3c-1.7,0-3-1.3-3-3C377.3,186.6,378.6,185.3,380.3,185.3
+              M380.3,187.3c-0.6,0.1-1,0.4-1,1c0,0.6,0.3,1,0.9,1c0.6,0,1-0.3,1.1-0.9C381.3,187.7,380.9,187.4,380.3,187.3" />
+          <path class="st12"
+            d="M460.8,157.5c0,1.7-1.4,3-3.1,3c-1.6,0-3-1.4-3-3c0-1.7,1.4-3,3.1-3C459.4,154.6,460.8,155.9,460.8,157.5
+              M458.8,157.5c-0.1-0.6-0.4-1-1-0.9c-0.6,0-0.9,0.4-1,0.9c0,0.6,0.3,1,1,1C458.4,158.5,458.7,158.1,458.8,157.5" />
+          <path class="st12"
+            d="M443.1,145.2c1.6,0,3,1.4,3,3c0,1.7-1.4,3-3,3c-1.6,0-3-1.4-3-3C440.1,146.5,441.4,145.2,443.1,145.2
+              M443.2,147.2c-0.6,0-1,0.3-1.1,0.9c0,0.6,0.3,1,0.9,1c0.6,0.1,1-0.3,1.1-0.9C444.1,147.7,443.7,147.3,443.2,147.2" />
+        </g>
+        <!-- 島嶼3 凍骨冰山島-->
+        <g class="st1 island" @mouseover="this.zoomAndShowText" @mouseout="this.zoomAndShowText" data-message="凍骨冰山島">
+          <defs>
+            <path id="SVGID_19_"
+              d="M347.3,417.1c6.4-1.9,13.1-2.9,19.9-2.9c24.7,0,47.6,13.4,59.9,34.8l14.4,25.4c1.2,1.8,3,2.9,5.2,2.9
                 c1,0,2.8-0.2,4.3-1.9l9.7-10.6c3.9-4.3,9.4-6.7,15.2-6.7c8.5,0,16,5,19.2,12.9l16.7,38.6c1.6,4.5,3.5,9.8,5.9,15.9
-                c1,2.5,2.4,6.1,5.7,7.4c0.6,0.3,2.1,0.8,3.4,0.1c1.6-0.9,1.7-3,1.7-3.2c4.2-67.3,8.3-134.5,12.5-201.8l-197.7-4.6L347.3,417.1z"
-                />
-            </defs>
-            <clipPath id="SVGID_20_">
-              <use xlink:href="#SVGID_19_"  style="overflow:visible;"/>
-            </clipPath>
-            <path class="st13" d="M525.3,531.9c-0.6,0-1.2-0.2-1.4-0.4c-2.7-1.1-4-4.4-4.8-6.6c-2.1-5.3-4-10.6-5.9-15.8c0,0,0-0.1,0-0.1
+                c1,2.5,2.4,6.1,5.7,7.4c0.6,0.3,2.1,0.8,3.4,0.1c1.6-0.9,1.7-3,1.7-3.2c4.2-67.3,8.3-134.5,12.5-201.8l-197.7-4.6L347.3,417.1z" />
+          </defs>
+          <clipPath id="SVGID_20_">
+            <use xlink:href="#SVGID_19_" style="overflow:visible;" />
+          </clipPath>
+          <path class="st13" d="M525.3,531.9c-0.6,0-1.2-0.2-1.4-0.4c-2.7-1.1-4-4.4-4.8-6.6c-2.1-5.3-4-10.6-5.9-15.8c0,0,0-0.1,0-0.1
               l-16.7-38.6c-3.4-8.4-11.5-13.8-20.6-13.8c-6.2,0-12.2,2.6-16.3,7.2l-9.7,10.6c-0.8,1-1.9,1.4-3.2,1.4c-2,0-3.2-1.2-3.9-2.2
               l-14.4-25.4c-12.6-21.9-36.1-35.6-61.2-35.6c-6.2,0-12.4,0.8-18.5,2.4l-3.9-90.1l194.5,4.5L527,529.8c0,0-0.1,1.5-1,2
-              C525.8,531.9,525.6,531.9,525.3,531.9"/>
-            <path class="st14" d="M346.4,326.6l191.4,4.5l-5.9,94.7l-6.4,103.9c0,0.2-0.1,0.6-0.2,0.7c-0.3,0-0.7-0.2-0.8-0.2
+              C525.8,531.9,525.6,531.9,525.3,531.9" />
+          <path class="st14" d="M346.4,326.6l191.4,4.5l-5.9,94.7l-6.4,103.9c0,0.2-0.1,0.6-0.2,0.7c-0.3,0-0.7-0.2-0.8-0.2
               c-2.1-0.9-3.3-3.8-4-5.8c-2.1-5.3-4-10.6-5.9-15.8c0-0.1,0-0.1-0.1-0.2l-16.7-38.6c-3.6-9-12.3-14.7-22-14.7
               c-6.6,0-13,2.8-17.4,7.7l-9.7,10.6c0,0,0,0,0,0c-0.5,0.6-1.2,0.9-2,0.9c-1.1,0-2-0.5-2.6-1.5l-14.3-25.3
               c-12.9-22.4-36.8-36.3-62.5-36.3c-5.7,0-11.5,0.7-17.1,2L346.4,326.6 M343.3,323.5l4,93.6c6.4-1.9,13.1-2.9,19.9-2.9
               c24.7,0,47.6,13.4,59.9,34.8l14.4,25.4c1.2,1.8,3,2.9,5.2,2.9c1,0,2.8-0.2,4.3-1.9l9.7-10.6c3.9-4.3,9.4-6.7,15.2-6.7
               c8.5,0,16,5,19.2,12.9l16.7,38.6c1.6,4.5,3.5,9.8,5.9,15.9c1,2.5,2.4,6.1,5.7,7.4c0.4,0.2,1.2,0.5,2,0.5c0.5,0,1-0.1,1.4-0.4
-              c1.6-0.9,1.7-3,1.7-3.2c4.2-67.3,8.3-134.5,12.5-201.8L343.3,323.5z"/>
-            <path class="st15" d="M392.3,370.8c0.4,0.2,0.5,0.4,0.5,0.9c0,0.6,0,1.2,0,1.9c0.1-0.1,0.1-0.1,0.2-0.1c0.5-0.4,1-0.7,1.5-1.1
+              c1.6-0.9,1.7-3,1.7-3.2c4.2-67.3,8.3-134.5,12.5-201.8L343.3,323.5z" />
+          <path class="st15" d="M392.3,370.8c0.4,0.2,0.5,0.4,0.5,0.9c0,0.6,0,1.2,0,1.9c0.1-0.1,0.1-0.1,0.2-0.1c0.5-0.4,1-0.7,1.5-1.1
               c0.2-0.2,0.5-0.2,0.8,0c0.3,0.2,0.4,0.4,0.3,0.7c0,0.2-0.2,0.4-0.3,0.5c-0.8,0.6-1.5,1.1-2.3,1.7c-0.1,0.1-0.1,0.2-0.1,0.2
               c0,1.2,0,2.4,0,3.7c0,0,0,0.1,0,0.1c0.1,0,0.1,0,0.2-0.1c1-0.6,2.1-1.2,3.1-1.9c0.1,0,0.1-0.1,0.1-0.2c0.1-0.9,0.2-1.9,0.3-2.8
               c0-0.4,0.3-0.7,0.7-0.7c0.4,0,0.7,0.4,0.7,0.8c-0.1,0.6-0.1,1.3-0.2,1.9c0,0,0,0,0,0.1c0.1,0,0.1-0.1,0.2-0.1
@@ -543,8 +597,8 @@ export default{
               c0-0.3,0-0.5-0.1-0.7c0-0.4-0.1-0.9-0.1-1.3c0-0.3,0.2-0.6,0.5-0.7c0.4-0.1,0.8,0.2,0.8,0.6c0.1,0.7,0.1,1.4,0.2,2.1
               c0,0.3,0.1,0.6,0.1,0.9c0,0.1,0.1,0.2,0.1,0.2c1.1,0.6,2.1,1.3,3.2,1.9c0,0,0,0,0.1,0V379c0-1.2,0-2.4,0-3.5c0-0.1,0-0.2-0.1-0.3
               c-0.8-0.6-1.5-1.1-2.3-1.7c-0.3-0.2-0.4-0.6-0.2-0.9c0.2-0.4,0.7-0.4,1-0.2c0.5,0.4,1,0.7,1.5,1.1c0,0,0.1,0.1,0.2,0.1
-              c0-0.1,0-0.1,0-0.2c0-0.6,0-1.1,0-1.7c0-0.4,0.1-0.7,0.5-0.8H392.3z"/>
-            <path class="st15" d="M497.1,406.1c-0.7,1.8-2,2.4-3.9,2.4c-22.4,0-44.8,0-67.2,0c-0.3,0-0.6,0-1,0c-0.8-0.1-1.4-0.6-1.3-1.4
+              c0-0.1,0-0.1,0-0.2c0-0.6,0-1.1,0-1.7c0-0.4,0.1-0.7,0.5-0.8H392.3z" />
+          <path class="st15" d="M497.1,406.1c-0.7,1.8-2,2.4-3.9,2.4c-22.4,0-44.8,0-67.2,0c-0.3,0-0.6,0-1,0c-0.8-0.1-1.4-0.6-1.3-1.4
               c0-0.7,0.6-1.2,1.3-1.2c0.9,0,1.7,0,2.7,0v-6.3h-12.9v6.3c1.2,0,2.5,0,3.7,0c0.4,0,0.9,0.1,1.2,0.4c0.3,0.3,0.5,0.9,0.3,1.2
               c-0.2,0.4-0.7,0.8-1.1,0.9c-0.8,0.2-1.6,0.1-2.4,0.1c-1.9,0-3.9,0-5.8,0c-2.2,0-3.4-1.2-3.4-3.4c0-4,0-8.1,0-12.1
               c0.1-17.6,11.7-32.6,28.7-37c6.2-1.6,12.5-1.6,18.7-0.1c1.2,0.3,1.7,0.8,1.5,1.7c-0.2,0.9-0.9,1.2-2.1,0.9
@@ -571,47 +625,51 @@ export default{
               c-1.5-1.4-2.9-2.7-4.4-4.1C466.8,367.4,464.3,368.3,462.6,370.5 M461.8,405.8h3.4v-6.3h-3.4V405.8z M412.2,399.5h-2.1v4.7
               c0,1.8,0,1.8,1.8,1.6c0.1,0,0.2-0.1,0.3-0.1V399.5z M423.1,370.6c-0.2-1.6-0.3-3-0.5-4.7c-1.6,1.6-3,3.1-4.6,4.7H423.1z
               M480.6,385.5c-0.3-1.1-0.6-2.2-0.9-3.2c0-0.1-0.3-0.3-0.4-0.3c-0.6,0-1.2,0-1.9,0v3.6H480.6z M434,370.5h6.2
-              C438.4,368.2,435.5,368.2,434,370.5 M412.1,388v-6c-0.1,0-0.2,0-0.3,0c-0.7,1.9-1.1,4-1.4,6.1H412.1z"/>
-            <path class="st15" d="M453.9,364.5c-0.3,0.5-0.4,1-0.6,1c-1.2,0.2-1.1,1.9-2.4,1.9c-0.2,0-0.5,0-0.6-0.1c-0.6-0.7-1.3-1.4-2-2
+              C438.4,368.2,435.5,368.2,434,370.5 M412.1,388v-6c-0.1,0-0.2,0-0.3,0c-0.7,1.9-1.1,4-1.4,6.1H412.1z" />
+          <path class="st15" d="M453.9,364.5c-0.3,0.5-0.4,1-0.6,1c-1.2,0.2-1.1,1.9-2.4,1.9c-0.2,0-0.5,0-0.6-0.1c-0.6-0.7-1.3-1.4-2-2
               c-0.5-0.6-0.1-1.5,0.7-1.8c0.3-0.1,0.4-0.4,0.7-0.6c0.4-0.3,0.7-0.7,1.2-0.9c0.6-0.2,1,0.3,1.3,0.8c0.1,0.3,0.5,0.5,0.7,0.7
-              C453.2,363.7,453.5,364.1,453.9,364.5"/>
-            <path class="st15" d="M488.4,375.9c-0.5-0.4-0.9-0.8-1.2-1.1c-0.2-0.2-0.5-0.5-0.7-0.7c-0.3-0.4-0.8-0.8-0.8-1.3
+              C453.2,363.7,453.5,364.1,453.9,364.5" />
+          <path class="st15"
+            d="M488.4,375.9c-0.5-0.4-0.9-0.8-1.2-1.1c-0.2-0.2-0.5-0.5-0.7-0.7c-0.3-0.4-0.8-0.8-0.8-1.3
               c0-0.4,0.4-0.9,0.8-1.1c0.4-0.2,0.5-0.4,0.7-0.7c0.3-0.4,0.8-0.8,1.2-0.8c0.4,0,1,0.4,1.2,0.8c0.2,0.4,0.4,0.5,0.7,0.7
-              c0.4,0.3,0.8,0.8,0.8,1.2c0,0.4-0.4,0.9-0.8,1.2c-0.4,0.2-0.6,0.4-0.8,0.8C489.3,375.3,488.9,375.5,488.4,375.9"/>
-            <path class="st15" d="M474.8,346.1c0.5,0.3,1,0.4,1.1,0.6c0.2,1.2,1.9,1.1,1.8,2.3c0,0.4-0.4,0.9-0.7,1.2
+              c0.4,0.3,0.8,0.8,0.8,1.2c0,0.4-0.4,0.9-0.8,1.2c-0.4,0.2-0.6,0.4-0.8,0.8C489.3,375.3,488.9,375.5,488.4,375.9" />
+          <path class="st15" d="M474.8,346.1c0.5,0.3,1,0.4,1.1,0.6c0.2,1.2,1.9,1.1,1.8,2.3c0,0.4-0.4,0.9-0.7,1.2
               c-0.3,0.2-0.6,0.4-0.9,0.8c-0.2,0.4-0.8,0.8-1.2,0.7c-0.4,0-0.8-0.5-1.2-0.8c-0.2-0.2-0.4-0.4-0.6-0.7c-0.3-0.4-0.8-0.8-0.8-1.3
-              c0-0.4,0.6-0.8,0.9-1.2c0.2-0.2,0.4-0.4,0.6-0.6C474.1,346.8,474.4,346.5,474.8,346.1"/>
-            <path class="st15" d="M432.5,350.7c-0.5-0.5-0.8-0.8-1.2-1.2c-0.2-0.2-0.5-0.4-0.7-0.7c-0.3-0.4-0.8-0.8-0.8-1.3
+              c0-0.4,0.6-0.8,0.9-1.2c0.2-0.2,0.4-0.4,0.6-0.6C474.1,346.8,474.4,346.5,474.8,346.1" />
+          <path class="st15" d="M432.5,350.7c-0.5-0.5-0.8-0.8-1.2-1.2c-0.2-0.2-0.5-0.4-0.7-0.7c-0.3-0.4-0.8-0.8-0.8-1.3
               c0-0.4,0.5-0.8,0.8-1.2c0.2-0.3,0.4-0.5,0.7-0.7c0.4-0.3,0.8-0.8,1.2-0.8c0.4,0,0.8,0.5,1.2,0.8c0.3,0.2,0.5,0.5,0.7,0.7
-              c0.3,0.4,0.8,0.8,0.8,1.2c0,0.4-0.4,1-0.8,1.2c-0.4,0.2-0.6,0.4-0.8,0.8C433.5,350,433,350.2,432.5,350.7"/>
-            <path class="st15" d="M444.3,347.3c0.7,0,1.3,0.6,1.3,1.3c0,0.7-0.6,1.3-1.3,1.3c-0.7,0-1.3-0.6-1.3-1.3
-              C443,347.9,443.6,347.3,444.3,347.3"/>
-            <path class="st15" d="M454.2,345.6c0,0.7-0.6,1.3-1.3,1.3c-0.7,0-1.3-0.5-1.3-1.3c0-0.7,0.5-1.4,1.3-1.4
-              C453.6,344.3,454.2,344.9,454.2,345.6"/>
-            <path class="st15" d="M482.2,360.3c0,0.7-0.7,1.3-1.4,1.3c-0.7,0-1.2-0.6-1.2-1.3c0-0.8,0.6-1.3,1.3-1.3
-              C481.6,359,482.2,359.6,482.2,360.3"/>
-            <path class="st15" d="M416.2,356.1c0.8,0,1.3,0.6,1.3,1.3c0,0.7-0.6,1.3-1.3,1.3c-0.7,0-1.3-0.6-1.3-1.3
-              C414.9,356.7,415.5,356.2,416.2,356.1"/>
-            <path class="st15" d="M465,352.4c0,0.7-0.6,1.3-1.3,1.3c-0.7,0-1.3-0.6-1.3-1.4c0-0.8,0.6-1.3,1.4-1.3
-              C464.5,351.1,465,351.7,465,352.4"/>
-          </g>
-          <g class="st1 island">
-            <defs>
-              <path id="SVGID_21_" d="M561.8,121.2c-4.5,3-10.6,6.4-18.3,8.7c-7.7,2.2-13.2,2.1-14.7,2.3c-8.8,1.3-17.2,35.4-16.7,172l45.2,1.1
+              c0.3,0.4,0.8,0.8,0.8,1.2c0,0.4-0.4,1-0.8,1.2c-0.4,0.2-0.6,0.4-0.8,0.8C433.5,350,433,350.2,432.5,350.7" />
+          <path class="st15" d="M444.3,347.3c0.7,0,1.3,0.6,1.3,1.3c0,0.7-0.6,1.3-1.3,1.3c-0.7,0-1.3-0.6-1.3-1.3
+              C443,347.9,443.6,347.3,444.3,347.3" />
+          <path class="st15" d="M454.2,345.6c0,0.7-0.6,1.3-1.3,1.3c-0.7,0-1.3-0.5-1.3-1.3c0-0.7,0.5-1.4,1.3-1.4
+              C453.6,344.3,454.2,344.9,454.2,345.6" />
+          <path class="st15" d="M482.2,360.3c0,0.7-0.7,1.3-1.4,1.3c-0.7,0-1.2-0.6-1.2-1.3c0-0.8,0.6-1.3,1.3-1.3
+              C481.6,359,482.2,359.6,482.2,360.3" />
+          <path class="st15" d="M416.2,356.1c0.8,0,1.3,0.6,1.3,1.3c0,0.7-0.6,1.3-1.3,1.3c-0.7,0-1.3-0.6-1.3-1.3
+              C414.9,356.7,415.5,356.2,416.2,356.1" />
+          <path class="st15" d="M465,352.4c0,0.7-0.6,1.3-1.3,1.3c-0.7,0-1.3-0.6-1.3-1.4c0-0.8,0.6-1.3,1.4-1.3
+              C464.5,351.1,465,351.7,465,352.4" />
+        </g>
+        <!-- 島嶼4 慢活樂園島-->
+        <g class="st1 island" @mouseover="this.zoomAndShowText" @mouseout="this.zoomAndShowText" data-message="慢活樂園島">
+          <defs>
+            <path id="SVGID_21_"
+              d="M561.8,121.2c-4.5,3-10.6,6.4-18.3,8.7c-7.7,2.2-13.2,2.1-14.7,2.3c-8.8,1.3-17.2,35.4-16.7,172l45.2,1.1
                 c1.9,0,3.7,0.8,5,2.2c1.2,1.4,1.9,3.3,1.8,5.2l-3.5,51.6l193.2,12.5c0.4-2.8,0.6-5.7,0.7-8.5c1.2-32.3-10.5-59.8-22.8-79.5
                 c-17.8-27.8-36.2-60.3-53.6-97.6c-14.3-30.8-25.6-59.9-34.5-86.6c-0.9-4.3-5.2-7.3-9.7-6.5c-1.3,0.2-2.6,0.3-3.9,0.3
-                c-5.4,0-9.3-2.4-14.1-5.1c-7.4-4.2-11.2-6.4-14.1-6.7c-0.3,0-0.7-0.1-1-0.1C589.8,86.5,584.7,105.8,561.8,121.2"/>
-            </defs>
-            <clipPath id="SVGID_22_">
-              <use xlink:href="#SVGID_21_"  style="overflow:visible;"/>
-            </clipPath>
-            <path class="st16" d="M562.2,362.8l3.4-50.1c0.1-2.3-0.7-4.5-2.2-6.3c-1.6-1.7-3.8-2.7-6.1-2.7l-43.7-1.1
+                c-5.4,0-9.3-2.4-14.1-5.1c-7.4-4.2-11.2-6.4-14.1-6.7c-0.3,0-0.7-0.1-1-0.1C589.8,86.5,584.7,105.8,561.8,121.2" />
+          </defs>
+          <clipPath id="SVGID_22_">
+            <use xlink:href="#SVGID_21_" style="overflow:visible;" />
+          </clipPath>
+          <path class="st16" d="M562.2,362.8l3.4-50.1c0.1-2.3-0.7-4.5-2.2-6.3c-1.6-1.7-3.8-2.7-6.1-2.7l-43.7-1.1
               c-0.5-144.9,9.5-168.1,15.4-169c0.3,0,0.7-0.1,1.3-0.1c2.6-0.2,7.3-0.5,13.5-2.3c6.5-1.9,12.6-4.8,18.8-8.9
               c11.5-7.7,18.5-16.3,24.1-23.1c5.4-6.6,9.2-11.3,14.1-11.3c0.3,0,0.6,0,0.8,0c2.6,0.3,6.2,2.3,13.5,6.5l0.7,0.4
               c4.6,2.7,8.6,4.9,14.2,4.9c1.4,0,2.8-0.1,4.1-0.3c0.4-0.1,0.8-0.1,1.2-0.1c3.3,0,6.1,2.3,6.8,5.4c0,0.1,0,0.1,0,0.2
               c9.9,29.5,21.5,58.7,34.6,86.8c15.6,33.6,33.7,66.5,53.7,97.7c10.9,17.5,23.8,45.4,22.6,78.6c-0.1,2.6-0.3,4.9-0.5,7L562.2,362.8z
-              "/>
-            <path class="st17" d="M600.8,86.5v3c0.2,0,0.5,0,0.7,0c2.3,0.2,6,2.4,12.9,6.3l0.7,0.4c4.6,2.6,9,5.1,14.9,5.1
+              " />
+          <path class="st17"
+            d="M600.8,86.5v3c0.2,0,0.5,0,0.7,0c2.3,0.2,6,2.4,12.9,6.3l0.7,0.4c4.6,2.6,9,5.1,14.9,5.1
               c1.4,0,2.9-0.1,4.4-0.3c0,0,0,0,0.1,0c0.3-0.1,0.6-0.1,0.9-0.1c2.5,0,4.8,1.8,5.3,4.2c0,0.1,0.1,0.2,0.1,0.3
               c9.9,29.5,21.5,58.8,34.7,87c15.7,33.7,33.7,66.6,53.7,97.9c15.8,25.3,23.3,51.4,22.3,77.8c-0.1,2-0.2,3.8-0.3,5.4l-187.4-12.1
               l3.3-48.6c0.1-2.6-0.8-5.3-2.5-7.3c0,0-0.1-0.1-0.1-0.1c-1.9-2-4.5-3.1-7.2-3.2l-42.2-1c-0.2-60.8,1.5-105.6,4.8-133.4
@@ -620,8 +678,9 @@ export default{
               c-4.5,3-10.6,6.4-18.3,8.7c-7.7,2.2-13.2,2.1-14.7,2.3c-8.8,1.3-17.2,35.4-16.7,172l45.2,1.1c1.9,0,3.7,0.8,5,2.2
               c1.2,1.4,1.9,3.3,1.8,5.2l-3.5,51.6l193.2,12.5c0.4-2.8,0.6-5.7,0.7-8.5c1.2-32.3-10.5-59.8-22.8-79.5
               c-17.8-27.8-36.2-60.3-53.6-97.6c-14.3-30.8-25.6-59.9-34.5-86.6c-0.8-3.8-4.3-6.6-8.2-6.6c-0.5,0-1,0-1.5,0.1
-              c-1.3,0.2-2.6,0.3-3.9,0.3c-5.4,0-9.3-2.4-14.1-5.1c-7.4-4.2-11.2-6.4-14.1-6.7C601.4,86.5,601.1,86.5,600.8,86.5"/>
-            <path class="st18" d="M565.4,256c0.6-1.7,2-2.1,3.5-2.3c4.4-0.3,8.1,1.9,9.8,6c0.2,0.5,0.5,0.6,1,0.6c2.4-0.1,4.6,0.4,6.1,2.3
+              c-1.3,0.2-2.6,0.3-3.9,0.3c-5.4,0-9.3-2.4-14.1-5.1c-7.4-4.2-11.2-6.4-14.1-6.7C601.4,86.5,601.1,86.5,600.8,86.5" />
+          <path class="st18"
+            d="M565.4,256c0.6-1.7,2-2.1,3.5-2.3c4.4-0.3,8.1,1.9,9.8,6c0.2,0.5,0.5,0.6,1,0.6c2.4-0.1,4.6,0.4,6.1,2.3
               c0.7,0.9,1.2,1.9,1.6,3c0.3,0.7-0.1,1.4-0.8,1.6c-0.7,0.2-1.2-0.1-1.6-0.9c-1.1-2.8-2.3-3.6-5.3-3.6c-0.5,0-0.9,0-1.4,0
               c-1.1,0-1.4-0.2-1.7-1.3c-0.5-1.8-1.5-3.2-3.1-4.2c-1.6-1-3.3-1.3-5.1-0.9c-0.2,0-0.6,0.4-0.6,0.6c0,2.2-0.1,4.5,0.1,6.7
               c0.2,2.9,2.4,4.9,5.4,4.9c7.4,0.1,14.8,0,22.1,0c2.4,0,4.3-1.7,4.6-3.9c0.2-2.4-1.1-4.5-3.4-5c-1-0.2-2-0.1-3-0.1
@@ -649,111 +708,113 @@ export default{
               c0.7,0.1,1.3,0.1,2,0c0.3,0,0.6-0.2,0.8-0.4c2.9-3.3,5.7-6.6,8.6-10c0.2-0.2,0.3-0.4,0.3-0.6C626.5,256.5,626.5,255.5,626.5,254.5
               M601.4,237.9c-1.5-3.3-2.9-6.5-4.4-9.7c-1.5,0.6-3,0.5-4.5,0c-1.5,3.3-2.9,6.5-4.4,9.7C592.1,239.8,597.6,239.8,601.4,237.9
               M602.5,240.3c-5.1,2.1-10.2,2.1-15.3,0c-0.5,1.2-1.1,2.4-1.6,3.5c6.2,2.5,12.3,2.5,18.4,0C603.5,242.6,603,241.5,602.5,240.3
-              M598.2,222.8c0-1.8-1.5-3.3-3.4-3.3c-1.8,0-3.4,1.5-3.4,3.4c0,1.9,1.5,3.4,3.4,3.4C596.7,226.2,598.2,224.7,598.2,222.8"/>
-            <path class="st18" d="M643.8,238.8c-0.4,0.6-1,0.8-1.8,0.8c-5.7,0-11.4,0-17.1,0c-0.1,0-0.3,0-0.4,0c-0.8,0-1.4-0.5-1.4-1.2
+              M598.2,222.8c0-1.8-1.5-3.3-3.4-3.3c-1.8,0-3.4,1.5-3.4,3.4c0,1.9,1.5,3.4,3.4,3.4C596.7,226.2,598.2,224.7,598.2,222.8" />
+          <path class="st18"
+            d="M643.8,238.8c-0.4,0.6-1,0.8-1.8,0.8c-5.7,0-11.4,0-17.1,0c-0.1,0-0.3,0-0.4,0c-0.8,0-1.4-0.5-1.4-1.2
               c0-0.7,0.6-1.2,1.4-1.3c1.2,0,2.3,0,3.5,0h3.3v-1c0-9.3,0-18.5,0-27.8c0-0.4,0-0.7,0.1-1.1c0.2-0.6,0.6-0.8,1.2-0.8
               c0.6,0.1,1,0.4,1.1,1c0,0.3,0,0.6,0,0.9c0,9.2,0,18.4,0,27.7v1h2.5v-1c0-9.2,0-18.3,0-27.5c0-0.3,0-0.7,0-1c0.1-0.6,0.5-1,1.1-1
-              c0.7,0,1.1,0.3,1.2,1c0.1,0.3,0.1,0.7,0.1,1c0,9.2,0,18.3,0,27.5v1.1c1.1,0,2.2,0,3.3,0c0.8,0,1.3,0.2,1.7,0.9V238.8z"/>
-            <path class="st18" d="M643.8,202.8c-0.6,1.7-1.9,2.3-3.7,2.3c-3.3-0.1-6.6,0-9.9,0c-1.6,0-2.9-0.3-3.6-1.9
+              c0.7,0,1.1,0.3,1.2,1c0.1,0.3,0.1,0.7,0.1,1c0,9.2,0,18.3,0,27.5v1.1c1.1,0,2.2,0,3.3,0c0.8,0,1.3,0.2,1.7,0.9V238.8z" />
+          <path class="st18" d="M643.8,202.8c-0.6,1.7-1.9,2.3-3.7,2.3c-3.3-0.1-6.6,0-9.9,0c-1.6,0-2.9-0.3-3.6-1.9
               c-0.6-1.4,0.1-3.3,1.3-4.4c1-0.8,2.1-1.1,3.4-1.2c0-0.4,0-0.7,0-1c0-2.2,1.5-3.8,3.6-3.9c2-0.1,3.7,1.4,3.8,3.6c0,0.4,0,0.8,0,1.2
               c0.6,0.1,1,0.1,1.5,0.2c1.6,0.4,2.7,1.4,3.2,3c0.1,0.2,0.2,0.4,0.2,0.6V202.8z M635.1,202.6c1.8,0,3.6,0,5.4,0
               c0.7,0,0.9-0.3,0.7-1c-0.2-0.8-0.8-1.3-1.7-1.5c-0.2,0-0.4,0-0.6,0c-2.5,0-5.1,0-7.6,0c-1.2,0-1.9,0.5-2.2,1.4
               c-0.3,0.8-0.1,1.1,0.7,1.1C631.6,202.6,633.4,202.6,635.1,202.6 M636.4,197.6c0-0.8,0.3-1.7-0.6-2.2c-0.3-0.2-1-0.2-1.3,0
-              c-0.8,0.5-0.6,1.3-0.6,2.1H636.4z"/>
-            <path class="st18" d="M565.4,221c0.9-1.8,0.9-1.8,3.8-2.2c0.4-1.5,0.8-3.1,1.2-4.6c0.3-0.8,0.6-1.7,1-2.5c0.3-0.8,1-1.1,1.7-0.8
+              c-0.8,0.5-0.6,1.3-0.6,2.1H636.4z" />
+          <path class="st18" d="M565.4,221c0.9-1.8,0.9-1.8,3.8-2.2c0.4-1.5,0.8-3.1,1.2-4.6c0.3-0.8,0.6-1.7,1-2.5c0.3-0.8,1-1.1,1.7-0.8
               c0.7,0.3,0.9,1,0.6,1.7c-0.8,2-1.5,4-1.8,6.1c1.9,1.1,2.5,2.2,2,4c-0.5,1.9-2,3.2-4,3.4c-1.8,0.1-3.6-1-4.2-2.7
               c-0.1-0.3-0.2-0.5-0.3-0.8V221z M569.8,221.3c-0.4,0-0.9,0-1.3,0c-0.5,0-0.6,0.2-0.6,0.7c0.1,1,0.9,1.7,1.8,1.7
-              c0.9,0,1.7-0.7,1.8-1.6c0.1-0.6-0.1-0.8-0.7-0.8C570.5,221.3,570.1,221.3,569.8,221.3"/>
-            <path class="st18" d="M643.8,245.4c-0.4,0.6-1,0.8-1.8,0.8c-2,0-3.9,0-5.9,0c-0.9,0-1.4-0.5-1.4-1.2c0-0.7,0.4-1.3,1.2-1.3
-              c2.2,0,4.4-0.1,6.6,0c0.4,0,0.8,0.6,1.2,0.9V245.4z"/>
-            <path class="st18" d="M565.4,194.2c0.1-0.1,0.2-0.2,0.3-0.3c0.5-0.6,1.3-0.7,1.9-0.1c0.5,0.5,0.5,1.5-0.1,1.9
-              c-0.5,0.5-1.3,0.4-1.8-0.2c-0.1-0.1-0.2-0.2-0.3-0.3V194.2z"/>
-            <path class="st18" d="M565.4,244.5c0.3-0.5,0.7-1,1.4-0.9c0.6,0.1,1,0.4,1.1,1c0.1,0.6-0.1,1.2-0.7,1.4c-0.5,0.2-1,0.1-1.4-0.3
-              c-0.1-0.1-0.2-0.2-0.3-0.3V244.5z"/>
-            <path class="st18" d="M643.8,222.5c-0.3,0.3-0.6,0.6-0.9,0.7c-0.6,0.2-1.1,0-1.4-0.6c-0.3-0.6-0.1-1.4,0.5-1.7
-              c0.6-0.3,1.1-0.2,1.6,0.2c0.1,0.1,0.2,0.3,0.3,0.4V222.5z"/>
-            <path class="st18" d="M611.3,202.7c0.8-1,1.9-1.1,3-1.1c0.8,0,1.5,0,2.3,0c1.5,0.1,2.6,1.2,2.7,2.7c0.1,2.3-1.3,4.1-3.5,4.5
+              c0.9,0,1.7-0.7,1.8-1.6c0.1-0.6-0.1-0.8-0.7-0.8C570.5,221.3,570.1,221.3,569.8,221.3" />
+          <path class="st18" d="M643.8,245.4c-0.4,0.6-1,0.8-1.8,0.8c-2,0-3.9,0-5.9,0c-0.9,0-1.4-0.5-1.4-1.2c0-0.7,0.4-1.3,1.2-1.3
+              c2.2,0,4.4-0.1,6.6,0c0.4,0,0.8,0.6,1.2,0.9V245.4z" />
+          <path class="st18" d="M565.4,194.2c0.1-0.1,0.2-0.2,0.3-0.3c0.5-0.6,1.3-0.7,1.9-0.1c0.5,0.5,0.5,1.5-0.1,1.9
+              c-0.5,0.5-1.3,0.4-1.8-0.2c-0.1-0.1-0.2-0.2-0.3-0.3V194.2z" />
+          <path class="st18" d="M565.4,244.5c0.3-0.5,0.7-1,1.4-0.9c0.6,0.1,1,0.4,1.1,1c0.1,0.6-0.1,1.2-0.7,1.4c-0.5,0.2-1,0.1-1.4-0.3
+              c-0.1-0.1-0.2-0.2-0.3-0.3V244.5z" />
+          <path class="st18" d="M643.8,222.5c-0.3,0.3-0.6,0.6-0.9,0.7c-0.6,0.2-1.1,0-1.4-0.6c-0.3-0.6-0.1-1.4,0.5-1.7
+              c0.6-0.3,1.1-0.2,1.6,0.2c0.1,0.1,0.2,0.3,0.3,0.4V222.5z" />
+          <path class="st18" d="M611.3,202.7c0.8-1,1.9-1.1,3-1.1c0.8,0,1.5,0,2.3,0c1.5,0.1,2.6,1.2,2.7,2.7c0.1,2.3-1.3,4.1-3.5,4.5
               c-2.1,0.4-4.1-0.8-4.9-2.9c-0.1-0.3-0.3-0.5-0.5-0.7c-2.6-2.4-5.6-4.1-9-5.1c-0.2-0.1-0.5-0.1-0.7-0.2c-0.8-0.3-1.2-0.9-1-1.6
               c0.2-0.7,0.9-1,1.7-0.8c1,0.3,1.9,0.6,2.9,1C606.8,199.5,609.2,201,611.3,202.7 M615.1,204.1c-0.4,0-0.9,0-1.3,0
               c-0.4,0-0.6,0.2-0.6,0.6c0.1,1,0.9,1.8,1.8,1.8c0.9,0,1.7-0.7,1.8-1.7c0.1-0.5-0.1-0.7-0.6-0.7
-              C615.9,204.2,615.5,204.1,615.1,204.1"/>
-            <path class="st18" d="M578.6,202.5c2.6-2.1,5.7-3.8,9.2-4.8c0.2,0,0.3-0.1,0.5-0.1c0.7-0.2,1.4,0.2,1.6,0.9
+              C615.9,204.2,615.5,204.1,615.1,204.1" />
+          <path class="st18" d="M578.6,202.5c2.6-2.1,5.7-3.8,9.2-4.8c0.2,0,0.3-0.1,0.5-0.1c0.7-0.2,1.4,0.2,1.6,0.9
               c0.2,0.6-0.1,1.2-0.9,1.5c-0.7,0.3-1.4,0.4-2.1,0.7c-2.9,1-5.5,2.6-7.7,4.7c-0.2,0.2-0.3,0.4-0.4,0.7c-0.8,2.1-2.9,3.4-5,2.9
               c-2.2-0.5-3.6-2.5-3.4-4.7c0.1-1.4,1.2-2.5,2.6-2.5c1.1,0,2.2-0.1,3.3,0C577,201.8,577.7,202.2,578.6,202.5 M574.7,204.1
               c-0.4,0-0.9,0-1.3,0c-0.5,0-0.6,0.2-0.6,0.7c0.1,1,0.9,1.7,1.8,1.7c0.9,0,1.6-0.7,1.8-1.6c0.1-0.6,0-0.9-0.7-0.8
-              C575.4,204.2,575,204.1,574.7,204.1"/>
-            <path class="st18" d="M572.6,235.9c-0.9-2.2-1.7-4.3-2.6-6.5c-0.1-0.2-0.1-0.4-0.2-0.6c-0.2-0.7,0.2-1.4,0.9-1.6
+              C575.4,204.2,575,204.1,574.7,204.1" />
+          <path class="st18" d="M572.6,235.9c-0.9-2.2-1.7-4.3-2.6-6.5c-0.1-0.2-0.1-0.4-0.2-0.6c-0.2-0.7,0.2-1.4,0.9-1.6
               c0.6-0.2,1.2,0.1,1.5,0.8c0.4,1.2,0.7,2.4,1.3,3.5c0.6,1.3,1.4,2.6,2.1,3.9c0.1,0.2,0.3,0.3,0.5,0.4c2.2,0.4,3.1,1.7,2.7,3.8
               c-0.4,2.3-2.7,3.8-4.9,3.4c-2.3-0.4-3.9-2.6-3.6-4.9C570.5,237.1,571.3,236.3,572.6,235.9 M574.7,238.4c-0.5,0-0.9-0.1-1.4,0
               c-0.2,0-0.5,0.3-0.5,0.5c-0.1,0.9,0.6,1.7,1.6,1.8c0.8,0.1,1.7-0.4,1.9-1.2c0.3-0.9,0.1-1.1-0.8-1.1
-              C575.2,238.4,574.9,238.4,574.7,238.4"/>
-            <path class="st18" d="M616.8,235.9c1.8,0.6,2.5,1.4,2.5,2.9c0,2-1.1,3.6-2.8,4.2c-3.1,1.1-6.2-1.4-5.8-4.6
+              C575.2,238.4,574.9,238.4,574.7,238.4" />
+          <path class="st18" d="M616.8,235.9c1.8,0.6,2.5,1.4,2.5,2.9c0,2-1.1,3.6-2.8,4.2c-3.1,1.1-6.2-1.4-5.8-4.6
               c0.2-1.3,1.2-2.3,2.5-2.5c0.3,0,0.7-0.3,0.9-0.5c1.2-1.7,2.1-3.6,2.8-5.6c0.1-0.3,0.2-0.6,0.3-0.9c0.3-0.7,0.9-1,1.5-0.8
               c0.6,0.2,1,0.8,0.7,1.5c-0.6,1.7-1.4,3.4-2.1,5.1C617.3,235.1,617,235.5,616.8,235.9 M616.9,238.7c-0.1-0.1-0.3-0.3-0.5-0.3
-              c-0.9,0-1.8,0-2.7,0c-0.2,0-0.4,0.3-0.5,0.5c0,1,0.8,1.9,1.8,1.9C616,240.8,616.8,239.9,616.9,238.7"/>
-            <path class="st18" d="M617.9,218.8c-0.5-1.7-1-3.3-1.5-5c-0.1-0.4-0.3-0.7-0.5-1.1c-0.2-0.7,0-1.3,0.6-1.6
+              c-0.9,0-1.8,0-2.7,0c-0.2,0-0.4,0.3-0.5,0.5c0,1,0.8,1.9,1.8,1.9C616,240.8,616.8,239.9,616.9,238.7" />
+          <path class="st18" d="M617.9,218.8c-0.5-1.7-1-3.3-1.5-5c-0.1-0.4-0.3-0.7-0.5-1.1c-0.2-0.7,0-1.3,0.6-1.6
               c0.6-0.3,1.3-0.1,1.6,0.7c0.5,1.3,1,2.6,1.4,3.9c0.3,1,0.5,2.1,0.8,3.3c0.4,0,0.8,0,1.2,0c1.5,0.1,2.6,1.2,2.7,2.7
               c0.1,2.6-1.8,4.6-4.2,4.6c-2.5,0-4.4-2-4.3-4.5C615.7,220.2,616.5,219.3,617.9,218.8 M620,221.3c-0.5,0-0.9,0-1.4,0
               c-0.2,0-0.4,0.3-0.5,0.4c-0.1,0.8,0.6,1.7,1.4,1.9c0.9,0.2,1.8-0.3,2.1-1.1c0.3-1,0.2-1.2-0.8-1.2
-              C620.5,221.3,620.3,221.3,620,221.3"/>
-            <path class="st18" d="M594.9,193.1c0.4,0,0.7,0,1.1,0c1.9-0.2,3.6,1.2,3.1,3.9c-0.4,2.3-2.7,3.8-4.9,3.4c-2.3-0.4-3.9-2.6-3.6-4.9
+              C620.5,221.3,620.3,221.3,620,221.3" />
+          <path class="st18" d="M594.9,193.1c0.4,0,0.7,0,1.1,0c1.9-0.2,3.6,1.2,3.1,3.9c-0.4,2.3-2.7,3.8-4.9,3.4c-2.3-0.4-3.9-2.6-3.6-4.9
               c0.2-1.3,1.3-2.3,2.6-2.3C593.7,193.1,594.3,193.1,594.9,193.1L594.9,193.1z M594.9,195.6c-0.4,0-0.9,0-1.3,0
               c-0.4,0-0.6,0.2-0.6,0.6c0.1,1,0.9,1.8,1.8,1.8c0.9,0,1.7-0.7,1.8-1.7c0.1-0.5-0.1-0.7-0.6-0.7
-              C595.6,195.6,595.3,195.6,594.9,195.6"/>
-            <path class="st18" d="M620.7,197.3c0,0.7-0.6,1.3-1.2,1.3c-0.7,0-1.2-0.6-1.2-1.4c0-0.7,0.6-1.2,1.3-1.2
-              C620.2,196,620.7,196.6,620.7,197.3"/>
-            <path class="st18" d="M626.1,216.7c-0.7,0-1.2-0.5-1.3-1.2c0-0.7,0.5-1.4,1.2-1.4c0.7,0,1.2,0.6,1.2,1.3
-              C627.3,216.1,626.8,216.7,626.1,216.7"/>
-            <path class="st18" d="M578.2,198.4c-0.7,0-1.2-0.6-1.2-1.3c0-0.8,0.6-1.3,1.3-1.3c0.7,0,1.2,0.6,1.2,1.3
-              C579.4,197.9,578.8,198.4,578.2,198.4"/>
-            <path class="st18" d="M624.5,231.4c-0.7,0-1.2-0.5-1.3-1.3c0-0.7,0.6-1.4,1.3-1.3c0.7,0,1.2,0.6,1.2,1.3
-              C625.7,230.8,625.1,231.4,624.5,231.4"/>
-            <path class="st18" d="M605.9,223.7c0,0.7-0.5,1.3-1.2,1.3c-0.7,0-1.2-0.6-1.2-1.3c0-0.8,0.6-1.3,1.3-1.3
-              C605.4,222.4,605.9,223,605.9,223.7"/>
-            <path class="st18" d="M584.4,220.3c0,0.7-0.5,1.3-1.2,1.3c-0.7,0-1.2-0.5-1.3-1.2c0-0.8,0.5-1.3,1.2-1.4
-              C583.8,219.1,584.4,219.6,584.4,220.3"/>
-            <path class="st18" d="M604.2,213.8c0,0.7-0.5,1.3-1.2,1.3c-0.7,0-1.2-0.6-1.3-1.3c0-0.7,0.6-1.4,1.3-1.3
-              C603.7,212.5,604.2,213,604.2,213.8"/>
-          </g>
-          <g class="st1 botmap">
-            <defs>
-              <rect id="SVGID_23_" x="592.6" y="287.7" width="82.4" height="57.6"/>
-            </defs>
-            <clipPath id="SVGID_24_">
-              <use xlink:href="#SVGID_23_"  style="overflow:visible;"/>
-            </clipPath>
-          </g>
-          <g class="st1 island">
-            <defs>
-              <path id="SVGID_25_" d="M553.6,545c0.2,1.3,0.6,3.3,1.8,5.2c2.8,4.2,7.9,5.4,11.3,6c16.6,3.2,25.5,2.8,25.5,2.8
+              C595.6,195.6,595.3,195.6,594.9,195.6" />
+          <path class="st18" d="M620.7,197.3c0,0.7-0.6,1.3-1.2,1.3c-0.7,0-1.2-0.6-1.2-1.4c0-0.7,0.6-1.2,1.3-1.2
+              C620.2,196,620.7,196.6,620.7,197.3" />
+          <path class="st18" d="M626.1,216.7c-0.7,0-1.2-0.5-1.3-1.2c0-0.7,0.5-1.4,1.2-1.4c0.7,0,1.2,0.6,1.2,1.3
+              C627.3,216.1,626.8,216.7,626.1,216.7" />
+          <path class="st18" d="M578.2,198.4c-0.7,0-1.2-0.6-1.2-1.3c0-0.8,0.6-1.3,1.3-1.3c0.7,0,1.2,0.6,1.2,1.3
+              C579.4,197.9,578.8,198.4,578.2,198.4" />
+          <path class="st18" d="M624.5,231.4c-0.7,0-1.2-0.5-1.3-1.3c0-0.7,0.6-1.4,1.3-1.3c0.7,0,1.2,0.6,1.2,1.3
+              C625.7,230.8,625.1,231.4,624.5,231.4" />
+          <path class="st18" d="M605.9,223.7c0,0.7-0.5,1.3-1.2,1.3c-0.7,0-1.2-0.6-1.2-1.3c0-0.8,0.6-1.3,1.3-1.3
+              C605.4,222.4,605.9,223,605.9,223.7" />
+          <path class="st18" d="M584.4,220.3c0,0.7-0.5,1.3-1.2,1.3c-0.7,0-1.2-0.5-1.3-1.2c0-0.8,0.5-1.3,1.2-1.4
+              C583.8,219.1,584.4,219.6,584.4,220.3" />
+          <path class="st18" d="M604.2,213.8c0,0.7-0.5,1.3-1.2,1.3c-0.7,0-1.2-0.6-1.3-1.3c0-0.7,0.6-1.4,1.3-1.3
+              C603.7,212.5,604.2,213,604.2,213.8" />
+        </g>
+        <g class="st1 botmap">
+          <defs>
+            <rect id="SVGID_23_" x="592.6" y="287.7" width="82.4" height="57.6" />
+          </defs>
+          <clipPath id="SVGID_24_">
+            <use xlink:href="#SVGID_23_" style="overflow:visible;" />
+          </clipPath>
+        </g>
+        <!-- 島嶼5 驚險火山島-->
+        <g class="st1 island" @mouseover="this.zoomAndShowText" @mouseout="this.zoomAndShowText" data-message="驚險火山島">
+          <defs>
+            <path id="SVGID_25_" d="M553.6,545c0.2,1.3,0.6,3.3,1.8,5.2c2.8,4.2,7.9,5.4,11.3,6c16.6,3.2,25.5,2.8,25.5,2.8
                 c19.4-0.8,29.1-1.1,34.6-2.3c35.1-7.5,58.5-28.1,68.1-37.8c8.8-8.9,13.8-16.4,23.6-31.3c18.7-28.5,27.8-52.9,30.7-61
-                c3.1-8.6,5.1-15.9,6.5-20.8l-192-12.4C560.3,443.8,556.9,494.4,553.6,545"/>
-            </defs>
-            <clipPath id="SVGID_26_">
-              <use xlink:href="#SVGID_25_"  style="overflow:visible;"/>
-            </clipPath>
-            <path class="st19" d="M591.2,557.5c-2.9,0-11.1-0.3-24.2-2.8c-2.7-0.5-7.7-1.5-10.3-5.4c-0.8-1.3-1.4-2.7-1.6-4.4l9.9-150.1
+                c3.1-8.6,5.1-15.9,6.5-20.8l-192-12.4C560.3,443.8,556.9,494.4,553.6,545" />
+          </defs>
+          <clipPath id="SVGID_26_">
+            <use xlink:href="#SVGID_25_" style="overflow:visible;" />
+          </clipPath>
+          <path class="st19" d="M591.2,557.5c-2.9,0-11.1-0.3-24.2-2.8c-2.7-0.5-7.7-1.5-10.3-5.4c-0.8-1.3-1.4-2.7-1.6-4.4l9.9-150.1
               L753.7,407c-1.7,6.3-3.7,12.7-5.9,19c-7.1,19.9-17.9,41.5-30.5,60.7c-9.7,14.8-14.6,22.2-23.4,31.1c-10.9,10.9-34,30.3-67.3,37.4
-              c-4.8,1-13.3,1.4-28.9,2l-5.5,0.2C592.1,557.5,591.8,557.5,591.2,557.5"/>
-            <path class="st20" d="M566.4,396.4l185.3,12c-1.6,5.7-3.4,11.5-5.4,17.1c-5,14-14.3,35.8-30.4,60.4c-9.6,14.7-14.5,22.1-23.2,30.9
+              c-4.8,1-13.3,1.4-28.9,2l-5.5,0.2C592.1,557.5,591.8,557.5,591.2,557.5" />
+          <path class="st20" d="M566.4,396.4l185.3,12c-1.6,5.7-3.4,11.5-5.4,17.1c-5,14-14.3,35.8-30.4,60.4c-9.6,14.7-14.5,22.1-23.2,30.9
               c-10.7,10.8-33.7,30-66.6,37c-4.7,1-13.2,1.4-28.6,2l-5.5,0.2c0,0-0.3,0-0.9,0c-2.9,0-11-0.3-24-2.8c-3.4-0.7-7.3-1.6-9.3-4.7
               c-0.7-1-1.1-2.2-1.3-3.6l5-75.6L566.4,396.4 M563.6,393.2c-3.3,50.6-6.6,101.2-10,151.8c0.2,1.3,0.6,3.3,1.8,5.2
               c2.8,4.2,7.9,5.4,11.3,6c13.4,2.6,21.8,2.8,24.5,2.8c0.7,0,1,0,1,0c19.4-0.8,29.1-1.1,34.6-2.3c35.1-7.5,58.4-28.1,68.1-37.8
-              c8.8-8.9,13.8-16.4,23.6-31.3c18.7-28.5,27.8-52.9,30.7-61c3.1-8.6,5.1-15.9,6.5-20.8L563.6,393.2z"/>
-            <path class="st21" d="M670.7,492.4c-0.4,0.6-0.9,0.8-1.6,0.8c-25.1,0-50.3,0-75.4,0c-0.1,0-0.2,0-0.3,0c-0.6,0-1.1-0.3-1.3-0.9
+              c8.8-8.9,13.8-16.4,23.6-31.3c18.7-28.5,27.8-52.9,30.7-61c3.1-8.6,5.1-15.9,6.5-20.8L563.6,393.2z" />
+          <path class="st21" d="M670.7,492.4c-0.4,0.6-0.9,0.8-1.6,0.8c-25.1,0-50.3,0-75.4,0c-0.1,0-0.2,0-0.3,0c-0.6,0-1.1-0.3-1.3-0.9
               c-0.2-0.6,0.2-1.1,0.7-1.4c2.6-1.4,4.9-3,7.2-4.8c1-0.8,2-1.6,3-2.4c0.6-0.5,1.3-0.5,1.8,0c0.5,0.5,0.4,1.2-0.2,1.8
               c-2,1.7-4.1,3.4-6.2,4.9c-0.2,0.2-0.5,0.2-0.6,0.6h67.5c-0.2-0.3-0.5-0.4-0.7-0.6c-7-4.8-12.8-10.8-17.8-17.7
               c-0.5-0.8-0.5-1.4,0.1-1.8c0.6-0.4,1.3-0.3,1.8,0.5c4.4,6.1,9.6,11.5,15.6,16c1.8,1.3,3.6,2.5,5.5,3.6c0.4,0.2,0.7,0.5,1,0.8
-              V492.4z"/>
-            <path class="st21" d="M649.2,483.7c0,0.5-0.2,0.8-0.6,1c-0.5,0.3-0.9,0.2-1.4-0.2c-1.3-1-2.5-2.1-3.6-3.3
+              V492.4z" />
+          <path class="st21" d="M649.2,483.7c0,0.5-0.2,0.8-0.6,1c-0.5,0.3-0.9,0.2-1.4-0.2c-1.3-1-2.5-2.1-3.6-3.3
               c-2.7-2.9-4.9-6.1-6.3-9.8c-0.1-0.2-0.2-0.5-0.2-0.7c-0.2-0.7,0.1-1.3,0.7-1.5c0.6-0.2,1.2,0.1,1.5,0.8c0.2,0.5,0.3,1,0.6,1.4
-              c1.9,4.4,4.8,8,8.4,11C648.7,482.8,649.2,483.1,649.2,483.7"/>
-            <path class="st21" d="M623.6,474c-0.1,0.2-0.1,0.4-0.2,0.7c-1.7,5-4.5,9.3-8.6,12.7c-0.3,0.2-0.6,0.5-0.9,0.6
+              c1.9,4.4,4.8,8,8.4,11C648.7,482.8,649.2,483.1,649.2,483.7" />
+          <path class="st21" d="M623.6,474c-0.1,0.2-0.1,0.4-0.2,0.7c-1.7,5-4.5,9.3-8.6,12.7c-0.3,0.2-0.6,0.5-0.9,0.6
               c-0.6,0.3-1.1,0.1-1.4-0.4c-0.3-0.5-0.3-1,0.1-1.4c0.1-0.1,0.3-0.2,0.4-0.3c3.8-3.1,6.6-7.1,8.2-11.7c0.1-0.3,0.2-0.5,0.3-0.8
-              c0.3-0.5,0.7-0.6,1.3-0.5C623.3,473,623.5,473.4,623.6,474"/>
-            <path class="st21" d="M632.5,475.1c0,1.7,0,3.4,0,5.1c0,0.9-0.4,1.3-1.2,1.3c-0.7,0-1.1-0.5-1.2-1.3c0-1.7,0-3.4,0-5.1
-              c0-1.7,0-3.3,0-5c0-0.9,0.4-1.4,1.1-1.4c0.8,0,1.2,0.5,1.2,1.4C632.5,471.8,632.5,473.5,632.5,475.1"/>
-            <path class="st21" d="M642.9,419.3c-0.4,0.1-0.7,0.1-1.1-0.1c-2.1-0.6-4.1-0.6-6.2,0.1c-0.5,0.2-0.7,0.2-1-0.3
+              c0.3-0.5,0.7-0.6,1.3-0.5C623.3,473,623.5,473.4,623.6,474" />
+          <path class="st21" d="M632.5,475.1c0,1.7,0,3.4,0,5.1c0,0.9-0.4,1.3-1.2,1.3c-0.7,0-1.1-0.5-1.2-1.3c0-1.7,0-3.4,0-5.1
+              c0-1.7,0-3.3,0-5c0-0.9,0.4-1.4,1.1-1.4c0.8,0,1.2,0.5,1.2,1.4C632.5,471.8,632.5,473.5,632.5,475.1" />
+          <path class="st21" d="M642.9,419.3c-0.4,0.1-0.7,0.1-1.1-0.1c-2.1-0.6-4.1-0.6-6.2,0.1c-0.5,0.2-0.7,0.2-1-0.3
               c-1.4-2.2-3.4-3.5-5.9-4.3c-0.5-0.1-1-0.1-1.4-0.4h-2.9c-0.3,0.3-0.7,0.2-1,0.3c-3.2,0.8-5.6,2.7-7,5.7c-0.6,1.4-0.6,1.4-2.1,1.3
               c-7.1-0.2-11.9,7.2-8.6,13.5c2.2,4.2,7.2,6.1,11.8,4.5c0.3-0.1,0.6-0.3,1,0c2.3,1.3,4.7,1.7,7.3,1.3c0.4-0.1,0.6,0,0.6,0.5
               c0,2.3,0,4.6,0,6.9c0,0.3,0,0.5-0.3,0.6c-1.1,0.5-1.6,1.4-2,2.5c-2.9,8.5-7.1,16.3-12.7,23.3c-1.5,1.8-3.1,3.6-4.7,5.3
@@ -773,67 +834,113 @@ export default{
               c0.7,0.2,1.2-0.1,1.5-0.9c0-0.1,0.1-0.2,0.1-0.3c1.1-1.7,1.5-3.6,1.8-5.6c0.6-3.3,3.5-5.6,7-6c3.2-0.4,6.5,1.4,8.1,4.3
               c0.8,1.5,1,1.6,2.5,0.8c4.7-2.4,10.2,0.7,10.5,5.9c0.2,2.7-1.4,5.3-4,6.5C641.5,434.7,641.1,435.1,640.8,435.7 M651.5,437.1
               c-2.7,2.4-7,3.1-9.8,1.6c0.4-0.6,0.9-1.2,1.2-1.9c0.1-0.2,0.3-0.3,0.5-0.4c5.5-2.8,6.8-10.1,2.5-14.6c-0.1-0.1-0.2-0.2-0.2-0.3
-              c3.4,0,6.9,2.4,8.2,5.8C655.3,430.8,654.3,434.6,651.5,437.1"/>
-            <path class="st21" d="M656.4,451.4c-2.4,0-4.4,2-4.4,4.3c0,2.4,2,4.3,4.4,4.3c2.4,0,4.5-2,4.4-4.4
+              c3.4,0,6.9,2.4,8.2,5.8C655.3,430.8,654.3,434.6,651.5,437.1" />
+          <path class="st21" d="M656.4,451.4c-2.4,0-4.4,2-4.4,4.3c0,2.4,2,4.3,4.4,4.3c2.4,0,4.5-2,4.4-4.4
               C660.8,453.4,658.8,451.4,656.4,451.4 M656.4,457.8c-1.1,0-2.1-0.9-2.1-2c0-1.1,1-2,2.1-2c1.1,0,2.1,0.9,2.1,2
-              C658.5,456.9,657.5,457.8,656.4,457.8"/>
-            <path class="st21" d="M608.5,443.8c-2.4,0-4.4,1.9-4.4,4.3c0,2.4,2,4.4,4.5,4.3c2.4,0,4.4-2,4.3-4.4
+              C658.5,456.9,657.5,457.8,656.4,457.8" />
+          <path class="st21" d="M608.5,443.8c-2.4,0-4.4,1.9-4.4,4.3c0,2.4,2,4.4,4.5,4.3c2.4,0,4.4-2,4.3-4.4
               C612.9,445.7,610.9,443.7,608.5,443.8 M608.5,450.1c-1.1,0-2.1-0.9-2.1-2c0-1.1,0.9-2,2.1-2c1.2,0,2.1,0.9,2.1,2
-              C610.6,449.2,609.6,450.1,608.5,450.1"/>
-            <path class="st21" d="M605.2,462.4c-2.4,0-4.4,1.9-4.4,4.3c0,2.4,2,4.3,4.4,4.3c2.4,0,4.4-1.9,4.4-4.3
+              C610.6,449.2,609.6,450.1,608.5,450.1" />
+          <path class="st21" d="M605.2,462.4c-2.4,0-4.4,1.9-4.4,4.3c0,2.4,2,4.3,4.4,4.3c2.4,0,4.4-1.9,4.4-4.3
               C609.7,464.3,607.7,462.3,605.2,462.4 M605.2,468.7c-1.2,0-2.1-0.9-2.1-2c0-1.1,1-2,2.1-2c1.1,0,2.1,0.9,2.1,2
-              C607.3,467.8,606.4,468.7,605.2,468.7"/>
-          </g>
-          <g class="st1 island">
-            <defs>
-              <path id="SVGID_27_" d="M194.7,463.7c-20.2,0-36.5,16.3-36.5,36.5v35.4c0,20.2,16.3,36.5,36.5,36.5h14.7
-                c20.2,0,36.5-16.3,36.5-36.5v-35.4c0-20.2-16.3-36.5-36.5-36.5H194.7z"/>
-            </defs>
-            <clipPath id="SVGID_28_">
-              <use xlink:href="#SVGID_27_"  style="overflow:visible;"/>
-            </clipPath>
-            <path class="st22" d="M192.2,568.8c-3.4,0-8.4-0.6-13.1-3.5c-13-7.9-17.7-29.5-9.5-43.6c5.4-9.4,15.5-13.3,20.4-15.1
+              C607.3,467.8,606.4,468.7,605.2,468.7" />
+        </g>
+        <!-- 島嶼6 孤島_停車場-->
+        <g class="st1 island" @mouseover="this.zoomAndShowText" @mouseout="this.zoomAndShowText" data-message="孤島">
+          <defs>
+            <path id="SVGID_27_" d="M194.7,463.7c-20.2,0-36.5,16.3-36.5,36.5v35.4c0,20.2,16.3,36.5,36.5,36.5h14.7
+                c20.2,0,36.5-16.3,36.5-36.5v-35.4c0-20.2-16.3-36.5-36.5-36.5H194.7z" />
+          </defs>
+          <clipPath id="SVGID_28_">
+            <use xlink:href="#SVGID_27_" style="overflow:visible;" />
+          </clipPath>
+          <path class="st22"
+            d="M192.2,568.8c-3.4,0-8.4-0.6-13.1-3.5c-13-7.9-17.7-29.5-9.5-43.6c5.4-9.4,15.5-13.3,20.4-15.1
               c6.8-2.6,12.8-3.1,18.1-3.5c2.6-0.2,5.1-0.4,7.7-0.4c4.3,0,8,0.5,11.7,1.6c6.1,1.8,12.4,3.7,14.8,8.3
-              c5.6,10.8-14.2,30.7-27.3,43.9c-6.8,6.8-12.2,11-19.4,12C194.6,568.7,193.4,568.8,192.2,568.8L192.2,568.8z"/>
-            <path class="st23" d="M215.8,504.2c4.1,0,7.7,0.5,11.3,1.6c5.8,1.7,11.8,3.6,13.9,7.5c5.1,9.9-15,30.1-27,42.2
+              c5.6,10.8-14.2,30.7-27.3,43.9c-6.8,6.8-12.2,11-19.4,12C194.6,568.7,193.4,568.8,192.2,568.8L192.2,568.8z" />
+          <path class="st23" d="M215.8,504.2c4.1,0,7.7,0.5,11.3,1.6c5.8,1.7,11.8,3.6,13.9,7.5c5.1,9.9-15,30.1-27,42.2
               c-6.7,6.8-11.7,10.6-18.5,11.6c-1,0.1-2.1,0.2-3.2,0.2c-3.2,0-7.9-0.6-12.3-3.2c-5.9-3.6-10.3-10.4-12-18.6
               c-1.7-8.3-0.6-16.6,3-22.9c5.2-8.9,14.9-12.7,19.6-14.5c6.6-2.6,12.2-3,17.7-3.4C210.8,504.4,213.3,504.2,215.8,504.2
               M215.8,501.2c-2.7,0-5.2,0.2-7.8,0.4c-5.4,0.4-11.6,0.8-18.6,3.6c-4.8,1.9-15.4,6-21.1,15.8c-8.4,14.4-3.9,37.2,10,45.7
               c5.1,3.1,10.4,3.7,13.9,3.7c1.9,0,3.2-0.2,3.7-0.2c7.5-1,13-5.1,20.2-12.4c13.7-13.7,33.7-33.9,27.6-45.7c-2.6-5.1-9.3-7.1-15.7-9
-              C223.6,501.6,219.6,501.2,215.8,501.2"/>
-          </g>
+              C223.6,501.6,219.6,501.2,215.8,501.2" />
         </g>
-        </svg>
+          
+    </svg>
 
+  </div>
+
+  <!-- 門票通路 -->
+  <div v-if="page == 5" class="ticketAccess">
+    <h1>門票通路</h1>
+    <h4><strong style="color:brown ; text-decoration:underline">販賣旅行社</strong></h4>
+
+    <div class="travelAgencyTable">
+      <div class="travelAgency">
+        <a href="https://www.colatour.com.tw/">
+          <img src="../../picture/travelAgency/可樂旅遊.png" alt="可樂旅遊" class="colaTour"></a>
+        <h6>可樂旅遊</h6>
       </div>
+      <div class="travelAgency">
+        <a href="https://www.settour.com.tw/">
+          <img src="../../picture/travelAgency/東南旅遊.png" alt="東南旅遊" class="setTour"></a>
+        <h6>東南旅遊</h6>
+      </div>
+      <div class="travelAgency">
+        <a href="https://www.liontravel.com/category/zh-tw/index">
+          <img src="../../picture/travelAgency/雄獅旅遊.png" alt="雄獅旅遊" class="lionTravel"></a>
+        <h6>雄獅旅遊</h6>
+      </div>
+    </div>
 
-      
-      <!-- ========================================================================================= -->
+    <h4><strong style="color:brown ; text-decoration:underline">線上平台</strong></h4>
 
-      <footer class="footerPlace"></footer>
+    <div class="onlinePlatformTable">
+      <div class="onlinePlatform">
+        <a href="https://www.kkday.com/zh-tw">
+          <img src="../../picture/travelAgency/kkday.png" alt="KKday" class="KKday"></a>
+        <h6>KKday</h6>
+      </div>
+      <div class="onlinePlatform">
+        <a href="https://www.klook.com/zh-TW/">
+          <img src="../../picture/travelAgency/klook.png" alt="Klook" class="Klook"></a>
+        <h6>Klook</h6>
+      </div>
+    </div>
 
+    <h4><strong style="color:brown ; text-decoration:underline">入口處購票</strong></h4>
+    <p>可於 AIRTIME 樂園園區的入口售票處購票</p>
+    <p>* 售票處營業時間為開園前1小時前，至閉園前2小時為止</p>
+
+  </div>
+
+  <!-- ========================================================================================= -->
+
+  <footer class="footerPlace"></footer>
 </template>
 
 <style lang="scss" scoped>
 //頁面 Header
-
-// .HomeHeaderViewClass{
-//   position: fixed;
-//   z-index: 99;
-// }
+.HomeHeaderViewClass {
+  position: fixed;
+  z-index: 99;
+}
 
 //輪播廣告
-.bootstrapAd{
+.bootstrapAd {
   z-index: -10;
-  h1{
+
+  h1 {
     width: 100%;
     background-color: rgb(26, 26, 172);
   }
-  p{
+
+  p {
     width: 100%;
     background-color: rgb(26, 26, 172);
   }
-  .change{
+
+  .change {
     width: 5vh;
     height: 10vh;
     border-radius: 10px;
@@ -843,7 +950,7 @@ export default{
   }
 }
 
-.midHeader{
+.midHeader {
   max-width: 80vw;
   margin: 0 10vw;
   display: flex;
@@ -851,25 +958,31 @@ export default{
   border-radius: 20px;
   background-color: white;
   margin-top: -6vh;
-  position: relative; /* 或者是其他值，除了 static */
-  z-index: 2; 
-  .fa-solid{
+  position: relative;
+  /* 或者是其他值，除了 static */
+  z-index: 2;
+
+  .fa-solid {
     font-size: 25pt;
     color: rgb(26, 26, 172);
   }
-  .block{
+
+  .block {
     width: calc(16.66%);
     height: 100%;
     text-align: center;
-    &:hover{
-      background-color:rgb(26, 26, 172);
+
+    &:hover {
+      background-color: rgb(26, 26, 172);
       color: white;
-      .fa-solid{
-        color:white;
+
+      .fa-solid {
+        color: white;
       }
     }
   }
-  .iconPlace{
+
+  .iconPlace {
     height: 70%;
     display: flex;
     justify-content: center;
@@ -879,21 +992,25 @@ export default{
 
 // ====================================================================
 //精選內容--卡片v-for區
-.bootstrapCard{
+.bootstrapCard {
   width: 80vw;
   margin: 0 10vw;
-  h1{
+
+  h1 {
     margin: 2vh 0;
     font-weight: bold;
-    font-family:Arial Black;
+    font-family: Arial Black;
   }
-  .cardPlace{
+
+  .cardPlace {
     width: 100%;
     height: 100%;
     display: flex;
-    justify-content: flex-start; /* 控制左對齊 */
+    justify-content: flex-start;
+    /* 控制左對齊 */
     flex-wrap: wrap;
-    .card{
+
+    .card {
       width: calc(33.33% - 2vw);
       margin: 2vh 1vw;
       height: 60vh;
@@ -905,6 +1022,7 @@ export default{
       perspective: 1000px;
       // object-fit: cover;
     }
+
     .cardFront {
       width: 100%;
       height: 100%;
@@ -912,144 +1030,337 @@ export default{
       position: absolute;
       // /* 隐藏卡片背面 */
       backface-visibility: hidden;
-          img{
-            width: 100%;
-          }
-          .reserve{
-            position: absolute;
-            bottom: 3%;
-            left: 5%;
-            font-weight: bold;
-          }
-          .reservetime{
-            position: absolute;
-            bottom: 3%;
-            left: 35%;
-            font-weight: bold;
-            color: red;
-          }
-    }
-    .cardBack {
+
+      img {
         width: 100%;
-        height: 100%;
-        background-color: #0779E4;
-        color: white;
-        font-size: 26px;
-        /* 让在背面显示的内容转到背面 */
-        transform: rotateY(180deg);
-        /* 让卡片背面与正面重合 */
+      }
+
+      .reserve {
         position: absolute;
-        backface-visibility: hidden;
-        padding: 5% 5%;
-        p{
-          font-size: 12pt;
-        }
-        button{
-          border: 0;
-          border-radius: 10px;
-          font-size: 14pt;
-          color: #0779E4;
-        }
-        .btnMore{
-          margin-top: 45%;
-        }
+        bottom: 3%;
+        left: 5%;
+        font-weight: bold;
+      }
+
+      .reservetime {
+        position: absolute;
+        bottom: 3%;
+        left: 35%;
+        font-weight: bold;
+        color: red;
+      }
     }
+
+    .cardBack {
+      width: 100%;
+      height: 100%;
+      background-color: #0779E4;
+      color: white;
+      font-size: 26px;
+      /* 让在背面显示的内容转到背面 */
+      transform: rotateY(180deg);
+      /* 让卡片背面与正面重合 */
+      position: absolute;
+      backface-visibility: hidden;
+      padding: 5% 5%;
+
+      p {
+        font-size: 12pt;
+      }
+
+      button {
+        border: 0;
+        border-radius: 10px;
+        font-size: 14pt;
+        color: #0779E4;
+      }
+
+      .btnMore {
+        margin-top: 45%;
+      }
+    }
+
+    .cardBack {
+      width: 100%;
+      height: 100%;
+      background-color: #0779E4;
+      color: white;
+      font-size: 26px;
+      /* 让在背面显示的内容转到背面 */
+      transform: rotateY(180deg);
+      /* 让卡片背面与正面重合 */
+      position: absolute;
+      backface-visibility: hidden;
+      padding: 5% 5%;
+
+      p {
+        font-size: 12pt;
+      }
+
+      button {
+        border: 0;
+        border-radius: 10px;
+        font-size: 14pt;
+        color: #0779E4;
+      }
+
+      .btnMore {
+        margin-top: 50%;
+      }
+    }
+
     .carousel-control-next {
-    /* 自定義位置，可以根據需要進行微調 */
+      /* 自定義位置，可以根據需要進行微調 */
       width: 5vh;
       height: 5vh;
       border-radius: 10px;
       background-color: #0779E4;
       position: absolute;
       top: 95%;
-      right: 1%; /* 右側位置，可以調整 */
+      right: 1%;
+      /* 右側位置，可以調整 */
       transform: translateY(-50%);
-      z-index: 1; /* 確保在前景顯示 */
+      z-index: 1;
+      /* 確保在前景顯示 */
     }
   }
 }
+
 //當按鈕按下卡片可以旋轉
 .card.rotate {
-        transform: rotateY(180deg); 
-        .carousel-control-next {
-          background-color: white;
-          color: #0779E4;
-        }
-        .carousel-control-next-icon {
-          filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(100deg) brightness(200%);
-        }
+  transform: rotateY(180deg);
+
+  .carousel-control-next {
+    background-color: white;
+    color: #0779E4;
+  }
+
+  .carousel-control-next-icon {
+    filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(100deg) brightness(200%);
+  }
 }
+
 //地圖區
-.mapByMyself{
-  h1{
+.mapByMyself {
+
+  // 地圖動畫-1218測試
+  .hovered {
+    transform: scale(1.2) translate(-20px, 0);
+  }
+
+  h1 {
     margin: 2vh 10%;
     font-weight: bold;
-    font-family:Arial Black;
+    font-family: Arial Black;
   }
-  svg{
+
+  svg {
     width: 100%;
     height: 80vh;
     margin-left: auto;
     margin-right: auto;
-    
+
   }
-  .island{
-  stroke: black;
-  fill: transparent;
+
+  .island {
+    stroke: black;
+    fill: transparent;
     transition: 1s;
     cursor: pointer;
-    &:hover{
-        transform: translate(-5px,-5px);
-        box-shadow: 5px 5px  black ;
+
+    &:hover {
+      transform: translate(-5px, -5px);
+      box-shadow: 5px 5px black;
     }
   }
-  // .st0{
-  //   stroke: black;
-  //   fill: transparent;
-  //     transition: 1s;
-  //     cursor: pointer;
-  //     &:hover{
-  //         transform: translate(-5px,-5px);
-  //         box-shadow: 5px 5px  black ;
-  //     }
-  // }
-  .st0{clip-path:url(#SVGID_2_);fill:#EDEEE3;}
-	.st1{clip-path:url(#SVGID_2_);}
-	.st2{opacity:0.28;clip-path:url(#SVGID_4_);}
-	.st3{clip-path:url(#SVGID_6_);}
-	.st4{clip-path:url(#SVGID_8_);fill:url(#SVGID_9_);}
-	.st5{clip-path:url(#SVGID_11_);fill:url(#SVGID_12_);}
-	.st6{clip-path:url(#SVGID_4_);fill:#3C2315;}
-	.st7{clip-path:url(#SVGID_16_);fill:#96E096;}
-	.st8{clip-path:url(#SVGID_16_);fill:#070001;}
-	.st9{clip-path:url(#SVGID_16_);}
-	.st10{clip-path:url(#SVGID_18_);fill:#96E096;}
-	.st11{clip-path:url(#SVGID_18_);fill:#070001;}
-	.st12{clip-path:url(#SVGID_18_);}
-	.st13{clip-path:url(#SVGID_20_);fill:#96E096;}
-	.st14{clip-path:url(#SVGID_20_);fill:#070001;}
-	.st15{clip-path:url(#SVGID_20_);}
-	.st16{clip-path:url(#SVGID_22_);fill:#96E096;}
-	.st17{clip-path:url(#SVGID_22_);fill:#070001;}
-	.st18{clip-path:url(#SVGID_22_);}
-	.st19{clip-path:url(#SVGID_26_);fill:#96E096;}
-	.st20{clip-path:url(#SVGID_26_);fill:#070001;}
-	.st21{clip-path:url(#SVGID_26_);}
-	.st22{clip-path:url(#SVGID_28_);fill:#96E096;}
-	.st23{clip-path:url(#SVGID_28_);fill:#0E0E0E;}
+
+  .st0 {
+    clip-path: url(#SVGID_2_);
+    fill: #EDEEE3;
+  }
+
+  .st1 {
+    clip-path: url(#SVGID_2_);
+  }
+
+  .st2 {
+    opacity: 0.28;
+    clip-path: url(#SVGID_4_);
+  }
+
+  .st3 {
+    clip-path: url(#SVGID_6_);
+  }
+
+  .st4 {
+    clip-path: url(#SVGID_8_);
+    fill: url(#SVGID_9_);
+  }
+
+  .st5 {
+    clip-path: url(#SVGID_11_);
+    fill: url(#SVGID_12_);
+  }
+
+  .st6 {
+    clip-path: url(#SVGID_4_);
+    fill: #3C2315;
+  }
+
+  .st7 {
+    clip-path: url(#SVGID_16_);
+    fill: #96E096;
+  }
+
+  .st8 {
+    clip-path: url(#SVGID_16_);
+    fill: #070001;
+  }
+
+  .st9 {
+    clip-path: url(#SVGID_16_);
+  }
+
+  .st10 {
+    clip-path: url(#SVGID_18_);
+    fill: #96E096;
+  }
+
+  .st11 {
+    clip-path: url(#SVGID_18_);
+    fill: #070001;
+  }
+
+  .st12 {
+    clip-path: url(#SVGID_18_);
+  }
+
+  .st13 {
+    clip-path: url(#SVGID_20_);
+    fill: #96E096;
+  }
+
+  .st14 {
+    clip-path: url(#SVGID_20_);
+    fill: #070001;
+  }
+
+  .st15 {
+    clip-path: url(#SVGID_20_);
+  }
+
+  .st16 {
+    clip-path: url(#SVGID_22_);
+    fill: #96E096;
+  }
+
+  .st17 {
+    clip-path: url(#SVGID_22_);
+    fill: #070001;
+  }
+
+  .st18 {
+    clip-path: url(#SVGID_22_);
+  }
+
+  .st19 {
+    clip-path: url(#SVGID_26_);
+    fill: #96E096;
+  }
+
+  .st20 {
+    clip-path: url(#SVGID_26_);
+    fill: #070001;
+  }
+
+  .st21 {
+    clip-path: url(#SVGID_26_);
+  }
+
+  .st22 {
+    clip-path: url(#SVGID_28_);
+    fill: #96E096;
+  }
+
+  .st23 {
+    clip-path: url(#SVGID_28_);
+    fill: #0E0E0E;
+  }
 }
 
 // ====================================================================
-hr{
+hr {
   width: 80%;
-  margin: 3vh  10%;
+  margin: 3vh 10%;
   border: 3px solid black;
 }
-.footerPlace{
-    width: 100vw;
-    height: 5vh;
-    background-color:#0779E4;
+
+// 門票區
+.ticketAccess {
+  width: 80vw;
+  height: 90vh;
+  margin: 0 10vw;
+
+  h1 {
+    margin: 2vh 0;
+    font-weight: bold;
+    font-family: Arial Black;
+  }
+
+  .travelAgencyTable {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+    margin-top: 5vh;
+
+    .travelAgency {
+      padding: 10px;
+      text-align: center;
+    }
+
+    .travelAgency img {
+      width: 200px;
+      height: 70px;
+    }
+
+    h6 {
+      margin-top: 5vh;
+      margin-bottom: 0;
+    }
+  }
+
+  .onlinePlatformTable {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    text-align: center;
+    margin-top: 5vh;
+
+    .onlinePlatform {
+      padding: 10px;
+    }
+
+    .onlinePlatform img {
+      width: 200px;
+      height: 70px;
+    }
+
+    h6 {
+      margin-top: 5vh;
+      margin-bottom: 0;
+    }
+  }
+
+  p {
+    margin-top: 5vh;
+    font-weight: bold;
+  }
 }
 
+.footerPlace {
+  width: 100vw;
+  height: 5vh;
+  background-color: #0779E4;
+}
 
 </style>

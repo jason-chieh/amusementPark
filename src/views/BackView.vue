@@ -22,11 +22,6 @@ import {
     Setting,
 } from '../../node_modules/@element-plus/icons-vue'
 
-
-
-
-
-
 export default{
     data(){
             return{
@@ -57,6 +52,9 @@ export default{
                 
                 //編輯設施的時候要有一個舊name讓資料庫可以找因為我的pk是鳴子
                 editOldName:"",
+
+                //編輯使用者的時候要有一個舊account讓資料庫可以找因為我的pk是鳴子
+                editOldAccount:"",
 
                 //管理設施搜尋欄綁的變數
                 searchName:"",
@@ -278,9 +276,28 @@ export default{
         },
         goaddmanager(){
             this.changePageNum=4
+
+            this.account=""
+            this.pwd=""
+            this.place=""
+            this.worknameNum=null
+
         },
         goManageManager(){
             this.changePageNum=5
+        },
+        goEditUser(index){
+            this.changePageNum=6
+            console.log(this.allAdminUser)
+
+             
+            this.account=this.allAdminUser[index].account
+            this.pwd=this.allAdminUser[index].pwd
+            this.place=this.allAdminUser[index].managePlace
+
+            let workNum = String(this.allAdminUser[index].manageNum)
+            this.worknameNum=workNum
+            this.editOldAccount = this.allAdminUser[index].account
         },
 
 // ================================================================以上頁面跳轉框
@@ -593,6 +610,7 @@ export default{
         },
 
 
+
         //人員管理--新增人員
         createAdminUser(){
             //確定有沒有填資料
@@ -643,6 +661,7 @@ export default{
             this.place='';
             this.worknameNum=null;
         },
+        //人員管理-刪除人員
         deleteAdminUser(index){
             //後端先刪除
                 const url = 'http://localhost:8080/api/addminUser/deleteAdminuser';
@@ -672,6 +691,49 @@ export default{
                 })
             //前端要刪除
             this.allAdminUser.splice(index,1)
+        },
+        //人員管理-更新人員
+        updateAdminUser(){
+            
+
+            const url = 'http://localhost:8080/api/addminUser/updateAdminUser';
+            // 要帶入的值
+            const queryParams = new URLSearchParams({
+                oldaccount:this.editOldAccount,
+            });
+
+            console.log(this.pwd)
+
+            var data = {
+            "adminuser":{
+                "account":this.account,
+                "pwd":this.pwd,
+                "managePlace":this.place,
+                "manageNum":this.worknameNum
+                }
+            };
+            
+            // 將查詢字串附加到 URL
+            const urlWithParams = `${url}?${queryParams}`;
+
+            fetch(urlWithParams, {
+            method: "POST", 
+            body: JSON.stringify(data), // data can be `string` or {object}!
+            headers: new Headers({
+                "Accept":"application/json",
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin":"*"
+            }),
+            })
+            .then(response => {return response.json();})      // 將API回應轉換為JSON格式
+            .then(data => {
+                console.log(data)
+                return this.searchAdminUser()
+            })
+
+            this.showBlockSucess()
+            this.goManageManager()
+
         },
         //人員管理-搜尋人員
         searchAdminUser(){
@@ -789,7 +851,6 @@ export default{
         this.searchAllFacility()
         this.searchAdminUser();
 
-
         //將登入頁傳來的個人資料轉成json可讀取
         const data = JSON.parse(this.$route.query.data);
         // 輸出 'value' 拿取裡面的key
@@ -864,10 +925,6 @@ export default{
                                     <el-menu-item @click="goManageManager" style="cursor: pointer;" class="child" index="2-1">管理人員</el-menu-item>
                                     <el-menu-item @click="goaddmanager" style="cursor: pointer;" class="child" index="2-2">新增人員</el-menu-item>
                             </el-sub-menu>
-
-
-
-                        
 
                             <el-menu-item index="3">
                                 <el-icon><setting /></el-icon>
@@ -1000,7 +1057,7 @@ export default{
                     </el-form>
                 </div>
 
-                <!-- 編輯選項 -->
+                <!-- 更新選項 -->
                 <div v-show="changePageNum==3"  class="addFacility">
                     <h1 style="color:rgb(255, 255, 255); margin-left: 7vw;">更新設施</h1>
 
@@ -1147,13 +1204,53 @@ export default{
                                 <span>管轄區:{{adminuser.managePlace}}</span>
                             </div>
                             <div class="BtnPlace">
-                                <button :key="index" @click="" type="button"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button :key="index" @click="goEditUser(index)" type="button"><i class="fa-solid fa-pen-to-square"></i></button>
                                 <button :key="index" @click="sureDeleteUser(index)" type="button"><i class="fa-solid fa-trash"></i></button>
                             </div>
 
                         </div>
                     </div>
 
+                </div>
+
+                <!-- 更新管理員 -->
+                <div v-show="changePageNum==6" class="addmanager">
+                    <h1 style="color: rgb(255, 255, 255); margin-left: 7vw;">更新人員</h1>
+
+                    <el-form class="addformPlace" :model="form" label-width="120px">
+                        <el-form-item label="帳號">
+                            <el-input class="userinput" v-model="this.account" />
+                        </el-form-item>
+
+                        <el-form-item label="密碼">
+                            <el-input class="userinput" v-model="this.pwd" />
+                        </el-form-item>
+
+                        <el-form-item label="管理區域">
+                            <el-select v-model="this.place" placeholder="請選擇島嶼">
+                                <el-option label="慢活樂園島" value="慢活樂園島" />
+                                <el-option label="溫馨親子島" value="溫馨親子島" />
+                                <el-option label="驚險火山島" value="驚險火山島" />
+                                <el-option label="凍骨冰山島" value="凍骨冰山島" />
+                                <el-option label="刺激飛天島" value="刺激飛天島" />
+                                <el-option label="孤島"       value="孤島" />
+                            </el-select>
+                        </el-form-item>
+
+                        <el-form-item label="職位">
+                            <el-select v-model="this.worknameNum" placeholder="請選擇職位">
+                                <el-option label="區域總管理" value="20" />
+                                <el-option label="區域設施人員" value="10" />
+                                <el-option label="區域工讀生" value="1" />
+                            </el-select>
+                        </el-form-item>
+
+                        <el-form-item class="userBtnPlace">
+                            <el-button type="primary" @click="updateAdminUser">Update</el-button>
+                            <el-button class="userCancelBtn" @click="goManageManager">Cancel</el-button>
+                        </el-form-item>
+                        
+                    </el-form>
                 </div>
 
             </div>

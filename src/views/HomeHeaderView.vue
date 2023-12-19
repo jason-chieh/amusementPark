@@ -20,7 +20,10 @@ export default{
         },
         goLogin(){
             this.$router.push("/LoginView")
-        }
+        },
+        SearchCarPlate() {
+            this.$router.push("/SearchCarPlate")
+        },
     },
     mounted(){
 
@@ -53,7 +56,7 @@ export default{
         <div class="headerBodyRight">
             <!-- <button type="button">精選內容</button>
             <button type="button">最新消息</button> -->
-            <button type="button">停車資訊</button>
+            <button @click="SearchCarPlate()" type="button">停車資訊</button>
             <button @click="goLogin()" type="button">購票登入</button>
             <button @click="goBuyTicket()" type="button">購票通道</button>
             <!-- <button @click="goBack()" type="button">暫時性後台通道</button> -->
