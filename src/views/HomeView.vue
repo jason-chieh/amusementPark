@@ -25,13 +25,10 @@ export default{
   methods: {
     // 讓卡片們旋轉
     changeCard() {
-
       // 獲取所有的 .card 元素
       const card = event.currentTarget.closest('.card');
-
       // 對該卡片元素應用旋轉樣式
       card.classList.toggle('rotate');
-
     },
     // 跳轉到精選頁
     gofacility() {
@@ -67,7 +64,9 @@ export default{
     calculateMinute(reserveNum){
       return Math.floor(reserveNum*1.5)
     },
-
+    searchAllFaclity(){
+      const url = 'http://localhost/api/park/searchAllFaclity'
+      
       const queryParams = new URLSearchParams({
       });
 
@@ -99,6 +98,8 @@ export default{
           }
 
             // console.log(this.publishedFacility)
+    })
+  },      
 
     // 地圖島嶼要放大與顯示文字框-1218測試
     zoomAndShowText() {
@@ -172,22 +173,7 @@ export default{
     if (this.page == 2) {
       this.zoomAndShowText()
     }
-
-    // //確定登入人資料是否有資料
-    // if(!(JSON.parse(this.$route.query.data==undefined))){
-    //     //將登入頁傳來的個人資料轉成json可讀取
-    //     const data = JSON.parse(this.$route.query.data);
-    //     // 輸出 'value' 拿取裡面的key
-    //     this.loginInfo = data.key; 
-    //     console.log(this.loginInfo)
-    //     this.checkLogin =true
-    //     this.welcomePlayer(this.loginInfo.player.nickname)
-    //     return
-    // }
-
-
     console.log("未登入狀態")
-
   }
 }
 </script>
@@ -273,66 +259,6 @@ export default{
     </div>
   </div>
 
-  <!-- ========================================================================================= -->
-
-  <!-- 遊樂設施資訊 -->
-  <div v-if="page == 1" class="bootstrapCard">
-    <h1>遊樂設施</h1>
-    <div class="cardPlace">
-      <div class="card" v-for="item, index in this.publishedFacility">
-        <div class="cardFront">
-          <img :src=item.photo class="card-img-top" alt="...">
-          <div class="card-body">
-            <h5 class="card-title" style="font-size: 20pt;">{{ item.name }}</h5>
-            <p class="card-text">{{ item.description }}</p>
-          </div>
-          <button @click="changeCard()" class="carousel-control-next" type="button"
-            data-bs-target="#carouselExampleControls" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
-        </div>
-        <!-- //===================================================== -->
-        <div class="cardBack">
-          <h3>{{ item.name }}</h3>
-          <p>活動期間:{{ item.startDate }}~{{ item.endDate }}</p>
-          <p>限制年齡:{{ item.age }}</p>
-          <p>地點:{{ item.place }}</p>
-          <button class="btnMore" type="button">詳細資訊</button>
-          <button @click="changeCard(index)" class="carousel-control-next " type="button"
-            data-bs-target="#carouselExampleControls" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 地圖資訊 -->
-  <div v-if="page == 2" class="mapByMyself">
-    <h1>地圖資訊</h1>
-
-    <!-- 1215測試用 -->
-    <!-- <div class="picTestArea"> 
-      <div class="text">
-        <span style="color: white; font-size: 18pt;">慢活樂園島</span>
-        <p style="color: white;font-size: 14pt;">位於好好玩遊樂園的西部，這裡有很多慢活設施，像是旋轉木馬、咖啡杯...等等，
-          來慢活樂園島就能享受悠閒、緩慢的度假氛圍。</p>
-      </div>
-    </div> -->
-
-    <!-- Generator: Adobe Illustrator 21.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-    <svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-      <g>
-        <defs>
-          <rect id="SVGID_1_" width="841.9" height="595.3" />
-        </defs>
-        <clipPath id="SVGID_2_">
-          <use xlink:href="#SVGID_1_" style="overflow:visible;" />
-        </clipPath>
-        <rect x="0.2" y="0.1" class="st0" width="841.2" height="595.2" />
-        <g class="st1 botmap">
       <!-- ========================================================================================= -->
 
       <div v-if="page==1"  class="bootstrapCard">
@@ -380,6 +306,7 @@ export default{
         <g>
           <defs>
             <rect id="SVGID_3_" width="841.9" height="595.3" />
+            </defs>
           <clipPath id="SVGID_4_">
             <use xlink:href="#SVGID_3_" style="overflow:visible;" />
           </clipPath>
@@ -459,7 +386,7 @@ export default{
               799.1,525.9 799.1,526.8 794.2,526.8 794.2,517.5 		" />
           <polygon class="st6" points="737,517.5 738.3,517.5 735.5,526.8 734.1,526.8 732,519.3 729.7,526.8 728.4,526.9 725.8,517.5 
               727,517.5 729.1,525.4 731.4,517.5 732.7,517.5 734.8,525.4 		" />
-        </g>
+        
         <g class="st1 botmap">
           <defs>
             <rect id="SVGID_13_" width="841.9" height="595.3" />
@@ -943,7 +870,7 @@ export default{
               c5.1,3.1,10.4,3.7,13.9,3.7c1.9,0,3.2-0.2,3.7-0.2c7.5-1,13-5.1,20.2-12.4c13.7-13.7,33.7-33.9,27.6-45.7c-2.6-5.1-9.3-7.1-15.7-9
               C223.6,501.6,219.6,501.2,215.8,501.2" />
         </g>
-      </g>
+      </g>    
     </svg>
 
   </div>
