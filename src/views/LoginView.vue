@@ -36,6 +36,15 @@ export default{
                 footer: ''
             });
         },
+		//新增失敗提示窗-遊玩日還未到
+		showDateFail(){
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "遊玩日還錯誤",
+                footer: ''
+            });
+        },
 		//新增失敗提示窗-帳號密碼有空
 		showLoginFailEmpty(){
             Swal.fire({
@@ -173,6 +182,11 @@ export default{
 				this.$router.push({ path: '/PlayerOrder', query: { data: JSON.stringify({ key:this.playerLoginResult }) } });
 				return
 			}
+
+			if(this.playerLoginResult.rtncode=="PLAYDATE_IS_NOT_ALREADY"){
+				this.showDateFail()
+				return
+			}
 			//假如失敗的話就跳警告視窗
 			this.showPlayerLoginFail()
 		}
@@ -191,6 +205,56 @@ export default{
 <template>
 <HomeHeaderView  class="HomeHeaderViewClass" />
 <div class="background">
+	<div class="imgbg"></div>
+	<div class="content">
+		<i style="--i:11;color: blue;" class="fa-solid fa-sun"></i>
+		<i style="--i:21;color: blue;" class="fa-solid fa-sun"></i>
+		<i style="--i:12" class="fa-solid fa-sun"></i>
+		<i style="--i:17;color: red;" class="fa-solid fa-sun"></i>
+		<i style="--i:22" class="fa-solid fa-sun"></i>
+		<i style="--i:33" class="fa-solid fa-sun"></i>
+		<i style="--i:15" class="fa-solid fa-sun"></i>
+		<i style="--i:12;color: red;" class="fa-solid fa-sun"></i>
+		<i style="--i:11" class="fa-solid fa-sun"></i>
+		<i style="--i:2;color: blue;" class="fa-solid fa-sun"></i>
+		<i style="--i:8" class="fa-solid fa-sun"></i>
+		<i style="--i:11" class="fa-solid fa-sun"></i>
+		<i style="--i:20;color: red;" class="fa-solid fa-sun"></i>
+		<i style="--i:14" class="fa-solid fa-sun"></i>
+		<i style="--i:16" class="fa-solid fa-sun"></i>
+		<i style="--i:17" class="fa-solid fa-sun"></i>
+		<i style="--i:14;color: blue;" class="fa-solid fa-sun"></i>
+		<i style="--i:11" class="fa-solid fa-sun"></i>
+		<i style="--i:23" class="fa-solid fa-sun"></i>
+		<i style="--i:11;color: red;" class="fa-solid fa-sun"></i>
+		<i style="--i:17" class="fa-solid fa-sun"></i>
+		<i style="--i:29" class="fa-solid fa-sun"></i>
+		<i style="--i:24" class="fa-solid fa-sun"></i>
+		<i style="--i:22;color: blue;" class="fa-solid fa-sun"></i>
+		<i style="--i:11" class="fa-solid fa-sun"></i>
+		<i style="--i:26;color: blue;" class="fa-solid fa-sun"></i>
+		<i style="--i:11;color: red;" class="fa-solid fa-sun"></i>
+		<i style="--i:20" class="fa-solid fa-sun"></i>
+		<i style="--i:15" class="fa-solid fa-sun"></i>
+		<i style="--i:25" class="fa-solid fa-sun"></i>
+		<i style="--i:19;color: blue;" class="fa-solid fa-sun"></i>
+		<i style="--i:29" class="fa-solid fa-sun"></i>
+		<i style="--i:15;color: blue;" class="fa-solid fa-sun"></i>
+		<i style="--i:25;color: red;" class="fa-solid fa-sun"></i>
+		<i style="--i:19" class="fa-solid fa-sun"></i>
+		<i style="--i:29;color: red;" class="fa-solid fa-sun"></i>
+		<i style="--i:25" class="fa-solid fa-sun"></i>
+		<i style="--i:19;color: blue;" class="fa-solid fa-sun"></i>
+		<i style="--i:29" class="fa-solid fa-sun"></i>
+		<i style="--i:15;color: blue;" class="fa-solid fa-sun"></i>
+		<i style="--i:25;color: red;" class="fa-solid fa-sun"></i>
+		<i style="--i:19" class="fa-solid fa-sun"></i>
+		<i style="--i:29;color: red;" class="fa-solid fa-sun"></i>
+		<i style="--i:11;color: red;" class="fa-solid fa-sun"></i>
+		<i style="--i:17" class="fa-solid fa-sun"></i>
+		<i style="--i:29" class="fa-solid fa-sun"></i>
+
+    </div>
 	<div class="area">
 			<h1>LOGIN</h1>
 			<div style="width: 100%;display: flex;justify-content: center;" class="BtnuserOrAdminArea">
@@ -241,16 +305,52 @@ export default{
 .background{
         width: 100vw;
         height: 100vh;
-        background-color: rgb(206, 202, 181);
-        margin: 0;
-        display: flex;
-        justify-content: baseline;
-        align-items: center;
-		background-image: url("../../picture/backView/loginBG.jpg");
-		background-size: cover;
+		overflow: hidden;
+		.imgbg{
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100vw;
+			height: 85vh;
+			background-image: url("../../picture/backView/loginBG.jpg");
+			background-size:cover;
+			margin-top: 15vh;
+		}
+		
+		.content{
+			display: flex;
+			i{
+				// width: 50px;
+				// height: 50px;
+				background: transparent;
+				font-size: 28pt;
+				color: yellow;
+				animation: animate ease infinite;
+				animation-duration: calc(100s/var(--i));
+
+				&:nth-child(even){
+					background: transparent;
+				}
+
+				@keyframes animate {
+					0%{
+						transform: translateY(120vh) scale(0) rotate(0deg);
+					}
+					20%{
+						transform: translateY(100vh) scale(1) rotate(0deg);
+					}
+					100%{
+						transform: translateY(-50vh) scale(0.5) rotate(360deg);
+					}
+
+				}
+			}
+		}
 
 		
 		.area{
+			position: absolute;
+			top: 25%;
 			width: 30vw;
 			height: 60%;
 			border: 2px solid black;

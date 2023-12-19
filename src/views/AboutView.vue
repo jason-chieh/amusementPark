@@ -4,6 +4,7 @@ import HomeHeaderView from '../views/HomeHeaderView.vue'
 
 //彈跳視窗
 import Swal from 'sweetalert2'
+
 //qrcode
 import { QRious } from "https://cdn.jsdelivr.net/gh/sorcererinferior/qrious-es6@main/qrious.js"
 
@@ -147,7 +148,7 @@ export default{
 		<i style="--i:8" class="fa-solid fa-star"></i>
 		<i style="--i:11" class="fa-solid fa-star"></i>
 		<i style="--i:20" class="fa-solid fa-star"></i>
-		<i style="--i:11" class="fa-solid fa-star"></i>
+		<i style="--i:14" class="fa-solid fa-star"></i>
 		<i style="--i:16" class="fa-solid fa-star"></i>
 		<i style="--i:17" class="fa-solid fa-star"></i>
 		<i style="--i:14" class="fa-solid fa-star"></i>
@@ -164,8 +165,25 @@ export default{
 		<i style="--i:20" class="fa-solid fa-star"></i>
 		<i style="--i:15" class="fa-solid fa-star"></i>
 		<i style="--i:25" class="fa-solid fa-star"></i>
+		<i style="--i:19" class="fa-solid fa-star"></i>
+		<i style="--i:29" class="fa-solid fa-star"></i>
+		<i style="--i:15" class="fa-solid fa-star"></i>
+		<i style="--i:25" class="fa-solid fa-star"></i>
+		<i style="--i:19" class="fa-solid fa-star"></i>
+		<i style="--i:29" class="fa-solid fa-star"></i>
+		<i style="--i:19" class="fa-solid fa-star"></i>
+		<i style="--i:29" class="fa-solid fa-star"></i>
+		<i style="--i:15" class="fa-solid fa-star"></i>
+		<i style="--i:25" class="fa-solid fa-star"></i>
+		<i style="--i:19" class="fa-solid fa-star"></i>
+		<i style="--i:29" class="fa-solid fa-star"></i>
+		<i style="--i:26" class="fa-solid fa-star"></i>
 		<i style="--i:11" class="fa-solid fa-star"></i>
-		<i style="--i:11" class="fa-solid fa-star"></i>
+		<i style="--i:20" class="fa-solid fa-star"></i>
+		<i style="--i:15" class="fa-solid fa-star"></i>
+		<i style="--i:25" class="fa-solid fa-star"></i>
+		<i style="--i:19" class="fa-solid fa-star"></i>
+
     </div>
 	<!-- style="--i:11" -->
 	<div class="buyTicketPlace">
@@ -224,25 +242,16 @@ export default{
 	.content{
 		display: flex;
 		i{
-			width: 50px;
-			height: 50px;
+			// width: 50px;
+			// height: 50px;
 			background: transparent;
 			font-size: 28pt;
 			color: yellow;
-			// box-shadow: 0 0 0 10px #4fc3dc44,
-			// 0 0 80px #4fc3dc,
-			// -250px 0 #4fc3dc99,
-			// 300px 0 #ff2d7599;
-			border-radius: 50%;
 			animation: animate ease infinite;
 			animation-duration: calc(100s/var(--i));
 
 			&:nth-child(even){
 				background: transparent;
-				// box-shadow: 0 0 0 10px #ff2d7544,
-				// 0 0 100px #ff2d75,
-				// -250px 0 #4fc3dc99,
-				// 400px 0 #4fc3fc99;
 			}
 
 			@keyframes animate {

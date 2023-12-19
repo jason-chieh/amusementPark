@@ -140,6 +140,15 @@ export default{
                 return
             }
 
+            for (let i = 0; i < this.reserveFacilityArr.length; i++) {
+                if(this.reserveFacilityArr[i].facilityName==this.publishedFacility[index].name){
+                    this.checkSameReserve = 1
+                    this.showReserveFail()
+                    return
+                }
+            }
+
+
             
             const url = 'http://localhost:8080/api/park/reserveFacility';
                 // 要帶入的值
@@ -172,16 +181,6 @@ export default{
         //新增預約細項
         addReserveFacility(index){
 
-            for (let i = 0; i < this.reserveFacilityArr.length; i++) {
-                if(this.reserveFacilityArr[i].facilityName==this.publishedFacility[index].name){
-                    this.checkSameReserve = 1
-                    this.showReserveFail()
-                    return
-                }
-            }
-
-
-
             var url = "http://localhost:8080/api/park/addReserveInfo";
             var data = {
                 "reserveFacility":{
@@ -201,7 +200,11 @@ export default{
             })
             .then((res) => res.json())
             .catch((error) => console.error("Error:", error))
-            .then((response) => console.log("Success:", response));
+            .then((response) => {
+                console.log("Success:", response)
+                return this.searchReserveFacility();
+            });
+
             this.showBlockSucess()
 
         },
@@ -292,6 +295,36 @@ export default{
                     console.log(data)
                     this.reserveFacilityArr=data
                 })
+        },
+        delReserveFacility(index){
+
+            const url = 'http://localhost:8080/api/park/deleteReserveFacility';
+            // 要帶入的值
+            const queryParams = new URLSearchParams({
+                facilityname:this.reserveFacilityArr[index].facilityName,
+                uuid:this.reserveFacilityArr[index].uuid
+            });
+            // 將查詢字串附加到 URL
+            const urlWithParams = `${url}?${queryParams}`;
+
+            fetch(urlWithParams, {
+            method: "GET", 
+            headers: new Headers({
+                "Accept":"application/json",
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin":"*"
+            }),
+            })
+            .then(response => {
+            // 將API回應轉換為JSON格式
+            return response.json();
+            })
+            .then(data => {
+            // 將API回應的JSON數據設置到組件的responseData數據屬性中
+                return  this.searchFacility()
+            })
+            //把前端陣列刪掉
+            this.reserveFacilityArr.splice(index,1)
         }
         
     },
@@ -329,9 +362,9 @@ export default{
                 <div class="dropdownMenu">
                         <button type="button" class="dropbtn">預約列表</button>
                         <div class="dropcontent">
-                            <div  class="reserveBlock" v-for="reserve in this.reserveFacilityArr">
+                            <div  class="reserveBlock" v-for="reserve, index in this.reserveFacilityArr">
                                 <p>{{reserve.facilityName}}</p>
-                                <button class="banBtn" type="button"><i class="fa-solid fa-ban"></i></button>
+                                <button @click="delReserveFacility(index)" class="banBtn" type="button"><i class="fa-solid fa-ban"></i></button>
                             </div>
                         </div>
                 </div>
