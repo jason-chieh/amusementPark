@@ -164,10 +164,10 @@ export default{
             timer: 1500
             });
         },
-        //確定要刪除嗎
+        //確定要刪除嗎-設施
         sureDelete(index){
             Swal.fire({
-                title: "Are you sure?",
+                title: "確定嗎?",
                 text: "You won't be able to revert this!",
                 icon: "warning",
                 showCancelButton: true,
@@ -182,6 +182,28 @@ export default{
                     icon: "success",
                     });
                     this.delFacility(index);
+                    // console.log(index)
+                }
+                });
+        },
+        //確定要刪除嗎-使用者
+        sureDeleteUser(index){
+            Swal.fire({
+                title: "確定嗎?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                    title: "Deleted!",
+                    text: "Your file has been deleted.",
+                    icon: "success",
+                    });
+                    this.deleteAdminUser(index);
                     // console.log(index)
                 }
                 });
@@ -620,6 +642,36 @@ export default{
             this.pwd='';
             this.place='';
             this.worknameNum=null;
+        },
+        deleteAdminUser(index){
+            //後端先刪除
+                const url = 'http://localhost:8080/api/addminUser/deleteAdminuser';
+                // 要帶入的值
+                const queryParams = new URLSearchParams({
+                    account:this.allAdminUser[index].account,
+                });
+                
+                // 將查詢字串附加到 URL
+                const urlWithParams = `${url}?${queryParams}`;
+
+                fetch(urlWithParams, {
+                method: "GET", 
+                headers: new Headers({
+                    "Accept":"application/json",
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin":"*"
+                }),
+                })
+                .then(response => {
+                // 將API回應轉換為JSON格式
+                return response.json();
+                })
+                .then(data => {
+                // 將API回應的JSON數據設置到組件的responseData數據屬性中
+                    console.log(data)
+                })
+            //前端要刪除
+            this.allAdminUser.splice(index,1)
         },
         //人員管理-搜尋人員
         searchAdminUser(){
@@ -1096,7 +1148,7 @@ export default{
                             </div>
                             <div class="BtnPlace">
                                 <button :key="index" @click="" type="button"><i class="fa-solid fa-pen-to-square"></i></button>
-                                <button :key="index" @click="" type="button"><i class="fa-solid fa-trash"></i></button>
+                                <button :key="index" @click="sureDeleteUser(index)" type="button"><i class="fa-solid fa-trash"></i></button>
                             </div>
 
                         </div>
