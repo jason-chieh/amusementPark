@@ -1,6 +1,7 @@
 <script >
 import { RouterLink, RouterView } from 'vue-router'
 import HomeHeaderView from '../views/HomeHeaderView.vue'
+import Swal from 'sweetalert2'
 import axios from 'axios'
 // import Tesseract from 'tesseract.js';
 import { watch } from 'vue';
@@ -17,6 +18,7 @@ export default {
         }
     },
     methods: {
+
         cancel(){
             this.$router.push('ParkingLotInfo')
         },
@@ -28,7 +30,11 @@ export default {
         admission() {
             const regex = /^[A-Z]{3}\d{4}$/
             if (!regex.test(this.carnum) ) {
-                alert('請輸入正確車牌')
+                Swal.fire({
+                        title: '車牌格式錯誤!',
+                        confirmButtonText: 'confirm'
+                    })
+                return
             } 
             // 创建一个对象，包含请求的数据
             const requestData = {
@@ -55,11 +61,19 @@ export default {
                 console.log('Server response:', data);
                 
                 if(data.rtncode == "ADMISSION_SUCCESSFUL"){
-                    this.page = 1;
+                    this.$router.push('searchCar')
                     this.carnum = "";
-                    return alert(data.rtncode);
+                    Swal.fire({
+                        title: '歡迎蒞臨 AIR TIME!!',
+                        confirmButtonText: '確認'
+                    })
+                    this.$router.push('ParkingLotInfo')
                 } else {
-                    alert(data.rtncode)
+                    Swal.fire({
+                        title: 'Fail!',
+                        text: "不得重複入場",
+                        confirmButtonText: '確認'
+                    })
                     this.page = 0;
                 }
             
@@ -98,8 +112,8 @@ export default {
             return randomCarNum
         }
         var randomCarNum = myrandomstring();
-        this.carnum = randomCarNum
-        console.log(this.carnum)
+        const carnum = randomCarNum
+        console.log("範例車牌號碼:",carnum)
 
         // this.lang()
     },
@@ -111,7 +125,6 @@ export default {
         const hours = date.getHours()
         const minutess = date.getMinutes()
         this.nowTime = `${year}-${month}-${day}-${hours}-${minutess}`
-        console.log(this.nowTime)
     },
     components: {
         HomeHeaderView
@@ -129,43 +142,61 @@ export default {
 <template>
     <HomeHeaderView />
     <div class="SearchCarPlatePicture" v-show="page == 0">
-        <div class="SearchCarPlateTitle">
-            <h1>{{msg}}</h1>
-        </div>
+        <h1>車輛入場</h1>
         <div class="CarPlate">
-            <h3>請輸入車牌號碼</h3>
-            <h5>範例:(ABX1234)</h5>
-            <input type="text" v-model="carnum" maxlength="7" oninput="value=value.replace(/[^A-Z\d]/g,'')" />
-            <label for="">車種</label>
-            <select name="" id="" v-model="vehicleType">
-                <option value="機車">機車</option>
-                <option value="小客車">小客車</option>
-                <option value="大客車">大客車</option>
-            </select>
-        </div>
-        <div class="SearchCarPlateconfirm">
-            <button @click="cancel">取消</button>
-            <button @click="admission()">確認</button>
+            <!-- <div class="SearchCarPlateTitle">
+                <h1>{{msg}}</h1>
+            </div> -->
+            <div class="carnumInput">
+                <h2>請輸入車牌號碼 : </h2>       
+                    <input type="text" v-model="carnum" maxlength="7" placeholder="範例: ABX1234 " oninput="value=value.replace(/[^A-Z\d]/g,'')" />
+            </div>
+            <div class="vehicleTypeSelect">
+                <h2>選擇車種 : </h2>
+                <select name="" id="" v-model="vehicleType">
+                    <option value="機車">機車</option>
+                    <option value="小客車">小客車</option>
+                    <option value="大客車">大客車</option>
+                </select>
+            </div>
+            <div class="SearchCarPlateconfirm">
+                <button  class ="btn"  @click="cancel" >取消 <span></span><span></span><span></span><span></span></button>
+                <button  class ="btn"  @click="admission" >確認 <span></span><span></span><span></span><span></span></button>
+            </div>
         </div>
 
-    </div>
-    <div class="carPay" v-show="this.page == 1">
-        <!-- <h1>繳費金額</h1>
-        <h3>{{ 100 }}</h3>
-        <div class="SearchCarPlateconfirm">
-            <button @click="change()">取消</button>
-            <button @click="money()">確認繳費</button>
-        </div> -->
-        <h1>Welcome to AIR TIME~</h1>
     </div>
 </template>
 
 <style lang="scss" scoped>
+.vehicleTypeSelect{
+    display: flex;
+    margin: 1% 4.5% 0 0%;
+}
+
+select{
+    margin:  0 10px ;
+}
+
+
+input{
+    margin:  0 10px ;
+}
+.carnumInput{
+    display: flex;
+}
+
+button{
+    font-size: 16pt;
+    font-weight: bolder;
+    margin:  20px;
+}
+
 .SearchCarPlatePicture {
     height: 85vh;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
     background-color: rgb(35, 139, 224);
 }
@@ -182,7 +213,6 @@ export default {
     width: 80vw;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
     align-items: center;
     color: rgb(12, 12, 12);
 }
@@ -190,16 +220,57 @@ export default {
 .SearchCarPlateconfirm {
     width: 50vw;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
 }
 
-.carPay {
-    height: 85vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    background-color: rgb(35, 139, 224);
+.btn {
+    display: inline-block;
+    position: relative;
+    z-index: 1;
+    min-width: 200px;
+    background: #FFFFFF;
+    border: 2px solid goldenrod;
+    border-radius: 4px;
+    color: goldenrod;
+    font-size: 1rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    overflow: hidden;
+    transition: 0.5s;
+    padding: 10px 20px;
+}
+.btn span {
+    position: absolute;
+    width: 25%;
+    height: 100%;
+    background-color: goldenrod;
+    transform: translateY(150%);
+    border-radius: 50%;
+    left: calc((var(--n) - 1) * 25%);
+    transition: 0.5s;
+    transition-delay: calc((var(--n) - 1) * 0.1s);
+    z-index: -1;
+}
+.btn:hover,
+.btn:focus {
+    color: black;
+}
+.btn:hover span {
+    transform: translateY(0) scale(2);
+}
+.btn span:nth-child(1) {
+    --n: 1;
+}
+.btn span:nth-child(2) {
+    --n: 2;
+}
+.btn span:nth-child(3) {
+    --n: 3;
+}
+.btn span:nth-child(4) {
+    --n: 4;
 }
 </style>
