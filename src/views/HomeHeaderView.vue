@@ -50,16 +50,18 @@ export default{
 
 <template>
     <div class="headerBody">
+
         <div class="headerBodyLeft">
             <img @click="goHome" src="../../picture/logo/logo2.jpg" alt="">
         </div>
+
         <div class="headerBodyRight">
             <!-- <button type="button">精選內容</button>
             <button type="button">最新消息</button> -->
-            <button @click="parking()" type="button">停車資訊</button>
-            <button @click="goLogin()" type="button">購票登入</button>
-            <button @click="goBuyTicket()" type="button">購票通道</button>
-            <button @click="goBack()" type="button">暫時性後台通道</button>
+            <i class="fa-regular fa-credit-card"><button @click="goBuyTicket()" type="button">線上購票</button></i>            
+            <i class="fa-solid fa-right-to-bracket"><button @click="goLogin()" type="button">購票登入</button></i>            
+            <i class="fa-solid fa-square-parking"><button @click="parking()" type="button"> 停車資訊</button></i>    
+            <i class="fa-solid fa-road-barrier"><button @click="goBack()" type="button">臨時後台入口</button></i>     
             <!-- <i class="fa-solid fa-magnifying-glass"></i> -->
         </div>
         
@@ -88,7 +90,8 @@ export default{
     .headerBodyRight{
         width: 70%;
         display: flex;
-        justify-content: end;
+        // justify-content: end;
+        justify-content: space-around;
         align-items: center;
         button{
             color: white;

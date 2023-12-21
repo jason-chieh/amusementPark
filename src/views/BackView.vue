@@ -341,7 +341,7 @@ export default {
             this.editOldAccount = this.allAdminUser[index].account
         },
         goManageRestaurant() {
-            this.searchRestaurant()
+            this.searchAllRestaurant()
             this.changePageNum = 7
         },
         goAddRestaurant() {
@@ -1647,7 +1647,7 @@ export default {
 
             <!-- 管理餐廳 -->
             <div v-show="changePageNum == 7" class="manageRestaurant">
-                <div class="restaurantmanageTop">
+                <div class="manageTop">
                     <div class="search">
                         <h4>搜尋名稱</h4>
                         <input v-model="this.searchNameRest"
@@ -1744,7 +1744,7 @@ export default {
                         <div class="photoPlace">
                             <label for="fileRest-upload" class="custom-file-upload">選擇照片</label>
                             <input id="fileRest-upload" type="file" @change="handleFileChangeRest">
-                            <img id="addRestImg" src="" ref="preview"
+                            <img id="addRestImg" src="" ref="previewRest"
                                 style="display: none; max-width: 200px; max-height: 200px;">
                         </div>
                     </el-form-item>
@@ -2102,6 +2102,124 @@ export default {
             }
         }
 
+
+        //管理餐廳
+        .manageRestaurant {
+            position: relative;
+
+            .manageTop {
+                width: 70vw;
+                margin: 0 5vw;
+                height: 20vh;
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                // background-color: #ccc;
+                border-radius: 10px;
+                backdrop-filter: blur(10px);
+                border: 1px solid black;
+                padding: 0 8vw;
+
+                option {
+                    font-size: 16pt;
+                }
+            }
+
+            .manageBot {
+                width: 70vw;
+                margin: 0 5vw;
+                height: 70vh;
+                border-radius: 10px;
+                backdrop-filter: blur(10px);
+                border: 1px solid black;
+                margin-top: 5vh;
+                overflow: auto;
+
+
+
+                .itemBlock {
+                    width: 100%;
+                    height: calc(20%);
+                    display: flex;
+                    // border: 1px solid blue;
+                    text-align: center;
+
+                    &:hover {
+                        background-color: rgb(157, 157, 157);
+                    }
+
+                    .TextPlace {
+                        width: 70%;
+                        display: flex;
+                        justify-content: baseline;
+                        align-items: center;
+                        padding: 0 1vw;
+
+                        span {
+                            min-width: 10vw;
+                            margin-right: 5vw;
+                        }
+                    }
+
+                    .BtnPlace {
+                        width: 20%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+
+                        button {
+                            border: 0;
+                            border-radius: 10px;
+                            width: 3vw;
+                            height: 5vh;
+                            margin: 0 0.5vw;
+
+                            &:hover {
+                                background-color: black;
+                                color: white;
+                            }
+                        }
+                    }
+                }
+            }
+
+
+        }
+
+        //新增餐廳
+        .addRestaurant {
+            position: relative;
+            .formPlace {
+                padding: 3% 5%;
+            }
+            .photoPlace {
+                display: flex;
+
+                //隱藏預設的外框
+                input[type="file"] {
+                    display: none;
+                }
+
+                // 選擇按鈕外觀
+                .custom-file-upload {
+                    height: 5vh;
+                    border: 1px solid #ccc;
+                    border-radius: 5px;
+                    display: inline-block;
+                    padding: 2px 12px;
+                    cursor: pointer;
+                    background-color: #2669fb;
+                    color: black;
+                }
+
+                // 選擇 hover 或 focus ，改變其外觀
+                .custom-file-upload:hover,
+                .custom-file-upload:focus {
+                    background-color: #ffffff;
+                }
+            }
+
+        }
     }
 }
 
