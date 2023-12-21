@@ -21,21 +21,21 @@ export default{
         goLogin(){
             this.$router.push("/LoginView")
         },
-        SearchCarPlate() {
-            this.$router.push("/SearchCarPlate")
+        parking() {
+            this.$router.push("/ParkingLotInfo")
         },
     },
     mounted(){
 
     //確定登入人資料是否有資料
-    if(!(JSON.parse(this.$route.query.data==undefined))){
-        //將登入頁傳來的個人資料轉成json可讀取
-        const data = JSON.parse(this.$route.query.data);
-        // 輸出 'value' 拿取裡面的key
-        this.loginInfo = data.key; 
-        console.log(this.loginInfo)
-        return
-    }
+    // if(!(JSON.parse(this.$route.query.data==undefined))){
+    //     //將登入頁傳來的個人資料轉成json可讀取
+    //     const data = JSON.parse(this.$route.query.data);
+    //     // 輸出 'value' 拿取裡面的key
+    //     this.loginInfo = data.key; 
+    //     console.log(this.loginInfo)
+    //     return
+    // }
 
 
 
@@ -56,7 +56,7 @@ export default{
         <div class="headerBodyRight">
             <!-- <button type="button">精選內容</button>
             <button type="button">最新消息</button> -->
-            <button @click="SearchCarPlate()" type="button">停車資訊</button>
+            <button @click="parking()" type="button">停車資訊</button>
             <button @click="goLogin()" type="button">購票登入</button>
             <button @click="goBuyTicket()" type="button">購票通道</button>
             <!-- <button @click="goBack()" type="button">暫時性後台通道</button> -->
