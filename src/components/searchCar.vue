@@ -69,7 +69,7 @@ export default{
                 <th>車牌號碼</th>
                 <th>車輛種類</th>
                 <th>入場時間</th>
-                <th>出場時間</th>
+                <th>狀態</th>
             </tr>
             <!-- for Infolist -->
             <tr v-for=" info in this.parkingInfo.parkingInfoList" v-if="this.parkingInfo.parkingInfoList != null">

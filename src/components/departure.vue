@@ -47,7 +47,7 @@ export default{
                         confirmButtonText: '確認'
                     })
                     this.isPay = true;
-                    this.$router.push('ParkingLotInfo')
+                    // this.$router.push('ParkingLotInfo')
                     return
                 } else if(data.rtncode == "IS_ALREADY_PAID"){
                     Swal.fire({
@@ -56,7 +56,7 @@ export default{
                         confirmButtonText: '確認'
                     })
                     this.isPay = true;
-                    this.$router.push('ParkingLotInfo')
+                    // this.$router.push('ParkingLotInfo')
                 }
             })
             .catch(error => {
@@ -72,9 +72,6 @@ export default{
             // 將日期時間字串轉換成 JavaScript 的 Date 物件
             const date1 = new Date(dateTime1);
             const date2 = new Date();
-
-            console.log(date1)
-            console.log(date2)
             // 計算時間差（毫秒數）
             const timeDifference = date2 - date1;
             // 將毫秒數轉換成小時數
@@ -117,7 +114,7 @@ export default{
             this.timeCalculation()
         },
 
-        //下一步
+        //下一步包含刪除資訊
         next(){
             if(this.isPay == false){
                 Swal.fire({
@@ -126,8 +123,34 @@ export default{
                         confirmButtonText: '確認'
                     })
                     return
-            }
-            this.page = 2;
+            } 
+            console.log(this.carnum);
+            fetch('http://localhost:8080/api/parkingLot/deleteParkingInfo', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                license: this.carnum,
+                }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                // 处理非成功的响应
+                throw new Error(`HTTP 错误！状态码: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // 根据需要处理来自服务器的响应
+                console.log(data);
+                this.page = 2;
+                // 你可以根据响应执行额外的操作
+            })
+            .catch(error => {
+                // 处理错误，例如网络问题或服务器错误
+                console.error('删除停车信息时发生错误:', error.message);
+            });
         },
 
         //上一步
@@ -241,12 +264,23 @@ export default{
             </div>
         </div>
     </div>
-    <div v-if="page == 2" class="page1">
-        <h1>歡應再次蒞臨AIR TIME</h1>
+    <div v-if="page == 2" class="page2">
+        <div class="body">
+            <h1>歡應再次蒞臨AIR TIME</h1>
+                <button class ="btn" @click="cancel">確認<span></span><span></span><span></span><span></span></button>
+        </div>
     </div>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </template>
 <style lang="scss" scoped>
+.body{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
 .btnArea{
     width: 50vw;
     display: flex;
@@ -294,6 +328,11 @@ p{
     height: 85vh;
     display: flex;
     justify-content: center;
+    background-color: rgb(35, 139, 224);
+
+}
+.page2{
+    height: 85vh;
     background-color: rgb(35, 139, 224);
 
 }
