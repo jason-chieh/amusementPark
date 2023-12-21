@@ -4,6 +4,7 @@ import HomeHeaderView from '../views/HomeHeaderView.vue'
 
 //彈跳視窗
 import Swal from 'sweetalert2'
+
 //qrcode
 import { QRious } from "https://cdn.jsdelivr.net/gh/sorcererinferior/qrious-es6@main/qrious.js"
 
@@ -17,10 +18,155 @@ export default{
 				age:"",
 				playDate:"",
 
+				//購買人信箱跟遊玩日期
+				loseEmail:"",
+				losePlayDate:"",
 
+				//查詢購買人資料
+				playerInfo:{}
 			}
 	},
 	methods:{
+		//新增失敗提示窗
+		showBlockFail(){
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "查無資料",
+                footer: ''
+            });
+        },
+		//新增成功提示窗
+		showBlockSucess(){
+            Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "已經寄送資料去信箱",
+            showConfirmButton: false,
+            timer: 1500
+            });
+        },
+		//讓人可以選擇的checkbox
+		// async showDayCanChoose(){
+		// 	const colorsArray = this.playerInfo.playerlist;
+		// 	/* inputOptions can be an object or Promise */
+		// 		const inputOptions = new Promise((resolve) => {
+		// 		  // 模拟异步操作，在一秒后解析 Promise
+		// 			setTimeout(() => {
+		// 				const colorOptions = {};
+
+		// 				colorsArray.forEach((color, index) => {
+		// 				colorOptions[color] = `${color.playDate}`; // 根据数组索引设置颜色选项
+		// 				});
+
+		// 				resolve(colorOptions); // 解析 Promise 并返回颜色选项对象
+		// 			}, 1000);
+		// 		});
+		// 		const { value: color } = await Swal.fire({
+		// 		title: "Select color",
+		// 		input: "radio",
+		// 		inputOptions,
+		// 		inputValidator: (value) => {
+		// 			if (!value) {
+		// 			return "You need to choose something!";
+		// 			}
+		// 		}
+		// 		});
+		// 		if (color) {
+		// 		Swal.fire({ html: `You selected: ${color}` });
+		// 		}
+		// },
+		// 請輸入購買帳號
+		async getEmail() {
+			try {
+				const { value: email } = await Swal.fire({
+				title: '輸入您的電子信箱',
+				input: 'email',
+				inputLabel: 'Your email address',
+				inputPlaceholder: 'Enter your email address'
+				});
+
+				if (email) {
+				Swal.fire(`Entered email: ${email}`);
+					this.loseEmail = `${email}`
+					this.getDate()
+				}
+			} catch (error) {
+				console.error('An error occurred:', error);
+			}
+    	},	
+		//請輸入遊玩日期
+		async getDate(){
+			try {
+				const { value: date } = await Swal.fire({
+				title: '選擇遊玩日期',
+				input: 'date',
+				inputValue: new Date().toISOString().split('T')[0],
+				});
+
+
+				if (date) {
+					//將date資料取出
+					this.losePlayDate = date
+					//前往後端搜尋
+					this.searchAndSentEmail()
+				
+					Swal.fire({
+						title: "核對資料",
+						html: "信箱："+this.loseEmail+"<br>"+"日期:"+date, 
+						confirmButtonText: '確定',
+						showCloseButton: true,
+						}).then((result) => {
+							if (result.isConfirmed) {
+								if(this.playerInfo.rtncode=="PLAYER_NO_EXIST"){
+									this.showBlockFail()
+								}
+								if(this.playerInfo.rtncode=="SUCCESSFUL"){
+									this.showBlockSucess()
+								}
+
+							} else if (result.dismiss === Swal.DismissReason.cancel) {
+
+							}
+						});
+				}
+				
+			} catch (error) {
+				console.error('An error occurred:', error);
+			}
+			
+		},
+		//跟後端尋找購買人信箱跟遊玩日期
+		searchAndSentEmail(){
+			const url = 'http://localhost:8080/api/adminuser/forgetQrcode';
+                // 要帶入的值
+
+                const queryParams = new URLSearchParams({
+					email:this.loseEmail,
+					playdate:this.losePlayDate
+                });
+
+                // 將查詢字串附加到 URL
+                const urlWithParams = `${url}?${queryParams}`;
+
+                fetch(urlWithParams, {
+                method: "GET", 
+                headers: new Headers({
+                    "Accept":"application/json",
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin":"*"
+                }),
+                })
+                .then(response => {
+                // 將API回應轉換為JSON格式
+                return  response.json();
+                })
+                .then(data => {
+                // 將API回應的JSON數據設置到組件的responseData數據屬性中
+					this.playerInfo = data
+					console.log(this.playerInfo)
+                })
+		},
 		//提視窗請你填購票資料
 		showBuyFail(){
 			Swal.fire({
@@ -147,7 +293,7 @@ export default{
 		<i style="--i:8" class="fa-solid fa-star"></i>
 		<i style="--i:11" class="fa-solid fa-star"></i>
 		<i style="--i:20" class="fa-solid fa-star"></i>
-		<i style="--i:11" class="fa-solid fa-star"></i>
+		<i style="--i:14" class="fa-solid fa-star"></i>
 		<i style="--i:16" class="fa-solid fa-star"></i>
 		<i style="--i:17" class="fa-solid fa-star"></i>
 		<i style="--i:14" class="fa-solid fa-star"></i>
@@ -164,8 +310,25 @@ export default{
 		<i style="--i:20" class="fa-solid fa-star"></i>
 		<i style="--i:15" class="fa-solid fa-star"></i>
 		<i style="--i:25" class="fa-solid fa-star"></i>
+		<i style="--i:19" class="fa-solid fa-star"></i>
+		<i style="--i:29" class="fa-solid fa-star"></i>
+		<i style="--i:15" class="fa-solid fa-star"></i>
+		<i style="--i:25" class="fa-solid fa-star"></i>
+		<i style="--i:19" class="fa-solid fa-star"></i>
+		<i style="--i:29" class="fa-solid fa-star"></i>
+		<i style="--i:19" class="fa-solid fa-star"></i>
+		<i style="--i:29" class="fa-solid fa-star"></i>
+		<i style="--i:15" class="fa-solid fa-star"></i>
+		<i style="--i:25" class="fa-solid fa-star"></i>
+		<i style="--i:19" class="fa-solid fa-star"></i>
+		<i style="--i:29" class="fa-solid fa-star"></i>
+		<i style="--i:26" class="fa-solid fa-star"></i>
 		<i style="--i:11" class="fa-solid fa-star"></i>
-		<i style="--i:11" class="fa-solid fa-star"></i>
+		<i style="--i:20" class="fa-solid fa-star"></i>
+		<i style="--i:15" class="fa-solid fa-star"></i>
+		<i style="--i:25" class="fa-solid fa-star"></i>
+		<i style="--i:19" class="fa-solid fa-star"></i>
+
     </div>
 	<!-- style="--i:11" -->
 	<div class="buyTicketPlace">
@@ -194,7 +357,10 @@ export default{
 					<input v-model="this.playDate" type="date" class="form-control" placeholder="" aria-label="Username" aria-describedby="basic-addon1">
 				</div>
 			</div>
-			<button @click="buyTicket()" type="button" class="btn btn-primary">購買</button>
+			<div class="buyBtnPlace">
+				<button @click="buyTicket()" type="button" class="btn btn-primary">購買</button>
+				<button @click="getEmail" type="button" class="btn btn-primary loseBtn">遺失票卷?</button>
+			</div>
 			<img id="qrcodeImg" src="" ref="qrcodepreview" style="display: none; max-width: 200px; max-height: 200px;">
 		</form>
 	</div>
@@ -224,25 +390,16 @@ export default{
 	.content{
 		display: flex;
 		i{
-			width: 50px;
-			height: 50px;
+			// width: 50px;
+			// height: 50px;
 			background: transparent;
 			font-size: 28pt;
 			color: yellow;
-			// box-shadow: 0 0 0 10px #4fc3dc44,
-			// 0 0 80px #4fc3dc,
-			// -250px 0 #4fc3dc99,
-			// 300px 0 #ff2d7599;
-			border-radius: 50%;
 			animation: animate ease infinite;
 			animation-duration: calc(100s/var(--i));
 
 			&:nth-child(even){
 				background: transparent;
-				// box-shadow: 0 0 0 10px #ff2d7544,
-				// 0 0 100px #ff2d75,
-				// -250px 0 #4fc3dc99,
-				// 400px 0 #4fc3fc99;
 			}
 
 			@keyframes animate {
@@ -276,9 +433,13 @@ export default{
 		.testFInal{
 			margin-left: 2vw;
 		}
-		.btn{
+		.buyBtnPlace{
 			margin-top: 5vh;
-			// margin-left: 10vw;
+			display: flex;
+			justify-content: space-between;
+			.loseBtn{
+				background-color: rgb(246, 115, 115);
+			}
 		}
 	}
 
