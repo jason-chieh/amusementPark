@@ -845,7 +845,6 @@ export default {
 
       <!-- 門票通路 -->
       <div v-if="page == 4" class="ticketAccess">
-      >>>>>>> 910e58f095c0df8eda4e8b47e887f25e2f9806bf
       <h1>門票通路</h1>
       <h4><strong style="color:brown ; text-decoration:underline">販賣旅行社</strong></h4>
 
