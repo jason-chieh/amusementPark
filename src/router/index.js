@@ -50,12 +50,44 @@ const router = createRouter({
       component: () => import('../views/PlayerOrder.vue')
     },
     {
-      path: '/SearchCarPlate',
-      name: 'SearchCarPlate',
+      path: '/ParkingLotInfo',
+      name: 'ParkingLotInfo',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import('../views/SearchCarPlate.vue')
+      component: () => import('../views/ParkingLotInfo.vue')
+    },
+    {
+      path: '/admission',
+      name: 'admission',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../components/admission.vue')
+    },
+    {
+      path: '/departure',
+      name: 'departure',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../components/departure.vue')  
+    },
+    {
+      path: '/searchCar',
+      name: 'searchCar',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../components/searchCar.vue')  
+    },
+    {
+      path: '/ThreeSphere',
+      name: 'ThreeSphere',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/ThreeSphere.vue')
     },
 
 
