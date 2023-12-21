@@ -823,6 +823,163 @@ export default {
   </div>
 
 
+
+
+      <!-- 門票通路 -->
+      <div v-if="page == 4" class="ticketAccess">
+      <h1>門票通路</h1>
+      <h4><strong style="color:brown ; text-decoration:underline">販賣旅行社</strong></h4>
+
+      <div class="travelAgencyTable">
+        <div class="travelAgency">
+          <a href="https://www.colatour.com.tw/"></a>
+          <a href="https://www.colatour.com.tw/" target="_blank">
+            <img src="../../picture/travelAgency/可樂旅遊.png" alt="可樂旅遊" class="colaTour"></a>
+          <h6>可樂旅遊</h6>
+        </div>
+        <div class="travelAgency">
+          <a href="https://www.settour.com.tw/"></a>
+          <a href="https://www.settour.com.tw/" target="_blank">
+            <img src="../../picture/travelAgency/東南旅遊.png" alt="東南旅遊" class="setTour"></a>
+          <h6>東南旅遊</h6>
+        </div>
+        <div class="travelAgency">
+          <a href="https://www.liontravel.com/category/zh-tw/index"></a>
+          <a href="https://www.liontravel.com/category/zh-tw/index" target="_blank">
+            <img src="../../picture/travelAgency/雄獅旅遊.png" alt="雄獅旅遊" class="lionTravel"></a>
+          <h6>雄獅旅遊</h6>
+        </div>
+      </div>
+
+      <h4><strong style="color:brown ; text-decoration:underline">線上平台</strong></h4>
+
+      <div class="onlinePlatformTable">
+        <div class="onlinePlatform">
+          <a href="https://www.kkday.com/zh-tw" target="_blank"></a>
+            <img src="../../picture/travelAgency/kkday.png" alt="KKday" class="KKday">
+          <h6>KKday</h6>
+        </div>
+        <div class="onlinePlatform">
+          <a href="https://www.klook.com/zh-TW/">
+            <img src="../../picture/travelAgency/klook.png" alt="Klook" class="Klook"></a>
+          <h6>Klook</h6>
+        </div>
+      </div>
+
+      <h4><strong style="color:brown ; text-decoration:underline">入口處購票</strong></h4>
+      <p>可於 AIRTIME 樂園園區的入口售票處購票</p>
+      <p>* 售票處營業時間為開園前1小時前，至閉園前2小時為止</p>
+
+      </div>
+
+      <!-- 美食餐廳 -->
+      <div v-if="page == 5" class="gourmetRestaurant">
+        <h1>美味餐點</h1>
+
+        <div class="restaurant1Area">
+          <div class="leftPart1">
+            <img src="../../picture\restaurant\美式餐廳_FriBay.jpg" alt="FriBay"
+              style="width: 600px; height: 350px; display:flex; margin:auto;">
+            <!-- <img src="https://picsum.photos/700/350?random=1" style="display:flex; margin:auto;"> -->
+          </div>
+          <div class="rightPart1">
+            <h4 style="text-indent: 0.5em;"><strong>FriBay</strong></h4>
+            <p>
+              歡迎光臨「FriBay」，我們是一家正統的美式餐廳，將經典的美國美食呈現在您的餐桌上。菜單豐富多樣，包括經典牛排、芝士漢堡、香脆炸雞翅，以及創意十足的美式披薩。每一道菜品都以新鮮、高品質的食材製作，保證為您帶來極致美味的享受。「FriBay」位於樂園驚險火山島，提供寬敞明亮的用餐環境和親切的服務，讓您在這裡感受到最地道的美國風味。不論是家庭聚餐還是與朋友相聚，「FriBay」都是您品味美味、享受愉悅時光的理想之地。
+            </p>
+          </div>
+        </div>
+
+        <div class="restaurant2Area">
+          <div class="leftPart2">
+            <h4 style="text-indent: 0.5em;"><strong>Trattoria di primo</strong></h4>
+            <p>歡迎來到「Trattoria di primo」，這是一家充滿義大利風情的餐廳，為您帶來最道地的義式美食體驗。在「Trattoria di
+              primo」，您可以品嚐到新鮮的義大利麵製品、濃郁的奶酪、美味的海鮮和精心調製的義大利咖啡。用餐環境充滿藝術氛圍，讓您彷彿置身於義大利的美麗小鎮，「Trattoria di primo」都能滿足您對義大利美食的所有期待。
+            </p>
+          </div>
+          <div class="rightPart2">
+            <img src="../../picture\restaurant\義式餐廳_Trattoria di primo.jpg" alt="FriBay"
+              style="width: 600px; height: 350px; display:flex; margin:auto;">
+            <!-- <img src="https://picsum.photos/700/350?random=2" style="display:flex; margin:auto;"> -->
+          </div>
+        </div>
+
+        <div class="restaurant3Area">
+          <div class="leftPart3">
+            <img src="../../picture\restaurant\台式餐廳_台味小館.jpg" alt="FriBay"
+              style="width: 600px; height: 350px; display:flex; margin:auto;">
+            <!-- <img src="https://picsum.photos/700/350?random=3" style="display:flex; margin:auto;"> -->
+          </div>
+          <div class="rightPart3">
+            <h4 style="text-indent: 0.5em;"><strong>台味小館</strong></h4>
+            <p>
+              歡迎蒞臨「台味小館」，這邊專為您呈現正宗的台灣美食。菜單匯集了台灣各地的經典料理，從台南小吃到台北夜市，品嚐滷肉飯、蚵仔煎、牛肉麵等，彷彿帶您置身於台灣街頭美食天堂。簡約舒適的用餐環境中，新鮮食材和獨特口感保證讓您感受到家的溫馨和台灣味覺享受。「台味小館」是您感受台灣美食文化的絕佳選擇。期待為您帶來一場道地的台灣味覺之旅。
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 獨家商品 -->
+      <div v-if="page == 6" class="limitedEdition ">
+        <h1>周邊商品</h1>
+
+        <div class="souvenirShop">
+          <div class="card" style="width: 18rem;">
+            <img src="../../picture\souvenir\瑪利歐_瑪利歐造型帽.png" class="card-img-top" alt="瑪利歐造型帽">
+            <div class="card-body">
+              <h5 class="card-title">瑪利歐造型帽</h5>
+              <p class="card-text">瑪利歐突然不見蹤影，碧姬公主正好又被庫巴抓走了，這次輪到你代替瑪利歐進攻庫巴城，將任天堂經典電玩角色瑪利歐所戴的帽子實體化，適合萬聖節、派對活動時穿戴，也是朋友生日送禮的好選擇
+              </p>
+              <a href="https://www.nintendo.tw/switch/aqmxa/" target="_blank" class="btn btn-primary">詳細資訊</a>
+            </div>
+          </div>
+          <div class="card" style="width: 18rem;">
+            <img src="../../picture\souvenir\瑪莉歐_紅色龜殼聲光小夜燈.png" class="card-img-top" alt="紅色龜殼聲光小夜燈">
+            <div class="card-body">
+              <h5 class="card-title">紅龜殼聲光小夜燈</h5>
+              <p class="card-text">
+                還記得在瑪莉歐關卡中連續踩擊龜殼達到花式通關的景象嗎？或是在瑪莉歐賽車中使用龜殼陷害對手露出陰險微笑的瞬間。紅龜殼聲光小夜燈，高度約12CM，可當一般裝飾擺設,，也可當作小夜燈來使用。</p>
+                <a href="https://www.nintendo.tw/switch/aqmxa/" target="_blank" class="btn btn-primary">詳細資訊</a>
+            </div>
+          </div>
+          <div class="card" style="width: 18rem;">
+            <img src="../../picture\souvenir\瑪利歐_無敵星泡沫慕斯瓶.png" class="card-img-top" alt="無敵星泡沫慕斯瓶">
+            <div class="card-body">
+              <h5 class="card-title">無敵星泡沫慕斯瓶</h5>
+              <p class="card-text">融合瑪利歐遊戲裡的多樣元素，以問號磚塊作為設計，上頭印有瑪利歐的圖樣，壓嘴部分則是設計成無敵星的樣貌，在瓶罐中加入慕斯洗手乳，即可在按壓後擠出星型泡沫，讓小朋友愛上洗手，遠離病毒
+              </p>
+              <a href="https://www.nintendo.tw/switch/aqmxa/" target="_blank" class="btn btn-primary">詳細資訊</a>
+            </div>
+          </div>
+          <div class="card" style="width: 18rem;">
+            <img src="../../picture\souvenir\瑪利歐_食人花燈飾.png" class="card-img-top" alt="食人花燈飾">
+            <div class="card-body">
+              <h5 class="card-title">食人花燈飾</h5>
+              <p class="card-text">小巧可愛的食人花不會吃蚊蟲，但會替你照亮夜裡的黑暗，日本 Nintendo
+                官方授權英國Paladone製作，枝幹部份可調整照射方向，按動開關按鈕即可開燈，使用電池供電，自用還是送禮都是不錯的選擇</p>
+                <a href="https://www.nintendo.tw/switch/aqmxa/" target="_blank" class="btn btn-primary">詳細資訊</a>
+            </div>
+          </div>
+          <div class="card" style="width: 18rem;">
+            <img src="../../picture\souvenir\瑪利歐_鐵罐禮物組.png" class="card-img-top" alt="鐵罐禮物組">
+            <div class="card-body">
+              <h5 class="card-title">鐵罐禮物組</h5>
+              <p class="card-text">整組包含一個鐵盒、馬克杯和杯墊，鐵罐以問號磚塊罪為主題，杯墊和馬克杯分別以蘑菇和瑪利歐當作主要圖示，整體色調鮮明活潑，非常適合坐在沙發上遊玩遊戲時搭配使用，享受著無人打擾的遊戲時光
+              </p>
+              <a href="https://www.nintendo.tw/switch/aqmxa/" target="_blank" class="btn btn-primary">詳細資訊</a>
+            </div>
+          </div>
+          <div class="card" style="width: 18rem;">
+            <img src="../../picture\souvenir\瑪利歐_害羞幽靈USB燈飾.png" class="card-img-top" alt="害羞幽靈USB燈飾">
+            <div class="card-body">
+              <h5 class="card-title">害羞幽靈USB燈飾</h5>
+              <p class="card-text">小心！寂靜的夜晚裡幽靈即將出沒，害羞精靈BOO USB燈飾，適合用來作為夜間照明，也可當作療癒心靈的擺飾，體積不大，不使用時易於收納，使用USB作為燈飾電源來源，可愛的造型值得你擁有</p>
+              <a href="https://www.nintendo.tw/switch/aqmxa/" target="_blank" class="btn btn-primary">詳細資訊</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
   <!-- ========================================================================================= -->
 
   <footer class="footerPlace"></footer>
