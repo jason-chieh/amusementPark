@@ -206,7 +206,7 @@ export default{
 <HomeHeaderView  class="HomeHeaderViewClass" />
 <div class="background">
 	<div class="imgbg"></div>
-	<div class="content">
+	<!-- <div class="content">
 		<i style="--i:11;color: blue;" class="fa-solid fa-sun"></i>
 		<i style="--i:21;color: blue;" class="fa-solid fa-sun"></i>
 		<i style="--i:12" class="fa-solid fa-sun"></i>
@@ -254,7 +254,7 @@ export default{
 		<i style="--i:17" class="fa-solid fa-sun"></i>
 		<i style="--i:29" class="fa-solid fa-sun"></i>
 
-    </div>
+    </div> -->
 	<div class="area">
 			<h1>LOGIN</h1>
 			<div style="width: 100%;display: flex;justify-content: center;" class="BtnuserOrAdminArea">
