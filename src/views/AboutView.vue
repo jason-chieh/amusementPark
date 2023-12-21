@@ -8,6 +8,9 @@ import Swal from 'sweetalert2'
 //qrcode
 import { QRious } from "https://cdn.jsdelivr.net/gh/sorcererinferior/qrious-es6@main/qrious.js"
 
+//這是畫面loding
+import { ElLoading } from 'element-plus'
+
 
 export default{
 	data(){
@@ -27,6 +30,18 @@ export default{
 			}
 	},
 	methods:{
+		//畫面會黑屏loading
+		openFullScreen2(){
+            const loading = ElLoading.service({
+                lock: true,
+                text: 'searching',
+                background: 'rgba(0, 0, 0, 0.7)',
+            })
+            setTimeout(() => {
+                loading.close()
+            }, 5000)
+            
+    	},
 		//新增失敗提示窗
 		showBlockFail(){
             Swal.fire({
@@ -97,7 +112,6 @@ export default{
     	},	
 		//請輸入遊玩日期
 		async getDate(){
-			try {
 				const { value: date } = await Swal.fire({
 				title: '選擇遊玩日期',
 				input: 'date',
@@ -108,12 +122,16 @@ export default{
 				if (date) {
 					//將date資料取出
 					this.losePlayDate = date
+
+					this.openFullScreen2()
+
 					//前往後端搜尋
 					this.searchAndSentEmail()
-				
+
+					setTimeout(() => {
 					Swal.fire({
 						title: "核對資料",
-						html: "信箱："+this.loseEmail+"<br>"+"日期:"+date, 
+						html: "信箱："+this.loseEmail+"<br>"+"日期:"+this.losePlayDate, 
 						confirmButtonText: '確定',
 						showCloseButton: true,
 						}).then((result) => {
@@ -128,12 +146,9 @@ export default{
 							} else if (result.dismiss === Swal.DismissReason.cancel) {
 
 							}
-						});
+					});
+					}, 5000); // 在此設定延遲的毫秒數，這裡是延遲 3 秒 (3000 毫秒)
 				}
-				
-			} catch (error) {
-				console.error('An error occurred:', error);
-			}
 			
 		},
 		//跟後端尋找購買人信箱跟遊玩日期
