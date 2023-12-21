@@ -182,15 +182,9 @@ export default {
 </script>
 
 <template>
-    <HomeHeaderView />
-
     <div ref="scene" class="top"></div>
 </template>
 
 <style scoped>
-.top {
-    height: 50vh;
-    width: 50vw;
-    z-index: -1;
-}
+
 </style> 

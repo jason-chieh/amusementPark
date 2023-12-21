@@ -2,6 +2,7 @@
 import { RouterLink, RouterView } from 'vue-router'
 import Swal from 'sweetalert2'
 import HomeHeaderView from '../views/HomeHeaderView.vue'
+import ThreeSphereView from "../../src/views/ThreeSphere.vue";
 
 export default {
   data() {
@@ -38,6 +39,10 @@ export default {
     // 跳轉到地圖頁
     gomap() {
       this.page = 2
+    },
+    // 跳轉到3地圖
+    go3dmap() {
+      this.page = 3
     },
     // 跳轉到門票頁
     goticket() {
@@ -172,7 +177,8 @@ export default {
 
   },
   components: {
-    HomeHeaderView
+    HomeHeaderView,
+    ThreeSphereView
   },
   mounted() {
     this.searchFacility()
@@ -241,11 +247,11 @@ export default {
           </div>
           <span>地圖資訊</span>
         </div>
-        <div class="tour  block">
+        <div @click="go3dmap" class="tour  block">
           <div class="iconPlace">
             <i class="fa-solid fa-fire"></i>
           </div>
-          <span>熱門精選</span>
+          <span>3D地圖資訊</span>
         </div>
         <!-- <div class="Activity  block">
           <div class="iconPlace">
@@ -1395,6 +1401,12 @@ export default {
 
       </div>
 
+       <!-- 3d地圖資訊 -->
+      <div v-if="page == 3" class="3dAccess">
+            <ThreeSphereView />
+      </div>
+
+
       <!-- 門票通路 -->
       <div v-if="page == 4" class="ticketAccess">
 
@@ -2000,6 +2012,9 @@ hr {
   margin: 3vh 10%;
   border: 3px solid black;
 }
+
+
+
 
 // 門票區
 .ticketAccess {
