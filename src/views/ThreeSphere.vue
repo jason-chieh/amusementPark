@@ -4,16 +4,31 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import HomeHeaderView from "../views/HomeHeaderView.vue";
 
+import {mapState,mapActions} from 'pinia'
+import parkPinia from '../../src/stores/parkPinia'
+
 export default {
     data() {
         return {
-            people: 500,
-            people1: 300,
-            people2: 99,
+            flypeople:0,
+            hoursepeople: 0,
+            icepeople: 0,
+            slowpeople: 0,
+            firepeople: 0,
         };
     },
     mounted() {
+
+        let w = this.getflypeople()
+        this.flypeople = w[0];
+        this.hoursepeople = w[1];
+        this.icepeople = w[2];
+        this.slowpeople = w[3];
+        this.firepeople = w[4];
+
         this.initScence();
+        
+
     },
     methods: {
         async initScence() {
@@ -50,10 +65,10 @@ export default {
             // 雲霄飛車
             const originGeometry = new THREE.SphereGeometry(0.1);
             let originMaterial;
-            if (this.people >= 500) {
+            if (this.flypeople >= 20) {
                 originMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
             }
-            else if (this.people >= 300) {
+            else if (this.flypeople >= 10) {
                 originMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
             }
             else {
@@ -64,10 +79,10 @@ export default {
             // 摩天輪
             const originGeometry1 = new THREE.SphereGeometry(0.1);
             let originMaterial1;
-            if (this.people1 >= 500) {
+            if (this.slowpeople >= 20) {
                 originMaterial1 = new THREE.MeshBasicMaterial({ color: 0xff0000 });
             }
-            else if (this.people1 >= 300) {
+            else if (this.slowpeople >= 10) {
                 originMaterial1 = new THREE.MeshBasicMaterial({ color: 0xffff00 });
             }
             else {
@@ -78,10 +93,10 @@ export default {
             // 小馬
             const originGeometry2 = new THREE.SphereGeometry(0.1);
             let originMaterial2;
-            if (this.people1 >= 500) {
+            if (this.hoursepeople >= 20) {
                 originMaterial2 = new THREE.MeshBasicMaterial({ color: 0xff0000 });
             }
-            else if (this.people1 >= 300) {
+            else if (this.hoursepeople >= 10) {
                 originMaterial2 = new THREE.MeshBasicMaterial({ color: 0xffff00 });
             }
             else {
@@ -92,10 +107,10 @@ export default {
             // 火山歷險
             const originGeometry3 = new THREE.SphereGeometry(0.1);
             let originMaterial3;
-            if (this.people2 >= 500) {
+            if (this.firepeople >= 20) {
                 originMaterial3 = new THREE.MeshBasicMaterial({ color: 0xff0000 });
             }
-            else if (this.people2 >= 300) {
+            else if (this.firepeople >= 10) {
                 originMaterial3 = new THREE.MeshBasicMaterial({ color: 0xffff00 });
             }
             else {
@@ -106,10 +121,10 @@ export default {
             // 冰雪奇緣
             const originGeometry4 = new THREE.SphereGeometry(0.1);
             let originMaterial4;
-            if (this.people1 >= 500) {
+            if (this.icepeople >= 20) {
                 originMaterial4 = new THREE.MeshBasicMaterial({ color: 0xff0000 });
             }
-            else if (this.people1 >= 300) {
+            else if (this.icepeople >= 10) {
                 originMaterial4 = new THREE.MeshBasicMaterial({ color: 0xffff00 });
             }
             else {
@@ -175,6 +190,8 @@ export default {
                 renderer.setSize(newWidth, newHeight);
             });
         },
+        // 執行方法獲得日期 還有 設定編輯問卷的代碼
+        ...mapActions(parkPinia,["getflypeople"]),
     },
     components: { HomeHeaderView }
 };

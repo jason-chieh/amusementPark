@@ -39,7 +39,7 @@ export default{
             })
             setTimeout(() => {
                 loading.close()
-            }, 5000)
+            }, 3000)
             
     	},
 		//新增失敗提示窗
@@ -138,8 +138,7 @@ export default{
 							if (result.isConfirmed) {
 								if(this.playerInfo.rtncode=="PLAYER_NO_EXIST"){
 									this.showBlockFail()
-								}
-								if(this.playerInfo.rtncode=="SUCCESSFUL"){
+								}else{
 									this.showBlockSucess()
 								}
 

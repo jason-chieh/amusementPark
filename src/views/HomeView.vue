@@ -4,6 +4,11 @@ import Swal from 'sweetalert2'
 import HomeHeaderView from '../views/HomeHeaderView.vue'
 import ThreeSphereView from "../../src/views/ThreeSphere.vue";
 
+import {mapState,mapActions} from 'pinia'
+import parkPinia from '../../src/stores/parkPinia'
+
+
+
 export default {
   data() {
     return {
@@ -42,7 +47,34 @@ export default {
     },
     // 跳轉到3地圖
     go3dmap() {
+
+      let flypeople = 0;
+      let  hoursepeople = 0;
+      let  icepeople  = 0;
+      let  slowpeople = 0;
+      let  firepeople = 0;
+
+
+      for(let i = 0 ;i<this.publishedFacility.length;i++){
+        if(this.publishedFacility[i].place=="驚險火山島"){
+          firepeople = firepeople + this.publishedFacility[i].reserveNum
+        }
+        if(this.publishedFacility[i].place=="刺激飛天島"){
+          flypeople = flypeople + this.publishedFacility[i].reserveNum
+        }
+        if(this.publishedFacility[i].place=="慢活樂園島"){
+          slowpeople = slowpeople + this.publishedFacility[i].reserveNum
+        }
+        if(this.publishedFacility[i].place=="凍骨冰山島"){
+          icepeople = icepeople + this.publishedFacility[i].reserveNum
+        }
+        if(this.publishedFacility[i].place=="溫馨親子島"){
+          hoursepeople = hoursepeople + this.publishedFacility[i].reserveNum
+        }
+      }
+      this.setpeople(flypeople,hoursepeople,icepeople,slowpeople,firepeople)
       this.page = 3
+
     },
     // 跳轉到門票頁
     goticket() {
@@ -175,6 +207,9 @@ export default {
       });
     },
 
+    // 執行方法獲得日期 還有 設定編輯問卷的代碼
+    ...mapActions(parkPinia,["setpeople"]),
+
   },
   components: {
     HomeHeaderView,
@@ -188,6 +223,10 @@ export default {
     // if (this.page == 2) {
     //   this.zoomAndShowText()
     // }
+  },
+  computed:{
+    // 抓取pinia裡面
+    ...mapState(parkPinia,["","",""])
   }
 }
 </script>
@@ -893,7 +932,7 @@ export default {
           </div>
 
           <div class="right" ref="mapRightPlace">
-            <h1 @click="svgMoveRight">{{ this.islandName }}</h1>
+            <h1 @click="svgMoveRight">← {{ this.islandName }}</h1>
             <div class="uniqueMap">
                 <div class="uniqueMapLeft">
                   
@@ -1755,7 +1794,7 @@ export default {
       }
 
       .btnMore {
-        margin-top: 50%;
+        margin-top: 45%;
       }
     }
 

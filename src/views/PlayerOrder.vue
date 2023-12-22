@@ -268,7 +268,7 @@ export default{
 
         // //搜尋登入者的預約細項
         searchReserveFacility(){
-                const url = 'http://localhost:8080/api/park/searchReserveFacility';
+                const url = 'http://localhost:8080/api/park/searchReserveFacility1';
                 // 要帶入的值
 
                 const queryParams = new URLSearchParams({
@@ -294,7 +294,17 @@ export default{
                 // 將API回應的JSON數據設置到組件的responseData數據屬性中
                     console.log(data)
                     this.reserveFacilityArr=data
+
+
+
+                    //將所有陣列裡面照片的字串加上資料型態 讓img可以讀取
+                    for (let i = 0; i < this.reserveFacilityArr.length; i++) {
+                        var string = this.reserveFacilityArr[i].photo;
+                        this.reserveFacilityArr[i].photo = 'data:image/jpeg;base64,' + string;
+                    }
                 })
+
+
         },
         delReserveFacility(index){
 
@@ -363,8 +373,9 @@ export default{
                         <button type="button" class="dropbtn">預約列表</button>
                         <div class="dropcontent">
                             <div  class="reserveBlock" v-for="reserve, index in this.reserveFacilityArr">
+                                <img :src=reserve.photo alt="" style="height: 100%;">
                                 <p>{{reserve.facilityName}}</p>
-                                <button @click="delReserveFacility(index)" class="banBtn" type="button"><i class="fa-solid fa-ban"></i></button>
+                                <button @click="delReserveFacility(index)" class="banBtn" type="button"><i class="fa-solid fa-x"></i></button>
                             </div>
                         </div>
                 </div>
@@ -378,7 +389,7 @@ export default{
         </div>
 
         <!-- 中間變色功能列 -->
-        <div class="midHeader">
+        <!-- <div class="midHeader">
             <div @click="gofacility" class="facility   block">
                 <div class="iconPlace">
                 <i class="fa-solid fa-brands fa-fort-awesome-alt"></i>
@@ -415,7 +426,7 @@ export default{
                 </div>
                 <span>美食餐廳</span>
             </div>
-        </div>
+        </div> -->
 
         <!-- ========================================================================================= -->
 
@@ -459,7 +470,7 @@ export default{
             <h1>地圖資訊</h1>
             
     <!-- Generator: Adobe Illustrator 21.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-            <svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            <!-- <svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
             viewBox="0 0 841.9 595.3" style="enable-background:new 0 0 841.9 595.3;" xml:space="preserve">
             <g>
             <defs>
@@ -1012,7 +1023,7 @@ export default{
                 C223.6,501.6,219.6,501.2,215.8,501.2"/>
             </g>
             </g>
-            </svg>
+            </svg> -->
 
         </div>
 
@@ -1097,7 +1108,8 @@ export default{
                         display: flex;
                         align-items: center;
                         justify-content: space-between;
-                        padding: 0 10%;
+                        padding: 1% 1%;
+                        overflow: hidden;
                         p{
                             margin: 0;
                         }

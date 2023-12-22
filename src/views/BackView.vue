@@ -391,7 +391,7 @@ export default {
             // 獲取文件資料
             const file = event.target.files[0];
 
-            console.log(file)
+            
 
             if (file) {
                 const reader = new FileReader();
@@ -401,10 +401,18 @@ export default {
                     this.$refs.preview.src = e.target.result;
                     // 顯示預覽img
                     this.$refs.preview.style.display = 'block';
+                    console.log(e.target.result)
                     this.photoS = e.target.result
 
+                    
+
+                    // const addFacility = document.getElementById('addFacilityIMG')
+                    // const imgadd = document.getElementById('addFacilityImg')
+                    // imgadd.src = e.target.result
                     const img = document.getElementById('edditimgShow')
                     img.src = e.target.result
+                    // addFacility.src = e.target.result
+                    // addFacility.style.display= 'block';
                     // console.log(e.target.result)
                     // console.log(typeof e.target.result)
                 };
@@ -413,6 +421,7 @@ export default {
             }
 
         },
+        
         //新增設施---提交並傳送到後端
         onSubmit() {
             //確定有沒有填資料
@@ -695,7 +704,7 @@ export default {
         createAdminUser() {
             //確定有沒有填資料
             if (this.account == "" || this.pwd == "" || this.place == "" || this.worknameNum == 0) {
-                alert("部的微空")
+                this.showBlockFail()
                 return
             }
 
@@ -774,6 +783,14 @@ export default {
         },
         //人員管理-更新人員
         updateAdminUser() {
+            //判斷你是不是超級管理員
+            if (this.loginInfo.adminuser.account != "superadmin") {
+                //確定你有沒有權利
+                if (this.loginInfo.adminuser.managePlace != this.place || this.loginInfo.adminuser.manageNum < 20) {
+                    this.showAuthorizeFail();
+                    return
+                }
+            }
 
 
             const url = 'http://localhost:8080/api/addminUser/updateAdminUser';
@@ -1438,8 +1455,7 @@ export default {
                         <div class="photoPlace">
                             <label for="file-upload" class="custom-file-upload">選擇照片</label>
                             <input id="file-upload" type="file" @change="handleFileChange">
-                            <img id="addFacilityImg" src="" ref="preview"
-                                style="display: none; max-width: 200px; max-height: 200px;">
+                            <img id="addFacilityImg" ref="preview" src="" style="max-width: 200px; max-height: 200px;">
                         </div>
                     </el-form-item>
 
@@ -1450,7 +1466,7 @@ export default {
                 </el-form>
             </div>
 
-            <!-- 更新選項 -->
+            <!-- 更新設施 -->
             <div v-show="changePageNum == 3" class="addFacility">
                 <h1 style="color:rgb(255, 255, 255); margin-left: 7vw;">更新設施</h1>
 
@@ -1499,7 +1515,7 @@ export default {
                         <div class="photoPlace">
                             <label for="file-upload" class="custom-file-upload">選擇照片</label>
                             <input id="file-upload" type="file" @change="handleFileChange">
-                            <img id="edditimgShow" src="" style="display: none; max-width: 200px; max-height: 200px;">
+                            <img id="edditimgShow" src="" style="max-width: 200px; max-height: 200px;">
                         </div>
                     </el-form-item>
 
@@ -1646,7 +1662,7 @@ export default {
             </div>
 
             <!-- 管理餐廳 -->
-            <div v-show="changePageNum == 7" class="manageRestaurant">
+            <!-- <div v-show="changePageNum == 7" class="manageRestaurant">
                 <div class="restaurantmanageTop">
                     <div class="search">
                         <h4>搜尋名稱</h4>
@@ -1697,10 +1713,10 @@ export default {
                     </div>
                 </div>
 
-            </div>
+            </div> -->
 
             <!-- 新增餐廳 -->
-            <div v-show="changePageNum == 8" class="addRestaurant">
+            <!-- <div v-show="changePageNum == 8" class="addRestaurant">
                 <h1 style="color: rgb(255, 255, 255); margin-left: 7vw;">新增餐廳</h1>
 
                 <el-form class="formPlace" :model="form" label-width="120px">
@@ -1754,10 +1770,10 @@ export default {
                         <el-button @click="goBackHome">Cancel</el-button>
                     </el-form-item>
                 </el-form>
-            </div>
+            </div> -->
 
             <!-- 更新餐廳 -->
-            <div v-show="changePageNum == 9" class="addRestaurant">
+            <!-- <div v-show="changePageNum == 9" class="addRestaurant">
                 <h1 style="color:rgb(255, 255, 255); margin-left: 7vw;">更新餐廳</h1>
 
                 <el-form class="formPlace" :model="form" label-width="120px">
@@ -1811,7 +1827,7 @@ export default {
                         <el-button @click="goManageRestaurant">Cancel</el-button>
                     </el-form-item>
                 </el-form>
-            </div>
+            </div> -->
 
         </div>
 
