@@ -305,7 +305,7 @@ export default {
             //設定照片
             const img = document.getElementById('edditimgShow')
             img.src = this.allFacility[index].photo;
-            img.style.display = 'block'; // 顯示圖片
+             img.style.display = 'block'; // 顯示圖片
             //設定舊姓名
             this.editOldName = this.allFacility[index].name
 
@@ -315,6 +315,7 @@ export default {
             this.changePageNum = 3
             this.openFullScreen2()
         },
+
         goaddmanager() {
             this.changePageNum = 4
 
@@ -325,6 +326,7 @@ export default {
 
         },
         goManageManager() {
+
             this.changePageNum = 5
         },
         goEditUser(index) {
@@ -361,18 +363,18 @@ export default {
         goEditRestaurant(index) {
             this.nameRest = this.allRestaurant[index].name
             this.descRest = this.allRestaurant[index].description
-            this.regionRest = this.allRestaurant[index].place
+            this.regionRest = this.allRestaurant[index].region
             this.date1Rest = this.allRestaurant[index].startDate
             this.date2Rest = this.allRestaurant[index].endDate
             this.publishedRest = this.allRestaurant[index].published
             this.photoSRest = this.allRestaurant[index].photo;
 
-            //設定照片
+             //設定照片
             const img = document.getElementById('edditimgShow')
             img.src = this.allRestaurant[index].photo;
             img.style.display = 'block';    // 顯示圖片
 
-            //設定舊姓名
+            // //設定舊姓名
             this.editOldNameRest = this.allRestaurant[index].name
 
             //頁面跳轉
@@ -431,13 +433,13 @@ export default {
             }
 
             //判斷你是不是超級管理員
-            if (this.loginInfo.adminuser.account != "superadmin") {
-                //確定你有沒有權利
-                if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
-                    this.showAuthorizeFail();
-                    return
-                }
-            }
+            // if (this.loginInfo.adminuser.account != "superadmin") {
+            //     //確定你有沒有權利
+            //     if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
+            //         this.showAuthorizeFail();
+            //         return
+            //     }
+            // }
 
 
             var url = "http://localhost:8080/api/park/create";
@@ -603,13 +605,13 @@ export default {
         delFacility(index) {
 
             //判斷你是不是超級管理員
-            if (this.loginInfo.adminuser.account != "superadmin") {
-                //確定你有沒有權利
-                if (this.loginInfo.adminuser.managePlace != this.allFacility[index].place || this.loginInfo.adminuser.manageNum < 20) {
-                    this.showAuthorizeFail();
-                    return
-                }
-            }
+            // if (this.loginInfo.adminuser.account != "superadmin") {
+            //     //確定你有沒有權利
+            //     if (this.loginInfo.adminuser.managePlace != this.allFacility[index].place || this.loginInfo.adminuser.manageNum < 20) {
+            //         this.showAuthorizeFail();
+            //         return
+            //     }
+            // }
 
 
 
@@ -645,13 +647,13 @@ export default {
         updateFacility() {
 
             //判斷你是不是超級管理員
-            if (this.loginInfo.adminuser.account != "superadmin") {
-                //確定你有沒有權利
-                if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
-                    this.showAuthorizeFail();
-                    return
-                }
-            }
+            // if (this.loginInfo.adminuser.account != "superadmin") {
+            //     //確定你有沒有權利
+            //     if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
+            //         this.showAuthorizeFail();
+            //         return
+            //     }
+            // }
 
 
             const url = 'http://localhost:8080/api/park/updateFacility';
@@ -697,8 +699,6 @@ export default {
 
 
         },
-
-
 
         //人員管理--新增人員
         createAdminUser() {
@@ -920,7 +920,7 @@ export default {
 
 
         //新增餐廳---選擇照片
-        handleFileRestChange(event) {
+        handleRestFileChange(event) {
             // 獲取文件資料
             const file = event.target.files[0];
 
@@ -938,7 +938,7 @@ export default {
 
                     const img = document.getElementById('edditimgRestShow')
                     img.src = e.target.result
-                    // console.log(e.target.result)
+                    console.log(e.target.result)
                     // console.log(typeof e.target.result)
                 };
                 // 讀取文件內容
@@ -949,32 +949,30 @@ export default {
         //新增餐廳---提交並傳送到後端
         onSubmitRestaurant() {
             //確定有沒有填資料
-            if (this.nameRest == "" || this.descRest == "" || this.regionRest == "" || this.date1Rest == "" || this.date2Rest == "" || this.photoSRest == "") {
+            if (this.nameRest == "" || this.descRest == "" || this.regionRest == "" || this.date1Rest == "" || this.date2Rest == "" || this.photoS == "") {
                 this.showBlockFail();
                 return
             }
 
             //判斷你是不是超級管理員
-            if (this.loginInfo.adminuser.account != "superadmin") {
-                //確定你有沒有權利
-                if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
-                    this.showAuthorizeFail();
-                    return
-                }
-            }
+            // if (this.loginInfo.adminuser.account != "superadmin") {
+            //     //確定你有沒有權利
+            //     if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
+            //         this.showAuthorizeFail();
+            //         return
+            //     }
+            // }
 
             var url = "http://localhost:8080/api/park/createRest";
             var data = {
-                "facility": {
                     "name": this.nameRest,
                     "description": this.descRest,
-                    "place": this.regionRest,
+                    "region": this.regionRest,
                     "published": this.publishedRest,
-                    "photoS": this.photoSRest,
+                    "photoBase64": this.photoS,
                     "photo": null,
                     "startDate": this.date1Rest,
                     "endDate": this.date2Rest
-                }
             };
 
             console.log(data)
@@ -998,14 +996,14 @@ export default {
             this.date1Rest = '';
             this.date2Rest = '';
             this.publishedRest = false,
-                this.photoSRest = '';
+            this.photoS = '';
             this.$refs.preview.src = '';
 
         },
         //管理餐廳---往後端搜尋所有的餐廳-fetch
         searchAllRestaurant() {
 
-            const url = 'http://localhost:8080/api/park/getAllRestaurantFromBack';
+            const url = 'http://localhost:8080/api/park/searchAllRest';
             // 要帶入的值
 
             const queryParams = new URLSearchParams({
@@ -1028,7 +1026,8 @@ export default {
                 })
                 .then(data => {
                     // 將API回應的JSON數據設置到組件的responseData數據屬性中
-                    this.allRestaurant = data;
+                    console.log(data)
+                    this.allRestaurant = data.restaurantList;
 
                     //將所有陣列裡面照片的字串加上資料型態 讓img可以讀取
                     for (let i = 0; i < this.allRestaurant.length; i++) {
@@ -1038,16 +1037,17 @@ export default {
                 })
         },
         //管理餐廳---搜尋條件餐廳
+    
         searchConditionRestaurant() {
             this.openFullScreen2()
             //假如是否開放有帶到的話用這個三個條件的方法
             if (this.searchOpenRest != "") {
-                const url = 'http://localhost:8080/api/park/searchThreeCondition';
+                const url = 'http://localhost:8080/api/park/searchThreeConditionRestaurant';
                 // 要帶入的值
 
                 const queryParams = new URLSearchParams({
                     name: this.searchNameRest,
-                    place: this.searchPlaceRest,
+                    region: this.searchPlaceRest,
                     published: this.searchOpenRest
 
                 });
@@ -1069,7 +1069,7 @@ export default {
                     })
                     .then(data => {
                         // 將API回應的JSON數據設置到組件的responseData數據屬性中
-                        this.allRestaurant = data
+                        this.allRestaurant = data.restaurantList
                         console.log(data)
                         //將所有陣列裡面照片的字串加上資料型態 讓img可以讀取
                         for (let i = 0; i < this.allRestaurant.length; i++) {
@@ -1081,55 +1081,53 @@ export default {
                 return;
             }
 
+            const url = 'http://localhost:8080/api/park/searchTwoConditionRestaurant';
 
-            const url = 'http://localhost:8080/api/park/searchTwoConditionRest';
-            // 要帶入的值
+            // 要带入的值
+            console.log("searchNameRest:" + this.searchNameRest);
+            console.log("region:" + this.searchPlaceRest);
 
+            // 将查询参数附加到 URL
             const queryParams = new URLSearchParams({
                 name: this.searchNameRest,
-                place: this.searchPlaceRest,
-
+                region: this.searchPlaceRest,
             });
 
-            // 將查詢字串附加到 URL
+            // 将查询参数附加到 URL
             const urlWithParams = `${url}?${queryParams}`;
 
             fetch(urlWithParams, {
                 method: "GET",
                 headers: new Headers({
                     "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*"
                 }),
             })
-                .then(response => {
-                    // 將API回應轉換為JSON格式
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
-                    // 將API回應的JSON數據設置到組件的responseData數據屬性中
-                    this.allRestaurant = data
-                    console.log(data)
-                    //將所有陣列裡面照片的字串加上資料型態 讓img可以讀取
+                    // 处理返回的数据
+                    console.log(data);
+                    this.allRestaurant = data.restaurantList
                     for (let i = 0; i < this.allRestaurant.length; i++) {
-                        var string = this.allRestaurant[i].photo;
-                        this.allRestaurant[i].photo = 'data:image/jpeg;base64,' + string;
-                    }
-
+                            var string = this.allRestaurant[i].photo;
+                            this.allRestaurant[i].photo = 'data:image/jpeg;base64,' + string;
+                        }
                 })
-
+                .catch(error => {
+                    // 处理错误
+                    console.error(error);
+                });
         },
         //管理餐廳---刪除餐廳
         delRestaurant(index) {
 
             //判斷你是不是超級管理員
-            if (this.loginInfo.adminuser.account != "superadmin") {
-                //確定你有沒有權利
-                if (this.loginInfo.adminuser.managePlace != this.allFacility[index].place || this.loginInfo.adminuser.manageNum < 20) {
-                    this.showAuthorizeFail();
-                    return
-                }
-            }
+            // if (this.loginInfo.adminuser.account != "superadmin") {
+            //     //確定你有沒有權利
+            //     if (this.loginInfo.adminuser.managePlace != this.allFacility[index].place || this.loginInfo.adminuser.manageNum < 20) {
+            //         this.showAuthorizeFail();
+            //         return
+            //     }
+            // }
 
 
 
@@ -1162,59 +1160,55 @@ export default {
 
         },
         //管理餐廳---更新餐廳
-        updateRestaurant() {
+        updateRstaurant() {
 
             //判斷你是不是超級管理員
-            if (this.loginInfo.adminuser.account != "superadmin") {
-                //確定你有沒有權利
-                if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
-                    this.showAuthorizeFail();
-                    return
-                }
-            }
-
+            // if (this.loginInfo.adminuser.account != "superadmin") {
+            //     //確定你有沒有權利
+            //     if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
+            //         this.showAuthorizeFail();
+            //         return
+            //     }
+            // }
 
             const url = 'http://localhost:8080/api/park/updateRestaurant';
-            // 要帶入的值
-            const queryParams = new URLSearchParams({
-                oldname: this.editOldNameRest,
-            });
 
-            var data = {
-                "facility": {
-                    "name": this.nameRest,
-                    "description": this.descRest,
-                    "place": this.regionRest,
-                    "published": this.publishedRest,
-                    "photoS": this.photoSRest,
-                    "photo": null,
-                    "startDate": this.date1Rest,
-                    "endDate": this.date2Rest
-                }
+            // 要带入的值
+            const data = {
+                "name": this.editOldNameRest,
+                "newName": this.nameRest,
+                "description": this.descRest,
+                "region": this.regionRest,
+                "published": this.publishedRest,
+                "photoBase64": this.photoS,
+                "photo": null,
+                "startDate": this.date1Rest,
+                "endDate": this.date2Rest
             };
 
-            // 將查詢字串附加到 URL
-            const urlWithParams = `${url}?${queryParams}`;
+            console.log("data:", data);
 
-            fetch(urlWithParams, {
+            fetch(url, {
                 method: "POST",
                 body: JSON.stringify(data), // data can be `string` or {object}!
                 headers: new Headers({
                     "Accept": "application/json",
                     "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*"
+                    // Note: Access-Control-Allow-Origin is typically set by the server, not the client.
+                    // You don't need to set it here.
                 }),
             })
-                .then(response => { return response.json(); })      // 將API回應轉換為JSON格式
+                .then(response => response.json())
                 .then(data => {
-                    console.log(data)
-                    return this.searchConditionRest()
+                    console.log(data);
+                    // 在这里处理更新成功后的逻辑
+                    // 例如，你可能想调用一个函数来执行其他操作或显示消息
+                    // this.showUpdateSuccess();
                 })
-            // this.searchCondition()
-            this.showUpdateSucess()
-            this.changePageNum = 7
-
-
+                .catch(error => {
+                    console.error("Error:", error);
+                    // 在这里处理错误，例如显示错误消息
+                });
         },
 
 
@@ -1249,12 +1243,12 @@ export default {
         this.searchAdminUser();
 
         //將登入頁傳來的個人資料轉成json可讀取
-        const data = JSON.parse(this.$route.query.data);
-        // 輸出 'value' 拿取裡面的key
-        this.loginInfo = data.key;
+        // const data = JSON.parse(this.$route.query.data);
+        // // 輸出 'value' 拿取裡面的key
+        // this.loginInfo = data.key;
 
-        //登入成功的提示窗-看是誰登入
-        this.loginSucess(data.key)
+        // //登入成功的提示窗-看是誰登入
+        // this.loginSucess(data.key)
 
     },
     setup() {
@@ -1340,6 +1334,8 @@ export default {
                                 index="3-1">管理餐廳</el-menu-item>
                             <el-menu-item @click="goAddRestaurant" style="cursor: pointer;" class="child"
                                 index="3-2">新增餐廳</el-menu-item>
+                            <el-menu-item @click="goEditRestaurant" style="cursor: pointer;" class="child"
+                                index="3-3">修改餐廳</el-menu-item>
                         </el-sub-menu>
 
                     </el-menu>
@@ -1662,7 +1658,7 @@ export default {
             </div>
 
             <!-- 管理餐廳 -->
-            <!-- <div v-show="changePageNum == 7" class="manageRestaurant">
+            <div v-show="changePageNum == 7" class="manageRestaurant">
                 <div class="restaurantmanageTop">
                     <div class="search">
                         <h4>搜尋名稱</h4>
@@ -1691,32 +1687,32 @@ export default {
                             <option value="false">停止中</option>
                         </select>
                     </div>
-                    <i @click="searchConditionRest" style="font-size: 20pt;margin-left: 2vw;cursor: pointer;"
+                    <i @click="searchConditionRestaurant" style="font-size: 20pt;margin-left: 2vw;cursor: pointer;"
                         class="fa-solid fa-magnifying-glass"></i>
                 </div>
 
                 <div class="manageBot">
                     <div class="itemBlock" v-for="restaurant, index in this.allRestaurant">
-                        <img :src=restaurant.photo alt="">
+                        -<img :src=restaurant.photo alt="">
                         <div class="TextPlace">
                             <span>{{ restaurant.name }}</span>
                             <span>{{ restaurant.place }}</span>
                             <span>{{ restaurant.published == true ? "開放中" : "停止中" }}</span>
                         </div>
                         <div class="BtnPlace">
-                            <button :key="index" @click="goEdit(index)" type="button"><i
+                            <button :key="index" @click="goEditRestaurant(index)" type="button"><i
                                     class="fa-solid fa-pen-to-square"></i></button>
-                            <button :key="index" @click="sureDelete(index)" type="button"><i
+                            <button :key="index" @click="sureDeleteRest(index)" type="button"><i
                                     class="fa-solid fa-trash"></i></button>
                         </div>
 
-                    </div>
+                    </div> 
                 </div>
 
-            </div> -->
+            </div> 
 
             <!-- 新增餐廳 -->
-            <!-- <div v-show="changePageNum == 8" class="addRestaurant">
+            <div v-show="changePageNum == 8" class="addRestaurant">
                 <h1 style="color: rgb(255, 255, 255); margin-left: 7vw;">新增餐廳</h1>
 
                 <el-form class="formPlace" :model="form" label-width="120px">
@@ -1759,7 +1755,7 @@ export default {
                     <el-form-item label="選擇照片">
                         <div class="photoPlace">
                             <label for="fileRest-upload" class="custom-file-upload">選擇照片</label>
-                            <input id="fileRest-upload" type="file" @change="handleFileChangeRest">
+                            <input id="fileRest-upload" type="file" @change="handleFileChange">
                             <img id="addRestImg" src="" ref="previewRest"
                                 style="display: none; max-width: 200px; max-height: 200px;">
                         </div>
@@ -1770,17 +1766,15 @@ export default {
                         <el-button @click="goBackHome">Cancel</el-button>
                     </el-form-item>
                 </el-form>
-            </div> -->
+            </div>
 
             <!-- 更新餐廳 -->
-            <!-- <div v-show="changePageNum == 9" class="addRestaurant">
+            <div v-show="changePageNum == 9" class="addRestaurant">
                 <h1 style="color:rgb(255, 255, 255); margin-left: 7vw;">更新餐廳</h1>
-
                 <el-form class="formPlace" :model="form" label-width="120px">
                     <el-form-item label="餐廳名稱">
                         <el-input v-model="this.nameRest" />
                     </el-form-item>
-
                     <el-form-item label="餐廳詳情">
                         <el-input v-model="this.descRest" type="textarea" />
                     </el-form-item>
@@ -1816,19 +1810,18 @@ export default {
                     <el-form-item label="選擇照片">
                         <div class="photoPlace">
                             <label for="file-upload" class="custom-file-upload">選擇照片</label>
-                            <input id="file-upload" type="file" @change="handleFileRestChange">
+                            <input id="file-upload" type="file" @change="handleRestFileChange">
                             <img id="edditimgShow" src="" style="display: none; max-width: 200px; max-height: 200px;">
                         </div>
                     </el-form-item>
 
                     <el-form-item>
                         <el-button style="background-color: rgb(0, 174, 0);" type="primary"
-                            @click="updateFacility">Update</el-button>
+                            @click="updateRstaurant">Update</el-button>
                         <el-button @click="goManageRestaurant">Cancel</el-button>
                     </el-form-item>
                 </el-form>
-            </div> -->
-
+            </div> 
         </div>
 
         <!-- 使用者資訊 -->
