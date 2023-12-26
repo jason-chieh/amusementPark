@@ -4,13 +4,13 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import HomeHeaderView from "../views/HomeHeaderView.vue";
 
-import {mapState,mapActions} from 'pinia'
+import { mapState, mapActions } from 'pinia'
 import parkPinia from '../../src/stores/parkPinia'
 
 export default {
     data() {
         return {
-            flypeople:0,
+            flypeople: 0,
             hoursepeople: 0,
             icepeople: 0,
             slowpeople: 0,
@@ -27,7 +27,7 @@ export default {
         this.firepeople = w[4];
 
         this.initScence();
-        
+
 
     },
     methods: {
@@ -40,7 +40,7 @@ export default {
             camera.position.y = 0;
             camera.position.z = 5;
             // 炫染畫面
-            const renderer = new THREE.WebGLRenderer();
+            const renderer = new THREE.WebGLRenderer({ alpha: true }); // 設定 alpha 為 true
             renderer.setSize(window.innerWidth, window.innerHeight);
             this.$refs.scene.appendChild(renderer.domElement);
             // 軌道控制
@@ -191,7 +191,7 @@ export default {
             });
         },
         // 執行方法獲得日期 還有 設定編輯問卷的代碼
-        ...mapActions(parkPinia,["getflypeople"]),
+        ...mapActions(parkPinia, ["getflypeople"]),
     },
     components: { HomeHeaderView }
 };
@@ -199,9 +199,76 @@ export default {
 </script>
 
 <template>
+    <div class="cor"></div>
+    <p class="corP">人數：２０以上</p>
+    <div class="cor1"></div>
+    <p class="cor1P">人數：１０～１９</p>
+    <div class="cor2"></div>
+    <p class="cor2P">人數：０～９</p>
     <div ref="scene" class="top"></div>
 </template>
 
 <style scoped>
+.top {
+    background-color: none;
+    position: relative;
+    z-index: 0;
+}
 
+.cor {
+    height: 5vh;
+    width: 3vw;
+    background-color: rgb(249, 5, 5);
+    border-radius: 55%;
+    position: absolute;
+    display: flex;
+}
+
+.corP {
+    height: 15vh;
+    width: 20vw;
+    /* background-color: rgb(249, 5, 5); */
+    border-radius: 55%;
+    position: absolute;
+    display: flex;
+    margin-left: 5%;
+}
+
+.cor1 {
+    height: 5vh;
+    width: 3vw;
+    background-color: rgb(229, 249, 5);
+    border-radius: 55%;
+    position: absolute;
+    margin-top: 5%;
+}
+.cor1P {
+    height: 15vh;
+    width: 20vw;
+    /* background-color: rgb(249, 5, 5); */
+    border-radius: 55%;
+    position: absolute;
+    display: flex;
+    margin-top: 5%;
+    margin-left: 5%;
+}
+.cor2 {
+    height: 5vh;
+    width: 3vw;
+    background-color: rgb(9, 249, 5);
+    border-radius: 55%;
+    position: absolute;
+    margin-top: 10%;
+}
+.cor2P {
+    height: 15vh;
+    width: 20vw;
+    /* background-color: rgb(249, 5, 5); */
+    border-radius: 55%;
+    position: absolute;
+    display: flex;
+    margin-left: 5%;
+    margin-top: 10%;
+
+}
 </style> 
