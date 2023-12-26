@@ -1,24 +1,24 @@
 <script>
 import HomeHeaderView from '../views/HomeHeaderView.vue'
-export default{
-    data(){
-        return{
-            license:"",
-            parkingInfo:[],
+export default {
+    data() {
+        return {
+            license: "",
+            parkingInfo: [],
         }
     },
 
-    methods:{
-         //轉換時間單位
+    methods: {
+        //轉換時間單位
         formatDate(dateTime) {
-        const formattedDate = new Date(dateTime).toLocaleString('zh-TW', {
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric',
-        });
-        return formattedDate;
+            const formattedDate = new Date(dateTime).toLocaleString('zh-TW', {
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+            });
+            return formattedDate;
         },
 
         search() {
@@ -36,15 +36,15 @@ export default{
                     'Content-Type': 'application/json',
                 },
             })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data)
-                this.parkingInfo = data;
-                this.license = "";
-            })
-            .catch(error => {
-                console.error('发生错误:', error);
-            });
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    this.parkingInfo = data;
+                    this.license = "";
+                })
+                .catch(error => {
+                    console.error('发生错误:', error);
+                });
         }
     },
 
@@ -52,7 +52,7 @@ export default{
         HomeHeaderView
     },
 
-    mounted(){
+    mounted() {
         this.search();
     }
 }
@@ -60,77 +60,98 @@ export default{
 <template>
     <HomeHeaderView />
     <div class="body">
+
         <div class="mainArea">
-            <h1>查詢車輛</h1>
+
+            <h1 style="margin-top: 3vh;">查詢車輛</h1>
             <input type="text" v-model="this.license">
-            <button @click="search">搜尋</button>
-        <table>
-            <tr>
-                <th>車牌號碼</th>
-                <th>車輛種類</th>
-                <th>入場時間</th>
-                <th>狀態</th>
-            </tr>
-            <!-- for Infolist -->
-            <tr v-for=" info in this.parkingInfo.parkingInfoList" v-if="this.parkingInfo.parkingInfoList != null">
-                <td>{{ info.license }}</td>
-                <td>{{ info.vehicleType }}</td>
-                <td>{{ formatDate(info.admissionTime) }}</td>
-                <td v-if="info.departureTime ==null"> 尚未離場</td>
-                <td v-else>{{ formatDate(info.departureTime) }}</td>
-            </tr>
-            <!-- for singleInfo -->
-            <tr v-else-if="this.parkingInfo.parkingLot !=null">
-                <td>{{ this.parkingInfo.parkingLot.license }}</td>
-                <td>{{ this.parkingInfo.parkingLot.vehicleType }}</td>
-                <td>{{ formatDate(this.parkingInfo.parkingLot.admissionTime) }}</td>
-                <td v-if="this.parkingInfo.parkingLot.departureTime ==null"> 尚未離場</td>
-                <td v-else>{{ formatDate(this.parkingInfo.parkingLot.departureTime) }}</td>
-            </tr>
-        </table>
+            <button @click="search" style="margin-left: 2vw;">搜尋</button>
+
+            <table>
+                <tr>
+                    <th>車牌號碼</th>
+                    <th>車輛種類</th>
+                    <th>入場時間</th>
+                    <th>狀態</th>
+                </tr>
+
+                <!-- for Infolist -->
+                <tr v-for=" info in this.parkingInfo.parkingInfoList" v-if="this.parkingInfo.parkingInfoList != null">
+                    <td>{{ info.license }}</td>
+                    <td>{{ info.vehicleType }}</td>
+                    <td>{{ formatDate(info.admissionTime) }}</td>
+                    <td v-if="info.departureTime == null"> 尚未離場</td>
+                    <td v-else>{{ formatDate(info.departureTime) }}</td>
+                </tr>
+
+                <!-- for singleInfo -->
+                <tr v-else-if="this.parkingInfo.parkingLot != null">
+                    <td>{{ this.parkingInfo.parkingLot.license }}</td>
+                    <td>{{ this.parkingInfo.parkingLot.vehicleType }}</td>
+                    <td>{{ formatDate(this.parkingInfo.parkingLot.admissionTime) }}</td>
+                    <td v-if="this.parkingInfo.parkingLot.departureTime == null"> 尚未離場</td>
+                    <td v-else>{{ formatDate(this.parkingInfo.parkingLot.departureTime) }}</td>
+                </tr>
+
+            </table>
+
         </div>
 
-</div>
+    </div>
+
 </template>
 <style lang="scss" scoped>
-
-.mainArea{
-    width: 90%;
-    height: 100%;
-    margin-top: 1%;
-}
-
-table{
-    width: 100%;
-    background-color: whitesmoke;
-    margin-top: 2%;
-}
-td{
-    width: 20%;
-    text-align: center;
-    font-size: 16pt;
-    font-weight:bold;
-    border: 1px black solid;
-}
-th{
-    width: 25%;
-    text-align: center;
-    font-size: 16pt;
-    font-weight:bold;
-    color: white;
-    background-color: rgb(35, 139, 224);
-    border: 1px black solid;
-}
-
-tr{
-    border: 1px black solid;
-}
-
-.body{
+.body {
+    width: 100vw;
     height: 85vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgb(35, 139, 224);
+    // background-color: rgb(35, 139, 224);
+    background-image: url(../../picture/parking/parking_background.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
+
+.mainArea {
+    width: 90%;
+    height: 100%;
+    // margin-top: 1%;
+}
+
+table {
+    width: 100%;
+    // background-color: whitesmoke;
+    margin-top: 2%;
+}
+
+td {
+    width: 20%;
+    text-align: center;
+    font-size: 16pt;
+    font-weight: bold;
+    border: 1px black solid;
+}
+
+th {
+    width: 25%;
+    text-align: center;
+    font-size: 16pt;
+    font-weight: bold;
+    border: 1px black solid;
+    background-color: white;
+    // color: white;
+    // background-color: rgb(35, 139, 224);
+    // background-image: url(../../picture/parking/parking_background.png);
+    // background-repeat: no-repeat;
+    // background-size: cover;
+    // background-position: center;
+}
+
+tr {
+    border: 1px black solid;
+}
+
+
 </style>
