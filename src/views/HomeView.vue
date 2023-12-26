@@ -1492,14 +1492,14 @@ export default {
 
   <!-- 3d地圖資訊 -->
   <div v-if="page == 3" class="3dAccess">
-    <div class="ThreeSphereViewInf">
+    <!-- <div class="ThreeSphereViewInf">
         <span style="width:20px;height:20px;background-color: red;margin: 0 1vw;border-radius: 50%;"></span>
         <span>人數大於20人</span>
         <span style="width:20px;height:20px;background-color: yellow;margin: 0 1vw;border-radius: 50%;"></span>
         <span>人數介於10人~20人</span>
         <span style="width:20px;height:20px;background-color: green;margin: 0 1vw;border-radius: 50%;"></span>
         <span>人數小於10人</span>
-    </div>
+    </div> -->
     <ThreeSphereView />
   </div>
 
