@@ -61,7 +61,7 @@ export default{
             <i class="fa-regular fa-credit-card"><button @click="goBuyTicket()" type="button">線上購票</button></i>            
             <i class="fa-solid fa-right-to-bracket"><button @click="goLogin()" type="button">購票登入</button></i>            
             <i class="fa-solid fa-square-parking"><button @click="parking()" type="button"> 停車資訊</button></i>    
-            <i class="fa-solid fa-road-barrier"><button @click="goBack()" type="button">臨時後台入口</button></i>     
+            <!-- <i class="fa-solid fa-road-barrier"><button @click="goBack()" type="button">臨時後台入口</button></i>       -->
             <!-- <i class="fa-solid fa-magnifying-glass"></i> -->
         </div>
         

@@ -27,8 +27,6 @@ export default {
         this.firepeople = w[4];
 
         this.initScence();
-
-
     },
     methods: {
         async initScence() {
@@ -200,75 +198,94 @@ export default {
 
 <template>
     <div class="cor"></div>
-    <p class="corP">人數：２０以上</p>
+    <p class="corP">２０ 人以上</p>
     <div class="cor1"></div>
-    <p class="cor1P">人數：１０～１９</p>
+    <p class="cor1P">１０～１９人</p>
     <div class="cor2"></div>
-    <p class="cor2P">人數：０～９</p>
+    <p class="cor2P">０～９人</p>
     <div ref="scene" class="top"></div>
 </template>
 
 <style scoped>
 .top {
-    background-color: none;
+    background: none;
     position: relative;
     z-index: 0;
 }
 
 .cor {
-    height: 5vh;
-    width: 3vw;
+    height: 3vh;
+    width: 1.5vw;
     background-color: rgb(249, 5, 5);
     border-radius: 55%;
     position: absolute;
     display: flex;
+    z-index: 1;
+    margin-top: 15%;
+    margin-left: 20%;
 }
 
 .corP {
     height: 15vh;
     width: 20vw;
-    /* background-color: rgb(249, 5, 5); */
     border-radius: 55%;
     position: absolute;
     display: flex;
-    margin-left: 5%;
+    margin-top: 14.8%;
+    margin-left: 25%;
+    z-index: 1;
+    font-family: Noto Sans Japanese;
+    font-weight: bolder;
+    font-size: 16pt;
 }
 
 .cor1 {
-    height: 5vh;
-    width: 3vw;
-    background-color: rgb(229, 249, 5);
+    height: 3vh;
+    width: 1.5vw;
+    background-color: rgb(204, 222, 3);
     border-radius: 55%;
     position: absolute;
-    margin-top: 5%;
+    margin-top: 20%;
+    margin-left: 20%;
+    z-index: 1;
+
 }
+
 .cor1P {
     height: 15vh;
     width: 20vw;
-    /* background-color: rgb(249, 5, 5); */
     border-radius: 55%;
     position: absolute;
     display: flex;
-    margin-top: 5%;
-    margin-left: 5%;
+    margin-top: 19.8%;
+    margin-left: 25%;
+    z-index: 1;
+    font-family: Noto Sans Japanese;
+    font-weight: bolder;
+    font-size: 16pt;
 }
+
 .cor2 {
-    height: 5vh;
-    width: 3vw;
+    height: 3vh;
+    width: 1.5vw;
     background-color: rgb(9, 249, 5);
     border-radius: 55%;
     position: absolute;
-    margin-top: 10%;
+    margin-top: 25%;
+    margin-left: 20%;
+    z-index: 1;
 }
+
 .cor2P {
     height: 15vh;
     width: 20vw;
-    /* background-color: rgb(249, 5, 5); */
     border-radius: 55%;
     position: absolute;
     display: flex;
-    margin-left: 5%;
-    margin-top: 10%;
-
-}
-</style> 
+    margin-top: 24.8%;
+    margin-left: 25%;
+    z-index: 1;
+    font-family: Noto Sans Japanese;
+    font-weight: bolder;
+    font-size: 16pt;
+}</style> 
