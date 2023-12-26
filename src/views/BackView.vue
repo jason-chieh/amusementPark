@@ -1691,7 +1691,7 @@ export default {
                         class="fa-solid fa-magnifying-glass"></i>
                 </div>
 
-                <div class="manageBot">
+                <div class="restaurantmanageBot">
                     <div class="itemBlock" v-for="restaurant, index in this.allRestaurant">
                         -<img :src=restaurant.photo alt="">
                         <div class="TextPlace">
@@ -1882,7 +1882,8 @@ export default {
             left: 0;
             right: 0;
             opacity: 0.5;
-            background-image: url("../../picture/backView/pexels-lisa-fotios-6477673.jpg");
+            background-image: url("../../picture/backView/amusement-park.png");
+            // background-image: url("../../picture/backView/pexels-lisa-fotios-6477673.jpg");
             background-repeat: no-repeat;
             background-size: cover;
 
@@ -2116,7 +2117,7 @@ export default {
         .manageRestaurant {
             position: relative;
 
-            .manageTop {
+            .restaurantmanageTop {
                 width: 70vw;
                 margin: 0 5vw;
                 height: 20vh;
@@ -2134,7 +2135,7 @@ export default {
                 }
             }
 
-            .manageBot {
+            .restaurantmanageBot {
                 width: 70vw;
                 margin: 0 5vw;
                 height: 70vh;
