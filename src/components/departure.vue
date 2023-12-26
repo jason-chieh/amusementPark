@@ -2,70 +2,70 @@
 import HomeHeaderView from '../views/HomeHeaderView.vue'
 import Swal from 'sweetalert2'
 
-export default{
-    data(){
-        return{
-            parkingInfo:[],
-            carnum:"",
-            departureTime:"",
+export default {
+    data() {
+        return {
+            parkingInfo: [],
+            carnum: "",
+            departureTime: "",
             nowTime: 0,
-            parkingFee:0,
+            parkingFee: 0,
             page: 0,
             msg: "浪漫遨遊~天空比鄰!!!",
             intervalId: null,
-            isPay:false,
+            isPay: false,
 
 
         }
     },
-    methods:{
+    methods: {
         //departure
-        departure(){
+        departure() {
             // 假設有以下 JSON 數據
             const departureData = {
-            "license": this.carnum,
-            "parkingFee": this.parkingFee
-            
+                "license": this.carnum,
+                "parkingFee": this.parkingFee
+
             };
 
             // 使用 Fetch API 發送 POST 請求
             fetch('http://localhost:8080/api/parkingLot/departure', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(departureData),
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(departureData),
             })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                // 在這裡處理 API 的響應
-                if(data.rtncode == "PAYMENT_SUCCESSFUL" ){
-                    Swal.fire({
-                        title: 'successful!',
-                        text: '付款成功!!',
-                        confirmButtonText: '確認'
-                    })
-                    this.isPay = true;
-                    // this.$router.push('ParkingLotInfo')
-                    return
-                } else if(data.rtncode == "IS_ALREADY_PAID"){
-                    Swal.fire({
-                        title: 'Fail!',
-                        text: '已經付款!!',
-                        confirmButtonText: '確認'
-                    })
-                    this.isPay = true;
-                    // this.$router.push('ParkingLotInfo')
-                }
-            })
-            .catch(error => {
-                console.error('發生錯誤:', error);
-            });
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    // 在這裡處理 API 的響應
+                    if (data.rtncode == "PAYMENT_SUCCESSFUL") {
+                        Swal.fire({
+                            title: 'successful!',
+                            text: '付款成功!!',
+                            confirmButtonText: '確認'
+                        })
+                        this.isPay = true;
+                        // this.$router.push('ParkingLotInfo')
+                        return
+                    } else if (data.rtncode == "IS_ALREADY_PAID") {
+                        Swal.fire({
+                            title: 'Fail!',
+                            text: '已經付款!!',
+                            confirmButtonText: '確認'
+                        })
+                        this.isPay = true;
+                        // this.$router.push('ParkingLotInfo')
+                    }
+                })
+                .catch(error => {
+                    console.error('發生錯誤:', error);
+                });
         },
 
         //停車費計算
-        timeCalculation(){
+        timeCalculation() {
             const originalDateTimeObj = new Date(this.parkingInfo.admissionTime);
             const dateTime1 = originalDateTimeObj;
 
@@ -77,12 +77,12 @@ export default{
             // 將毫秒數轉換成小時數
             const hoursDifference = Math.floor(timeDifference / (1000 * 60 * 60));
             console.log("兩個日期時間之間的時間差（小時）：", hoursDifference);
-            this.parkingFee = 10*hoursDifference;
+            this.parkingFee = 10 * hoursDifference;
 
         },
 
         //當下時間for離場
-        nowDateTime(){
+        nowDateTime() {
             const date = new Date();
             const year = date.getFullYear();
             const month = date.getMonth() + 1;
@@ -91,8 +91,8 @@ export default{
             const minutes = date.getMinutes();
             let period = '上午'; // 預設為上午
             if (hours >= 12) {
-            // 如果小時數大於等於12，表示下午
-            period = '下午';
+                // 如果小時數大於等於12，表示下午
+                period = '下午';
             }
             // 處理小時數為12小時制
             const formattedHours = hours % 12 || 12;
@@ -102,7 +102,7 @@ export default{
 
         //進場時間格式轉換
         formatDatetime() {
-        // 將ISO格式轉換為年月日時分格式
+            // 將ISO格式轉換為年月日時分格式
             const originalDateTimeObj = new Date(this.parkingInfo.admissionTime);
             this.departureTime = originalDateTimeObj.toLocaleString("zh-TW", {
                 year: "numeric",
@@ -115,93 +115,93 @@ export default{
         },
 
         //下一步包含刪除資訊
-        next(){
-            if(this.isPay == false){
+        next() {
+            if (this.isPay == false) {
                 Swal.fire({
-                        title: 'Fail!',
-                        text: '請先繳納停車費!!',
-                        confirmButtonText: '確認'
-                    })
-                    return
-            } 
+                    title: 'Fail!',
+                    text: '請先繳納停車費!!',
+                    confirmButtonText: '確認'
+                })
+                return
+            }
             console.log(this.carnum);
             fetch('http://localhost:8080/api/parkingLot/deleteParkingInfo', {
                 method: 'POST',
                 headers: {
-                'Content-Type': 'application/json',
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                license: this.carnum,
+                    license: this.carnum,
                 }),
             })
-            .then(response => {
-                if (!response.ok) {
-                // 处理非成功的响应
-                throw new Error(`HTTP 错误！状态码: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                // 根据需要处理来自服务器的响应
-                console.log(data);
-                this.page = 2;
-                // 你可以根据响应执行额外的操作
-            })
-            .catch(error => {
-                // 处理错误，例如网络问题或服务器错误
-                console.error('删除停车信息时发生错误:', error.message);
-            });
+                .then(response => {
+                    if (!response.ok) {
+                        // 处理非成功的响应
+                        throw new Error(`HTTP 错误！状态码: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // 根据需要处理来自服务器的响应
+                    console.log(data);
+                    this.page = 2;
+                    // 你可以根据响应执行额外的操作
+                })
+                .catch(error => {
+                    // 处理错误，例如网络问题或服务器错误
+                    console.error('删除停车信息时发生错误:', error.message);
+                });
         },
 
         //上一步
-        front(){
+        front() {
             this.page = 0;
         },
 
         //搜尋
         search() {
-        const license = this.carnum; // 从你的数据中获取license的值
+            const license = this.carnum; // 从你的数据中获取license的值
 
-        const url = new URL('http://localhost:8080/api/parkingLot/search');
-        url.searchParams.append('license', license);
+            const url = new URL('http://localhost:8080/api/parkingLot/search');
+            url.searchParams.append('license', license);
 
-        fetch(url, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                // 添加其他必要的头部
-            },
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(responseData => {
-            this.parkingInfo =  responseData.parkingLot;
-            console.log(this.parkingInfo);
-            if(responseData.rtncode == "SERACH_SUCCESSFUL"){
-                this.page = 1;
-                this.formatDatetime();
-                this.nowDateTime();
-                return
-            } else if(responseData.rtncode == "LICENSE_PLATE_NUMBER_NOT_FOUND"){
-                Swal.fire({
-                        title: 'Fail!',
-                        text: '無此車牌號碼!!',
-                        confirmButtonText: '確認'
-                    })
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // 添加其他必要的头部
+                },
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(responseData => {
+                    this.parkingInfo = responseData.parkingLot;
+                    console.log(this.parkingInfo);
+                    if (responseData.rtncode == "SERACH_SUCCESSFUL") {
+                        this.page = 1;
+                        this.formatDatetime();
+                        this.nowDateTime();
+                        return
+                    } else if (responseData.rtncode == "LICENSE_PLATE_NUMBER_NOT_FOUND") {
+                        Swal.fire({
+                            title: 'Fail!',
+                            text: '無此車牌號碼!!',
+                            confirmButtonText: '確認'
+                        })
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
 
-        });
-    },
+                });
+        },
 
         //取消
-        cancel(){
+        cancel() {
             this.$router.push('ParkingLotInfo')
         },
     },
@@ -220,32 +220,33 @@ export default{
                 <!-- <div class="SearchCarPlateTitle">
                         <h1>{{msg}}</h1>
                     </div> -->
-                    <h2>車輛離場</h2>
-                    <div class="carNuminputArea">
-                        <h2>請輸入車牌號碼 : </h2>
-                        <input type="text" v-model="carnum" placeholder="範例: ABX1234 " maxlength="7" oninput="value=value.replace(/[^A-Z\d]/g,'')" />
-                    </div>
+                <h1 style="color: black; margin-bottom: 3vh;">車輛離場</h1>
+                <div class="carNuminputArea">
+                    <h2>請輸入車牌號碼 : </h2>
+                    <input type="text" v-model="carnum" placeholder="範例: ABX1234 " maxlength="7"
+                        oninput="value=value.replace(/[^A-Z\d]/g,'')" />
+                </div>
                 <div class="SearchCarPlateconfirm">
-                    <button class ="btn" @click="cancel">取消 <span></span><span></span><span></span><span></span></button>
-                    <button class ="btn" @click="search()">確認<span></span><span></span><span></span><span></span></button>
+                    <button class="btn" @click="cancel">取消 <span></span><span></span><span></span><span></span></button>
+                    <button class="btn" @click="search()">確認<span></span><span></span><span></span><span></span></button>
                 </div>
             </div>
         </div>
     </div>
     <div v-if="page == 1" class="page1">
-        <div >
-            <h1>入場時間 :{{  this.departureTime }}</h1>
-            <h1>離場時間 :{{  this.nowTime }}</h1>
+        <div>
+            <h1>入場時間 :{{ this.departureTime }}</h1>
+            <h1>離場時間 :{{ this.nowTime }}</h1>
             <h1>停車費 : {{ this.parkingFee }}元</h1>
             <h1>請選擇付款方式:</h1>
             <div class="mainArea">
                 <div class="payway" style="cursor: pointer;" @click="departure">
-                    <i class="fa-solid fa-sack-dollar fa-2xl" ></i>
+                    <i class="fa-solid fa-sack-dollar fa-2xl"></i>
                     <p>現金支付</p>
                 </div>
-                <div class="payway" style="cursor: pointer;"  @click="departure">
+                <div class="payway" style="cursor: pointer;" @click="departure">
                     <img src="../../public/parking/LINE-Pay.png">
-                    <p >LinePay</p>
+                    <p>LinePay</p>
                 </div>
                 <div class="payway" style="cursor: pointer;" @click="departure">
                     <i class="fa-brands fa-cc-apple-pay fa-2xl"></i>
@@ -259,21 +260,23 @@ export default{
                 </div>
             </div>
             <div class="btnArea">
-                <button  class ="btn"  @click="front" >取消 <span></span><span></span><span></span><span></span></button>
-                <button  class ="btn"  @click="next" >確認 <span></span><span></span><span></span><span></span></button>
+                <button class="btn" @click="front">取消 <span></span><span></span><span></span><span></span></button>
+                <button class="btn" @click="next">確認 <span></span><span></span><span></span><span></span></button>
             </div>
         </div>
     </div>
     <div v-if="page == 2" class="page2">
         <div class="body">
             <h1>歡應再次蒞臨AIR TIME</h1>
-                <button class ="btn" @click="cancel">確認<span></span><span></span><span></span><span></span></button>
+            <button class="btn" @click="cancel">確認<span></span><span></span><span></span><span></span></button>
         </div>
     </div>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </template>
 <style lang="scss" scoped>
-.body{
+.body {
     width: 100%;
     height: 100%;
     display: flex;
@@ -281,39 +284,43 @@ export default{
     align-items: center;
     flex-direction: column;
 }
-.btnArea{
+
+.btnArea {
     width: 50vw;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-input{
-    margin:  0 10px ;
+input {
+    margin: 0 10px;
 }
 
-.carNuminputArea{
+.carNuminputArea {
     display: flex;
 }
-button{
+
+button {
     font-size: 16pt;
     font-weight: bolder;
-    margin:  20px;
+    margin: 20px;
 }
 
-h1{
+h1 {
     color: white;
 }
 
-p{
+p {
     font-weight: bold;
     font-size: 16pt;
     color: white;
 }
-.mainArea{
+
+.mainArea {
     display: flex;
 }
-.payway{
+
+.payway {
     width: 150px;
     height: 100%;
     display: flex;
@@ -322,42 +329,55 @@ p{
     text-align: center;
     margin: 10px;
     padding: 2%;
-}   
+}
 
-.page1{
+.page1 {
     height: 85vh;
     display: flex;
     justify-content: center;
-    background-color: rgb(35, 139, 224);
+    // background-color: rgb(35, 139, 224);
+    background-image: url(../../picture/parking/parking_background.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 
 }
-.page2{
+
+.page2 {
     height: 85vh;
-    background-color: rgb(35, 139, 224);
+    // background-color: rgb(35, 139, 224);
+    background-image: url(../../picture/parking/parking_background.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 
 }
 
-td{
+td {
     font-size: 16pt;
     font-weight: bolder;
 }
-.fa-brands{
-    font-size : 50px ;
+
+.fa-brands {
+    font-size: 50px;
     margin: 25px 0 20px 0px;
 
 }
-.fa-solid{
-    font-size : 50px ;
+
+.fa-solid {
+    font-size: 50px;
     margin: 25px 0px 20px 0px;
 
 }
 
 
-img{
+img {
     width: 45px;
-    display: block; /* 將圖片設置為區塊元素 */
-    margin: 0 auto; /* 使用 margin:auto 將圖片水平置中 */
-    
+    display: block;
+    /* 將圖片設置為區塊元素 */
+    margin: 0 auto;
+    /* 使用 margin:auto 將圖片水平置中 */
+
 }
 
 .SearchCarPlatePicture {
@@ -366,7 +386,11 @@ img{
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    background-color: rgb(35, 139, 224);
+    // background-color: rgb(35, 139, 224);
+    background-image: url(../../picture/parking/parking_background.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 
 .SearchCarPlateTitle {
@@ -399,14 +423,18 @@ img{
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    background-color: rgb(35, 139, 224);
+    // background-color: rgb(35, 139, 224);
+    background-image: url(../../picture/parking/parking_background.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 
 .btn {
     display: inline-block;
     position: relative;
     z-index: 1;
-    min-width: 200px;
+    min-width: 100px;
     background: #FFFFFF;
     border: 2px solid goldenrod;
     border-radius: 4px;
@@ -420,6 +448,7 @@ img{
     transition: 0.5s;
     padding: 10px 20px;
 }
+
 .btn span {
     position: absolute;
     width: 25%;
@@ -432,23 +461,29 @@ img{
     transition-delay: calc((var(--n) - 1) * 0.1s);
     z-index: -1;
 }
+
 .btn:hover,
 .btn:focus {
-    color: black;
+    color: white;
+    font-size: large;
 }
+
 .btn:hover span {
     transform: translateY(0) scale(2);
 }
+
 .btn span:nth-child(1) {
     --n: 1;
 }
+
 .btn span:nth-child(2) {
     --n: 2;
 }
+
 .btn span:nth-child(3) {
     --n: 3;
 }
+
 .btn span:nth-child(4) {
     --n: 4;
-}
-</style>
+}</style>

@@ -88,6 +88,9 @@ export default {
 
             //登入人的資料
             loginInfo: {},
+
+            //權限設定
+            isAuthorization:false
         }
     },
     components: {
@@ -752,6 +755,14 @@ export default {
         },
         //人員管理-刪除人員
         deleteAdminUser(index) {
+            //判斷你是不是超級管理員
+            if (this.loginInfo.adminuser.account != "superadmin") {
+            //確定你有沒有權利
+            if (this.loginInfo.adminuser.managePlace != this.place || this.loginInfo.adminuser.manageNum < 20) {
+                this.showAuthorizeFail();
+                return
+            }
+            }
             //後端先刪除
             const url = 'http://localhost:8080/api/addminUser/deleteAdminuser';
             // 要帶入的值
@@ -1210,8 +1221,6 @@ export default {
                     // 在这里处理错误，例如显示错误消息
                 });
         },
-
-
         //使用者登出
         logput() {
             var url = "http://localhost:8080/api/addminUser/logout";
@@ -1243,9 +1252,14 @@ export default {
         this.searchAdminUser();
 
         //將登入頁傳來的個人資料轉成json可讀取
-        // const data = JSON.parse(this.$route.query.data);
-        // // 輸出 'value' 拿取裡面的key
-        // this.loginInfo = data.key;
+        const data = JSON.parse(this.$route.query.data);
+        // 輸出 'value' 拿取裡面的key
+        this.loginInfo = data.key;
+        // console.log()
+        //判斷是不是超級管理員可以新增人員
+        if(this.loginInfo.adminuser.account=='superadmin'){
+            this.isAuthorization=true
+        }
 
         // //登入成功的提示窗-看是誰登入
         // this.loginSucess(data.key)
@@ -1289,7 +1303,6 @@ export default {
                         <span @click="goBackHome" style="cursor: pointer;" class="titleSpan">後臺管理頁面</span>
 
 
-
                         <el-sub-menu index="1">
                             <template #title>
                                 <el-icon>
@@ -1299,9 +1312,8 @@ export default {
                             </template>
                             <el-menu-item @click="goManageFacility" style="cursor: pointer;" class="child"
                                 index="1-1">管理設施</el-menu-item>
-                            <el-menu-item @click="goAddFacility" style="cursor: pointer;" class="child"
+                            <el-menu-item   @click="goAddFacility" style="cursor: pointer;" class="child"
                                 index="1-2">新增設施</el-menu-item>
-                            <!-- <el-menu-item @click="" style="cursor: pointer;" class="child" index="1-3">刪除設施</el-menu-item> -->
                         </el-sub-menu>
 
 
@@ -1314,7 +1326,7 @@ export default {
                             </template>
                             <el-menu-item @click="goManageManager" style="cursor: pointer;" class="child"
                                 index="2-1">管理人員</el-menu-item>
-                            <el-menu-item @click="goaddmanager" style="cursor: pointer;" class="child"
+                            <el-menu-item v-if="this.isAuthorization==true" @click="goaddmanager" style="cursor: pointer;" class="child"
                                 index="2-2">新增人員</el-menu-item>
                         </el-sub-menu>
 
@@ -1691,7 +1703,7 @@ export default {
                         class="fa-solid fa-magnifying-glass"></i>
                 </div>
 
-                <div class="manageBot">
+                <div class="restaurantmanageBot">
                     <div class="itemBlock" v-for="restaurant, index in this.allRestaurant">
                         -<img :src=restaurant.photo alt="">
                         <div class="TextPlace">
@@ -1882,7 +1894,8 @@ export default {
             left: 0;
             right: 0;
             opacity: 0.5;
-            background-image: url("../../picture/backView/pexels-lisa-fotios-6477673.jpg");
+            background-image: url("../../picture/backView/amusement-park.png");
+            // background-image: url("../../picture/backView/pexels-lisa-fotios-6477673.jpg");
             background-repeat: no-repeat;
             background-size: cover;
 
@@ -2116,7 +2129,7 @@ export default {
         .manageRestaurant {
             position: relative;
 
-            .manageTop {
+            .restaurantmanageTop {
                 width: 70vw;
                 margin: 0 5vw;
                 height: 20vh;
@@ -2134,7 +2147,7 @@ export default {
                 }
             }
 
-            .manageBot {
+            .restaurantmanageBot {
                 width: 70vw;
                 margin: 0 5vw;
                 height: 70vh;

@@ -142,9 +142,11 @@ export default {
 
 <template>
     <HomeHeaderView />
-    <div class="SearchCarPlatePicture" v-show="page == 0">
-        <h1>車輛入場</h1>
-        <div class="CarPlate">
+    <div class="searchCarPlatePicture" v-show="page == 0">
+
+        <h1 style="margin-bottom: 3vh;"> 車輛入場</h1>
+
+        <div class="carPlate">
             <!-- <div class="SearchCarPlateTitle">
                 <h1>{{msg}}</h1>
             </div> -->
@@ -152,6 +154,7 @@ export default {
                 <h2>請輸入車牌號碼 : </h2>       
                     <input type="text" v-model="carnum" maxlength="7" placeholder="範例: ABX1234 " oninput="value=value.replace(/[^A-Z\d]/,'')" />
             </div>
+
             <div class="vehicleTypeSelect">
                 <h2>選擇車種 : </h2>
                 <select name="" id="" v-model="vehicleType">
@@ -160,6 +163,7 @@ export default {
                     <option value="大客車">大客車</option>
                 </select>
             </div>
+
             <div class="SearchCarPlateconfirm">
                 <button  class ="btn"  @click="cancel" >取消 <span></span><span></span><span></span><span></span></button>
                 <button  class ="btn"  @click="admission" >確認 <span></span><span></span><span></span><span></span></button>
@@ -170,6 +174,18 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+.searchCarPlatePicture {
+    height: 85vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    // background-color: rgb(35, 139, 224);
+    background-image: url(../../picture/parking/parking_background.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
 .vehicleTypeSelect{
     display: flex;
     margin: 1% 4.5% 0 0%;
@@ -193,29 +209,22 @@ button{
     margin:  20px;
 }
 
-.SearchCarPlatePicture {
-    height: 85vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: rgb(35, 139, 224);
-}
 
-.SearchCarPlateTitle {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: rgb(238, 255, 0);
-}
 
-.CarPlate {
+// .SearchCarPlateTitle {
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     color: rgb(238, 255, 0);
+// }
+
+.carPlate {
     height: 30%;
-    width: 80vw;
+    width: 40vw;
     display: flex;
     flex-direction: column;
     align-items: center;
-    color: rgb(12, 12, 12);
+    // color: rgb(12, 12, 12);
 }
 
 .SearchCarPlateconfirm {
@@ -229,7 +238,7 @@ button{
     display: inline-block;
     position: relative;
     z-index: 1;
-    min-width: 200px;
+    min-width: 100px;
     background: #FFFFFF;
     border: 2px solid goldenrod;
     border-radius: 4px;
@@ -257,7 +266,8 @@ button{
 }
 .btn:hover,
 .btn:focus {
-    color: black;
+    color: white;
+    font-size: large;
 }
 .btn:hover span {
     transform: translateY(0) scale(2);
