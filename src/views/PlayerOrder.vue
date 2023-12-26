@@ -441,7 +441,9 @@ export default{
                         <h5 class="card-title" style="font-size: 20pt;">{{item.name}}</h5>
                         <p class="card-text">{{item.description}}</p>
                         <span class="card-text reserve">預計等待時間:</span>
-                        <span class="card-text reservetime">{{calculateMinute(item.reserveNum)}}分鐘</span>
+                        <span class="card-text reservetime">{{calculateMinute(item.reserveNum)}}分鐘</span><br>
+                        <span class="card-text reserve">人數:</span>
+                        <span class="card-text reservetime">{{item.reserveNum}}人</span>
                         </div>
                         <i @click="this.reserveFacility(index)" class="fa-solid fa-circle-plus"></i>
                         <button @click="changeCard()" class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next" >
