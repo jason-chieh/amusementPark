@@ -28,14 +28,15 @@ export default {
         },
         
         admission() {
-            const regex = /^[A-Z]{3}\d{4}$/
-            if (!regex.test(this.carnum) ) {
-                Swal.fire({
-                        title: '車牌格式錯誤!',
-                        confirmButtonText: 'confirm'
-                    })
-                return
-            } 
+                    const regex = /^[A-Z\d]{2,4}[A-Z\d]{2,4}$/;
+                    if (!regex.test(this.carnum) ) {
+                    Swal.fire({
+                            title: '車牌格式錯誤!',
+                            confirmButtonText: 'confirm'
+                        })
+                    return
+                    }
+                
             // 创建一个对象，包含请求的数据
             const requestData = {
             license: this.carnum,  // 替换为实际的车牌号
@@ -149,7 +150,7 @@ export default {
             </div> -->
             <div class="carnumInput">
                 <h2>請輸入車牌號碼 : </h2>       
-                    <input type="text" v-model="carnum" maxlength="7" placeholder="範例: ABX1234 " oninput="value=value.replace(/[^A-Z\d]/g,'')" />
+                    <input type="text" v-model="carnum" maxlength="7" placeholder="範例: ABX1234 " oninput="value=value.replace(/[^A-Z\d]/,'')" />
             </div>
             <div class="vehicleTypeSelect">
                 <h2>選擇車種 : </h2>
