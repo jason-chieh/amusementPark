@@ -455,7 +455,11 @@ export default {
                 return
             }
 
+<<<<<<< HEAD
             //判斷你是不是超級管理員
+=======
+            判斷你是不是超級管理員
+>>>>>>> 12-27_restaurant_fetch_DB
             if (this.loginInfo.adminuser.account != "superadmin") {
                 //確定你有沒有權利
                 if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
@@ -463,6 +467,10 @@ export default {
                     return
                 }
             }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 12-27_restaurant_fetch_DB
 
             var url = "http://localhost:8080/api/park/create";
             var data = {
@@ -634,6 +642,11 @@ export default {
                     return
                 }
             }
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 12-27_restaurant_fetch_DB
 
             //後端先
             console.log(this.allFacility[index].name)
@@ -686,6 +699,10 @@ export default {
                     return
                 }
             }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 12-27_restaurant_fetch_DB
 
             const url = 'http://localhost:8080/api/park/updateFacility';
             // 要帶入的值
@@ -1204,6 +1221,10 @@ export default {
                     return
                 }
             }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 12-27_restaurant_fetch_DB
             const url = 'http://localhost:8080/api/park/updateRestaurant';
 
             // 要带入的值
