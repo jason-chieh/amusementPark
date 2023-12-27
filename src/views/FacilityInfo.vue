@@ -782,9 +782,9 @@ export default {
     min-height: 100vh;
     margin: 0 10vw;
     padding: 2% 2%;
-    background-color: pink;
+    // background-color: pink;
     background-image: url("../../picture/backView/pexels-pixabay-235985.jpg");
-    background-size: auto;
+    background-size: cover;
     background-repeat: no-repeat;
     border-radius: 10px;
     .commentBlock{
