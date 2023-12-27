@@ -81,11 +81,7 @@ export default {
       // ],
 
 
-      // 美食店家
-      restaurant1AreaArr: [],
-      //美食分頁
-      pageSize: 3,
-      currentPage: 1,
+
     }
   },
   methods: {
