@@ -5,10 +5,82 @@ export default {
         return {
             // 點選設施的詳細資訊
             facilityInfo:{},
+
+            facilityName:"",
+            comments:"",
+            nickName:"",
+
+            //所有人留言的陣列
+            allComments:[],
+
+            //判斷是否有登入
+            canComments:true,
         }
     },
     methods: {
+        //創建留言
+        createComment(){
+            const url = 'http://localhost:8080/api/park/createComment';
+                // 要帶入的值
 
+                const queryParams = new URLSearchParams({
+                    comments:this.comments,
+                    facilityName:this.facilityName,
+                    nickname:this.nickName
+                    
+                });
+                
+                // 將查詢字串附加到 URL
+                const urlWithParams = `${url}?${queryParams}`;
+
+                fetch(urlWithParams, {
+                method: "GET", 
+                headers: new Headers({
+                    "Accept":"application/json",
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin":"*"
+                }),
+                })
+                .then(response => {
+                // 將API回應轉換為JSON格式
+                return response.json();
+                })
+                .then(data => {
+                // 將API回應的JSON數據設置到組件的responseData數據屬性中
+                    console.log(data)
+                    return this.searchComment();
+                })
+        },
+        //搜尋留言
+        searchComment(){
+            const url = 'http://localhost:8080/api/park/searchComment';
+                // 要帶入的值
+
+                const queryParams = new URLSearchParams({
+                    facilityName:this.facilityName,
+                });
+                
+                // 將查詢字串附加到 URL
+                const urlWithParams = `${url}?${queryParams}`;
+
+                fetch(urlWithParams, {
+                method: "GET", 
+                headers: new Headers({
+                    "Accept":"application/json",
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin":"*"
+                }),
+                })
+                .then(response => {
+                // 將API回應轉換為JSON格式
+                return response.json();
+                })
+                .then(data => {
+                // 將API回應的JSON數據設置到組件的responseData數據屬性中
+                    console.log(data)
+                    this.allComments=data
+                })
+        }
     },
     components: {
         HomeHeaderView
@@ -19,11 +91,24 @@ export default {
         const data = JSON.parse(this.$route.query.data);
         // 輸出 'value' 拿取裡面的key
         this.facilityInfo = data.key;
-        console.log( this.facilityInfo)
+        //拿取登入者名子
+        const secondParamValue = this.$route.query.secondParam;
+        console.log(this.facilityInfo)
         // 將讀取到的照片賦予值給預覽img的src
         this.$refs.preview.src = this.facilityInfo.photo;
         // 顯示預覽img
         this.$refs.preview.style.display = 'block';
+        //遊樂設施名子
+        this.facilityName = this.facilityInfo.name;
+        
+        //登入者名子
+        this.nickName = secondParamValue
+        console.log(this.nickName)
+        if(this.nickName==undefined){
+            this.canComments=false
+        }
+        this.searchComment();
+
     }
 }
 </script>
@@ -39,7 +124,7 @@ export default {
     <div class="information">
         <div class="informationLeft">
             <h1>{{this.facilityInfo.name}}</h1>
-            <p style="min-height: 30vh;overflow: hidden;">{{this.facilityInfo.description}}</p>
+            <p style="min-height: 25vh;overflow: hidden;">{{this.facilityInfo.description}}</p>
             <span style="font-weight: bolder;">設施期間:</span><span style="margin-left: 2vw;">{{ this.facilityInfo.startDate }}~{{ this.facilityInfo.endDate }}</span><br>
             <span style="font-weight: bolder;">限制年齡:</span><span style="margin-left: 2vw;">{{ this.facilityInfo.age}}</span><br>
             <span style="font-weight: bolder;">預約人數:</span><span style="margin-left: 2vw;">{{ this.facilityInfo.reserveNum}}</span><br>
@@ -529,23 +614,26 @@ export default {
     <!-- 評論區 -->
     <div class="commentPlace">
         <h1 style="font-size:40pt;color: rgb(2, 2, 2);">評論區</h1>
-        <div class="addComment">
+        <div v-if="this.canComments==true" class="addComment">
             <div class="addcommentImg">
                 <i class="fa-solid fa-circle-user"></i>
             </div>
             <div class="addcommentArea">
-                <h1>請留言</h1>
-                <input style="height:50%;" type="inputArea">
+                <div class="input-group">
+                    <span class="input-group-text">分享心得</span>
+                    <textarea class="form-control" v-model="this.comments" aria-label="With textarea"></textarea>
+                </div>
+                <button @click="createComment" type="button">發送</button>
             </div>
         </div>
-        <div class="commentBlock">
+        <div class="commentBlock" v-for="comment in this.allComments">
             <div class="commentHeadImg">
                 <i class="fa-solid fa-circle-user"></i>
             </div>
             <div class="commentArea">
-                <h1>噴火龍</h1>
-                <h6 class="comment">我真的覺得很好玩，好好玩我真的覺得很好玩，好好玩我真的覺得很好玩，好好玩我真的覺得很好玩，好好玩我真的覺得很好玩，好好玩我真的覺得很好玩，好我真的覺得很好玩，好我真的覺得很好玩，好我真的覺得很好玩，好</h6>
-                <h6 class="playdate">遊玩日期:2023-12-27</h6>
+                <h1>{{comment.player}}</h1>
+                <h6 class="comment">{{comment.comments}}</h6>
+                <h6 class="playdate">{{comment.playDate}}</h6>
             </div>
         </div>
     </div>
@@ -730,7 +818,6 @@ export default {
             }
             .comment{
                 max-height:40%;
-                overflow: auto;
             }
         }
     }
@@ -756,19 +843,26 @@ export default {
             width: 80%;
             height: 100%;
             border-left: 2px solid black;
-            padding: 2% 2%;
+            padding: 1% 1%;
             position: relative;
-            h1{
-                margin: 0;
+            .form-control{
+                height: 100%;
+                background-color: white;
+                border: 0;
             }
-            .playdate{
+            span{
+                border: 0;
+                background-color: transparent;
+                font-weight: bold;
+                font-size: 22pt;
+            }
+            button{
                 position: absolute;
-                right:2%;
-                bottom: 0;
-            }
-            .comment{
-                max-height:40%;
-                overflow: auto;
+                bottom: 2%;
+                right: 1%;
+                border: 0;
+                border-radius: 10px;
+                width: 10%;
             }
         }
     }
