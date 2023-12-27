@@ -435,14 +435,14 @@ export default {
                 return
             }
 
-            //判斷你是不是超級管理員
-            // if (this.loginInfo.adminuser.account != "superadmin") {
-            //     //確定你有沒有權利
-            //     if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
-            //         this.showAuthorizeFail();
-            //         return
-            //     }
-            // }
+            判斷你是不是超級管理員
+            if (this.loginInfo.adminuser.account != "superadmin") {
+                //確定你有沒有權利
+                if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
+                    this.showAuthorizeFail();
+                    return
+                }
+            }
 
 
             var url = "http://localhost:8080/api/park/create";
@@ -608,13 +608,13 @@ export default {
         delFacility(index) {
 
             //判斷你是不是超級管理員
-            // if (this.loginInfo.adminuser.account != "superadmin") {
-            //     //確定你有沒有權利
-            //     if (this.loginInfo.adminuser.managePlace != this.allFacility[index].place || this.loginInfo.adminuser.manageNum < 20) {
-            //         this.showAuthorizeFail();
-            //         return
-            //     }
-            // }
+            if (this.loginInfo.adminuser.account != "superadmin") {
+                //確定你有沒有權利
+                if (this.loginInfo.adminuser.managePlace != this.allFacility[index].place || this.loginInfo.adminuser.manageNum < 20) {
+                    this.showAuthorizeFail();
+                    return
+                }
+            }
 
 
 
@@ -650,13 +650,13 @@ export default {
         updateFacility() {
 
             //判斷你是不是超級管理員
-            // if (this.loginInfo.adminuser.account != "superadmin") {
-            //     //確定你有沒有權利
-            //     if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
-            //         this.showAuthorizeFail();
-            //         return
-            //     }
-            // }
+            if (this.loginInfo.adminuser.account != "superadmin") {
+                //確定你有沒有權利
+                if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
+                    this.showAuthorizeFail();
+                    return
+                }
+            }
 
 
             const url = 'http://localhost:8080/api/park/updateFacility';
@@ -966,13 +966,13 @@ export default {
             }
 
             //判斷你是不是超級管理員
-            // if (this.loginInfo.adminuser.account != "superadmin") {
-            //     //確定你有沒有權利
-            //     if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
-            //         this.showAuthorizeFail();
-            //         return
-            //     }
-            // }
+            if (this.loginInfo.adminuser.account != "superadmin") {
+                //確定你有沒有權利
+                if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
+                    this.showAuthorizeFail();
+                    return
+                }
+            }
 
             var url = "http://localhost:8080/api/park/createRest";
             var data = {
@@ -1174,13 +1174,13 @@ export default {
         updateRstaurant() {
 
             //判斷你是不是超級管理員
-            // if (this.loginInfo.adminuser.account != "superadmin") {
-            //     //確定你有沒有權利
-            //     if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
-            //         this.showAuthorizeFail();
-            //         return
-            //     }
-            // }
+            if (this.loginInfo.adminuser.account != "superadmin") {
+                //確定你有沒有權利
+                if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
+                    this.showAuthorizeFail();
+                    return
+                }
+            }
 
             const url = 'http://localhost:8080/api/park/updateRestaurant';
 
@@ -1708,7 +1708,7 @@ export default {
                         -<img :src=restaurant.photo alt="">
                         <div class="TextPlace">
                             <span>{{ restaurant.name }}</span>
-                            <span>{{ restaurant.place }}</span>
+                            <span>{{ restaurant.region }}</span>
                             <span>{{ restaurant.published == true ? "開放中" : "停止中" }}</span>
                         </div>
                         <div class="BtnPlace">

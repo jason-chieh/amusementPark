@@ -35,45 +35,47 @@ export default {
       // 餐廳頁面
       page: 5,
       currentPage: 1,
-      pageSize: 3,      // 每頁顯示的餐廳數量
-      publishedRestaurant: [
-        {
-          name: "FriBay",
-          cuisine: "美式餐廳",
-          photo: "../../picture/restaurant/美式餐廳_FriBay.jpg",
-          description: "正統的美式餐廳，菜單豐富多樣，包括經典牛排、芝士漢堡、香脆炸雞翅，以及創意十足的美式披薩。「FriBay」位於樂園驚險火山島，提供寬敞明亮的用餐環境和親切的服務，讓您在這裡感受到最地道的美國風味。",
-        },
-        {
-          name: "Trattoria di primo",
-          cuisine: "義式餐廳",
-          photo: "../../picture/restaurant/義式餐廳_Trattoria di primo.jpg",
-          description: "義大利風情的餐廳，可以品嚐到新鮮的義大利麵製品、濃郁的奶酪、美味的海鮮和精心調製的義大利咖啡。用餐環境充滿藝術氛圍，讓您彷彿置身於義大利的美麗小鎮，「Trattoria di primo」都能滿足您對義大利美食的所有期待。",
-        },
-        {
-          name: "台味小館",
-          cuisine: "台式餐廳",
-          photo: "../../picture/restaurant/台式餐廳_台味小館.jpg",
-          description: "正宗的台灣美食。菜單匯集了台灣各地的經典料理，品嚐滷肉飯、蚵仔煎、牛肉麵等，彷彿帶您置身於台灣街頭美食天堂。簡約舒適的用餐環境中，新鮮食材和獨特口感保證讓您感受到家的溫馨和台灣味覺享受。",
-        },
-        {
-          name: "一樂拉麵",
-          cuisine: "日式餐廳",
-          photo: "../../picture/restaurant/日式餐廳_一樂拉麵.jpg",
-          description: "「一樂拉麵」以經典的拉麵、新鮮的生魚片和創意的壽司而聞名，每一道料理都精心製作，保持了日本料理的細緻和原汁原味。用餐環境舒適，充滿和風氛圍，讓您在品味美食的同時，彷彿置身於日本的美麗四季之中。",
-        },
-        {
-          name: "韓老大餐酒館",
-          cuisine: "韓式餐廳",
-          photo: "../../picture/restaurant/韓式餐廳_韓老大餐酒館.jpg",
-          description: "引以為傲的菜單包含了烤肉、拌飯、辣炒年糕等傳統韓國料理。用餐環境溫馨舒適，營造出韓國街頭小店的氛圍，在「韓老大餐酒館」感受到真實的韓式美味和獨特的韓國餐飲文化。",
-        },
-        {
-          name: "Starbucks®AirTime臻選烘焙工坊",
-          cuisine: "美式咖啡",
-          photo: "../../picture/restaurant/美式咖啡_Starbucks.jpg",
-          description: "位於慢活樂園島。精心烘焙的咖啡豆經過巧妙的調配，呈現濃郁香醇的口感，在這邊不僅可品嚐星巴克經典咖啡，還能親臨現場感受咖啡的誕生過程。星巴克®AirTime臻選烘焙工坊絕對是每位遊客不容錯過的特別體驗。",
-        },
-      ],
+      pageSize: 3,              // 每頁顯示的餐廳數量
+      publishedRestaurant:[]    // 前台餐廳頁面接後端
+      // 前台餐廳頁面刻死的
+      // publishedRestaurant: [
+      //   {
+      //     name: "FriBay",
+      //     cuisine: "美式餐廳",
+      //     photo: "../../picture/restaurant/美式餐廳_FriBay.jpg",
+      //     description: "正統的美式餐廳，菜單豐富多樣，包括經典牛排、芝士漢堡、香脆炸雞翅，以及創意十足的美式披薩。「FriBay」位於樂園驚險火山島，提供寬敞明亮的用餐環境和親切的服務，讓您在這裡感受到最地道的美國風味。",
+      //   },
+      //   {
+      //     name: "Trattoria di primo",
+      //     cuisine: "義式餐廳",
+      //     photo: "../../picture/restaurant/義式餐廳_Trattoria di primo.jpg",
+      //     description: "義大利風情的餐廳，可以品嚐到新鮮的義大利麵製品、濃郁的奶酪、美味的海鮮和精心調製的義大利咖啡。用餐環境充滿藝術氛圍，讓您彷彿置身於義大利的美麗小鎮，「Trattoria di primo」都能滿足您對義大利美食的所有期待。",
+      //   },
+      //   {
+      //     name: "台味小館",
+      //     cuisine: "台式餐廳",
+      //     photo: "../../picture/restaurant/台式餐廳_台味小館.jpg",
+      //     description: "正宗的台灣美食。菜單匯集了台灣各地的經典料理，品嚐滷肉飯、蚵仔煎、牛肉麵等，彷彿帶您置身於台灣街頭美食天堂。簡約舒適的用餐環境中，新鮮食材和獨特口感保證讓您感受到家的溫馨和台灣味覺享受。",
+      //   },
+      //   {
+      //     name: "一樂拉麵",
+      //     cuisine: "日式餐廳",
+      //     photo: "../../picture/restaurant/日式餐廳_一樂拉麵.jpg",
+      //     description: "「一樂拉麵」以經典的拉麵、新鮮的生魚片和創意的壽司而聞名，每一道料理都精心製作，保持了日本料理的細緻和原汁原味。用餐環境舒適，充滿和風氛圍，讓您在品味美食的同時，彷彿置身於日本的美麗四季之中。",
+      //   },
+      //   {
+      //     name: "韓老大餐酒館",
+      //     cuisine: "韓式餐廳",
+      //     photo: "../../picture/restaurant/韓式餐廳_韓老大餐酒館.jpg",
+      //     description: "引以為傲的菜單包含了烤肉、拌飯、辣炒年糕等傳統韓國料理。用餐環境溫馨舒適，營造出韓國街頭小店的氛圍，在「韓老大餐酒館」感受到真實的韓式美味和獨特的韓國餐飲文化。",
+      //   },
+      //   {
+      //     name: "Starbucks®AirTime臻選烘焙工坊",
+      //     cuisine: "美式咖啡",
+      //     photo: "../../picture/restaurant/美式咖啡_Starbucks.jpg",
+      //     description: "位於慢活樂園島。精心烘焙的咖啡豆經過巧妙的調配，呈現濃郁香醇的口感，在這邊不僅可品嚐星巴克經典咖啡，還能親臨現場感受咖啡的誕生過程。星巴克®AirTime臻選烘焙工坊絕對是每位遊客不容錯過的特別體驗。",
+      //   },
+      // ],
 
     }
   },
@@ -158,7 +160,7 @@ export default {
       });
     },
 
-    //計算設施使用時間
+    //計算設施使用時間 
     calculateMinute(reserveNum) {
       return Math.floor(reserveNum * 1.5)
     },
@@ -299,7 +301,23 @@ export default {
     // 餐廳介紹切換頁面
     changePage(offset) {
       this.currentPage += offset;
-    }
+    },
+    // 美食餐廳切換頁面
+    gourmetRestaurant() {
+
+      fetch("http://localhost:8080/api/park/searchAllRest")
+        .then(res => res.json())
+        .then(data => {
+          // console.log(data);
+          for (let i = 0; i < data.restaurantList.length; i++) {
+            var string = data.restaurantList[i].photo;
+            data.restaurantList[i].photo = 'data:image/jpeg;base64,' + string;
+            if (data.restaurantList[i].published == true) {
+              this.publishedRestaurant.push(data.restaurantList[i])
+            }
+          }
+        })
+    },
 
   },
   components: {
@@ -308,6 +326,7 @@ export default {
   },
   mounted() {
     this.searchFacility()
+    this.gourmetRestaurant()
   },
   // 更新頁面後，重新渲染
   updated() {
@@ -1583,25 +1602,14 @@ export default {
 
   <!-- 3d地圖資訊 -->
   <div v-if="page == 3" class="3dAccess">
-<<<<<<< HEAD
     <!-- <div class="ThreeSphereViewInf">
-        <span style="width:20px;height:20px;background-color: red;margin: 0 1vw;border-radius: 50%;"></span>
-        <span>人數大於20人</span>
-        <span style="width:20px;height:20px;background-color: yellow;margin: 0 1vw;border-radius: 50%;"></span>
-        <span>人數介於10人~20人</span>
-        <span style="width:20px;height:20px;background-color: green;margin: 0 1vw;border-radius: 50%;"></span>
-        <span>人數小於10人</span>
-    </div> -->
-=======
-    <div class="ThreeSphereViewInf">
       <span style="width:20px;height:20px;background-color: red;margin: 0 1vw;border-radius: 50%;"></span>
       <span>人數大於20人</span>
       <span style="width:20px;height:20px;background-color: yellow;margin: 0 1vw;border-radius: 50%;"></span>
       <span>人數介於10人~20人</span>
       <span style="width:20px;height:20px;background-color: green;margin: 0 1vw;border-radius: 50%;"></span>
       <span>人數小於10人</span>
-    </div>
->>>>>>> 12-27_restaurant_page
+    </div> -->
     <ThreeSphereView />
   </div>
 
@@ -1614,19 +1622,16 @@ export default {
 
     <div class="travelAgencyTable">
       <div class="travelAgency">
-        <a href="https://www.colatour.com.tw/"></a>
         <a href="https://www.colatour.com.tw/" target="_blank">
           <img src="../../picture/travelAgency/可樂旅遊.png" alt="可樂旅遊" class="colaTour"></a>
         <h6>可樂旅遊</h6>
       </div>
       <div class="travelAgency">
-        <a href="https://www.settour.com.tw/"></a>
         <a href="https://www.settour.com.tw/" target="_blank">
           <img src="../../picture/travelAgency/東南旅遊.png" alt="東南旅遊" class="setTour"></a>
         <h6>東南旅遊</h6>
       </div>
       <div class="travelAgency">
-        <a href="https://www.liontravel.com/category/zh-tw/index"></a>
         <a href="https://www.liontravel.com/category/zh-tw/index" target="_blank">
           <img src="../../picture/travelAgency/雄獅旅遊.png" alt="雄獅旅遊" class="lionTravel"></a>
         <h6>雄獅旅遊</h6>
@@ -1662,10 +1667,12 @@ export default {
     <h1>美味餐點</h1>
 
     <!-- <div class="restaurantArea" v-for="item, index in this.publishedRestaurant">
-      <div class="leftPart" >
-        <img :src=item.photo class="rest-img-top" alt="...">
+      <div class="leftPart">
+        <img :src="item.photo" class="rest-img-top" alt="..."
+          style="width: 600px; height: 350px; display:flex; margin:auto; border-radius: 10px;">
       </div>
       <div class="rightPart">
+        <h4 style="text-indent: 0.5em;"><strong>♘ {{ item.name }}</strong></h4>
         <p class="card-text">{{ item.description }}</p>
       </div>
     </div> -->
@@ -1749,7 +1756,7 @@ export default {
 
     <div v-for="(item, index) in paginatedRestaurants" :key="index" class="restaurantArea">
       <div class="leftPart">
-        <img :src="item.photo" class="rest-img-top" alt="..." style="width: 600px; height: 350px; display:flex; margin:auto;">
+        <img :src="item.photo" class="rest-img-top" alt="..." style="width: 600px; height: 350px; display:flex; margin:auto; border-radius: 10px;">
       </div>
       <div class="rightPart">
         <h4 style="text-indent: 0.5em;"><strong>♘ {{ item.name }}</strong></h4>
