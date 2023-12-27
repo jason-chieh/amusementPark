@@ -290,7 +290,7 @@ export default {
             this.published = false
 
             //設定照片
-            const img = document.getElementById('addFacilityImg')
+            const img = document.getElementById('addFacilityIMG')
             img.src = ""
 
 
@@ -345,7 +345,17 @@ export default {
             this.editOldAccount = this.allAdminUser[index].account
         },
         goManageRestaurant() {
-            this.searchAllRestaurant()
+            //取消編輯返回首頁資料清空
+            this.nameRest = "";
+            this.descRest = "";
+            this.regionRest = "";
+            this.date1Rest = "";
+            this.date2Rest = "";
+            this.publishedRest = false;
+            this.photoSRest = "";
+            const img = this.$refs.preview;
+            img.style.display = 'none'; 
+            this.searchAllRestaurant();
             this.changePageNum = 7
         },
         goAddRestaurant() {
@@ -357,28 +367,46 @@ export default {
             this.publishedRest = false
 
             //設定照片
-            const img = document.getElementById('addRestImg')
+            const img = this.$refs.previewRestImg
             img.src = ""
 
             this.changePageNum = 8
         },
         goEditRestaurant(index) {
-            this.nameRest = this.allRestaurant[index].name
-            this.descRest = this.allRestaurant[index].description
-            this.regionRest = this.allRestaurant[index].region
-            this.date1Rest = this.allRestaurant[index].startDate
-            this.date2Rest = this.allRestaurant[index].endDate
-            this.publishedRest = this.allRestaurant[index].published
-            this.photoSRest = this.allRestaurant[index].photo;
+            console.log(this.allRestaurant[index])
+            if(this.allRestaurant[index] != null ){
+                this.nameRest = (this.allRestaurant[index].name).replace(/ /g, "")//刪除name空格
+                this.descRest = this.allRestaurant[index].description
+                this.regionRest = this.allRestaurant[index].region
+                this.date1Rest = this.allRestaurant[index].startDate
+                this.date2Rest = this.allRestaurant[index].endDate
+                this.publishedRest = this.allRestaurant[index].published
+                this.photoSRest = this.allRestaurant[index].photo;
+                //設定照片
+                // console.log(this.allRestaurant[index].photo)
+                // const img = document.getElementById('addFacilityIMG')
+                const img = this.$refs.preview;
+                img.src = this.allRestaurant[index].photo;
+                // 顯示圖片
+                img.style.display = 'block';  
+                
+               // //設定舊姓名
+                this.editOldNameRest = this.allRestaurant[index].name
+                this.changePageNum = 9
+                this.openFullScreen2()
+                return
+            }
+            this.nameRest = ""
+            this.descRest = ""
+            this.regionRest = ""
+            this.date1Rest = ""
+            this.date2Rest = ""
+            this.publishedRest = false
 
-             //設定照片
-            const img = document.getElementById('edditimgShow')
-            img.src = this.allRestaurant[index].photo;
-            img.style.display = 'block';    // 顯示圖片
-
-            // //設定舊姓名
-            this.editOldNameRest = this.allRestaurant[index].name
-
+            //設定照片
+            const img = this.$refs.preview
+            img.src = ""
+            
             //頁面跳轉
             this.changePageNum = 9
             this.openFullScreen2()
@@ -393,30 +421,25 @@ export default {
             // 獲取文件資料
             const file = event.target.files[0];
 
-            
-
             if (file) {
                 const reader = new FileReader();
-
                 reader.onload = (e) => {
                     // 將讀取到的照片賦予值給預覽img的src
                     this.$refs.preview.src = e.target.result;
                     // 顯示預覽img
                     this.$refs.preview.style.display = 'block';
-                    console.log(e.target.result)
                     this.photoS = e.target.result
-
-                    
-
-                    // const addFacility = document.getElementById('addFacilityIMG')
-                    // const imgadd = document.getElementById('addFacilityImg')
-                    // imgadd.src = e.target.result
+                    const addFacility = document.getElementById('addFacilityIMG')
+                    //新增餐廳圖片使用
+                    this.$refs.previewRestImg.src = e.target.result
+                    this.$refs.previewRestImg.style.display = 'block';
+                    //const imgadd = document.getElementById('addFacilityImg')
                     const img = document.getElementById('edditimgShow')
                     img.src = e.target.result
-                    // addFacility.src = e.target.result
-                    // addFacility.style.display= 'block';
-                    // console.log(e.target.result)
-                    // console.log(typeof e.target.result)
+                    addFacility.src = e.target.result
+                    addFacility.style.display= 'block';
+                    console.log(e.target.result)
+                    console.log(typeof e.target.result)
                 };
                 // 讀取文件內容
                 reader.readAsDataURL(file);
@@ -433,14 +456,13 @@ export default {
             }
 
             //判斷你是不是超級管理員
-            // if (this.loginInfo.adminuser.account != "superadmin") {
-            //     //確定你有沒有權利
-            //     if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
-            //         this.showAuthorizeFail();
-            //         return
-            //     }
-            // }
-
+            if (this.loginInfo.adminuser.account != "superadmin") {
+                //確定你有沒有權利
+                if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
+                    this.showAuthorizeFail();
+                    return
+                }
+            }
 
             var url = "http://localhost:8080/api/park/create";
             var data = {
@@ -605,15 +627,13 @@ export default {
         delFacility(index) {
 
             //判斷你是不是超級管理員
-            // if (this.loginInfo.adminuser.account != "superadmin") {
-            //     //確定你有沒有權利
-            //     if (this.loginInfo.adminuser.managePlace != this.allFacility[index].place || this.loginInfo.adminuser.manageNum < 20) {
-            //         this.showAuthorizeFail();
-            //         return
-            //     }
-            // }
-
-
+            if (this.loginInfo.adminuser.account != "superadmin") {
+                //確定你有沒有權利
+                if (this.loginInfo.adminuser.managePlace != this.allFacility[index].place || this.loginInfo.adminuser.manageNum < 20) {
+                    this.showAuthorizeFail();
+                    return
+                }
+            }
 
             //後端先
             console.log(this.allFacility[index].name)
@@ -643,18 +663,29 @@ export default {
             this.allFacility.splice(index, 1)
 
         },
+        //限制日期選擇
+        dateLimit(){
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0');
+            var yyyy = today.getFullYear();
+
+            today = yyyy + '-' + mm + '-' + dd;
+
+            document.getElementById('datePicker').setAttribute('min', today);
+        },
+
         //管理設施---更新設施
         updateFacility() {
 
             //判斷你是不是超級管理員
-            // if (this.loginInfo.adminuser.account != "superadmin") {
-            //     //確定你有沒有權利
-            //     if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
-            //         this.showAuthorizeFail();
-            //         return
-            //     }
-            // }
-
+            if (this.loginInfo.adminuser.account != "superadmin") {
+                //確定你有沒有權利
+                if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
+                    this.showAuthorizeFail();
+                    return
+                }
+            }
 
             const url = 'http://localhost:8080/api/park/updateFacility';
             // 要帶入的值
@@ -926,12 +957,10 @@ export default {
             return "員工"
         },
 
-
-        //新增餐廳---選擇照片
-        handleRestFileChange(event) {
+        //新增餐廳---選擇照片--無使用
+        handleRestaurantFileChange(event) {
             // 獲取文件資料
             const file = event.target.files[0];
-
             console.log(file)
 
             if (file) {
@@ -939,21 +968,22 @@ export default {
 
                 reader.onload = (e) => {
                     // 將讀取到的照片賦予值給預覽img的src
+                    console.log(e.target.result)
                     this.$refs.preview.src = e.target.result;
                     // 顯示預覽img
                     this.$refs.preview.style.display = 'block';
                     this.photoS = e.target.result
-
-                    const img = document.getElementById('edditimgRestShow')
+                    const img = document.getElementById('addFacilityImg')
                     img.src = e.target.result
-                    console.log(e.target.result)
-                    // console.log(typeof e.target.result)
+                    console.log(typeof e.target.result)
                 };
                 // 讀取文件內容
                 reader.readAsDataURL(file);
             }
 
         },
+
+
         //新增餐廳---提交並傳送到後端
         onSubmitRestaurant() {
             //確定有沒有填資料
@@ -963,17 +993,17 @@ export default {
             }
 
             //判斷你是不是超級管理員
-            // if (this.loginInfo.adminuser.account != "superadmin") {
-            //     //確定你有沒有權利
-            //     if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
-            //         this.showAuthorizeFail();
-            //         return
-            //     }
-            // }
+            if (this.loginInfo.adminuser.account != "superadmin") {
+                //確定你有沒有權利
+                if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
+                    this.showAuthorizeFail();
+                    return
+                }
+            }
 
             var url = "http://localhost:8080/api/park/createRest";
             var data = {
-                    "name": this.nameRest,
+                    "name": this.nameRest.replace(/ /g, ""),
                     "description": this.descRest,
                     "region": this.regionRest,
                     "published": this.publishedRest,
@@ -1006,7 +1036,7 @@ export default {
             this.publishedRest = false,
             this.photoS = '';
             this.$refs.preview.src = '';
-
+            this.goManageRestaurant()
         },
         //管理餐廳---往後端搜尋所有的餐廳-fetch
         searchAllRestaurant() {
@@ -1045,7 +1075,6 @@ export default {
                 })
         },
         //管理餐廳---搜尋條件餐廳
-    
         searchConditionRestaurant() {
             this.openFullScreen2()
             //假如是否開放有帶到的話用這個三個條件的方法
@@ -1129,15 +1158,13 @@ export default {
         delRestaurant(index) {
 
             //判斷你是不是超級管理員
-            // if (this.loginInfo.adminuser.account != "superadmin") {
-            //     //確定你有沒有權利
-            //     if (this.loginInfo.adminuser.managePlace != this.allFacility[index].place || this.loginInfo.adminuser.manageNum < 20) {
-            //         this.showAuthorizeFail();
-            //         return
-            //     }
-            // }
-
-
+            if (this.loginInfo.adminuser.account != "superadmin") {
+                //確定你有沒有權利
+                if (this.loginInfo.adminuser.managePlace != this.allFacility[index].place || this.loginInfo.adminuser.manageNum < 20) {
+                    this.showAuthorizeFail();
+                    return
+                }
+            }
 
             //後端先
             console.log(this.allRestaurant[index].name)
@@ -1168,24 +1195,22 @@ export default {
 
         },
         //管理餐廳---更新餐廳
-        updateRstaurant() {
-
+        updateRestaurant() {
             //判斷你是不是超級管理員
-            // if (this.loginInfo.adminuser.account != "superadmin") {
-            //     //確定你有沒有權利
-            //     if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
-            //         this.showAuthorizeFail();
-            //         return
-            //     }
-            // }
-
+            if (this.loginInfo.adminuser.account != "superadmin") {
+                //確定你有沒有權利
+                if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
+                    this.showAuthorizeFail();
+                    return
+                }
+            }
             const url = 'http://localhost:8080/api/park/updateRestaurant';
 
             // 要带入的值
             const data = {
-                "name": this.editOldNameRest,
-                "newName": this.nameRest,
-                "description": this.descRest,
+                "name": this.editOldNameRest.replace(/ /g, ""),
+                "newName": this.nameRest.replace(/ /g, ""),
+                "description": this.descRest.replace(/ /g, ""),
                 "region": this.regionRest,
                 "published": this.publishedRest,
                 "photoBase64": this.photoS,
@@ -1211,7 +1236,7 @@ export default {
                     console.log(data);
                     // 在这里处理更新成功后的逻辑
                     // 例如，你可能想调用一个函数来执行其他操作或显示消息
-                    // this.showUpdateSuccess();
+                    this.showUpdateSucess();
                 })
                 .catch(error => {
                     console.error("Error:", error);
@@ -1238,13 +1263,16 @@ export default {
                     console.log("Success:", response,)
                 });
         }
+
+
+
         // ================================================================以上功能跟連接方法
 
     },
     mounted() {
         this.searchAllFacility()
         this.searchAdminUser();
-
+        this.dateLimit();
         //將登入頁傳來的個人資料轉成json可讀取
         const data = JSON.parse(this.$route.query.data);
         // 輸出 'value' 拿取裡面的key
@@ -1451,7 +1479,7 @@ export default {
                         <div class="photoPlace">
                             <label for="file-upload" class="custom-file-upload">選擇照片</label>
                             <input id="file-upload" type="file" @change="handleFileChange">
-                            <img id="addFacilityImg" ref="preview" src="" style="max-width: 200px; max-height: 200px;">
+                            <img id="addFacilityIMG" ref="preview" src="" style="max-width: 200px; max-height: 200px;">
                         </div>
                     </el-form-item>
 
@@ -1696,7 +1724,7 @@ export default {
                         -<img :src=restaurant.photo alt="">
                         <div class="TextPlace">
                             <span>{{ restaurant.name }}</span>
-                            <span>{{ restaurant.place }}</span>
+                            <span>{{ restaurant.region }}</span>
                             <span>{{ restaurant.published == true ? "開放中" : "停止中" }}</span>
                         </div>
                         <div class="BtnPlace">
@@ -1737,14 +1765,14 @@ export default {
 
                     <el-form-item label="開放時間">
                         <el-col :span="11">
-                            <input v-model="this.date1Rest" type="date" style="width: 100%">
+                            <input v-model="this.date1Rest" type="date" style="width: 100%" id="datePicker">
                         </el-col>
                         <el-col :span="2" class="text-center">
                             <span class="text-gray-500">-</span>
                         </el-col>
 
                         <el-col :span="11">
-                            <input type="date" v-model="this.date2Rest" style="width: 100%">
+                            <input type="date" v-model="this.date2Rest" style="width: 100%" id="datePicker">
                         </el-col>
                     </el-form-item>
 
@@ -1754,23 +1782,25 @@ export default {
 
                     <el-form-item label="選擇照片">
                         <div class="photoPlace">
-                            <label for="fileRest-upload" class="custom-file-upload">選擇照片</label>
-                            <input id="fileRest-upload" type="file" @change="handleFileChange">
-                            <img id="addRestImg" src="" ref="previewRest"
-                                style="display: none; max-width: 200px; max-height: 200px;">
+                            <label for="file-upload" class="custom-file-upload">選擇照片</label>
+                            <input id="file-upload" type="file" @change="handleFileChange">
+                            <img id="addFacilityIMG" src="" ref="previewRestImg" style="display: none;  max-width: 200px; max-height: 200px;" >
                         </div>
                     </el-form-item>
+
+
 
                     <el-form-item>
                         <el-button type="primary" @click="onSubmitRestaurant">Create</el-button>
                         <el-button @click="goBackHome">Cancel</el-button>
                     </el-form-item>
                 </el-form>
+
             </div>
 
-            <!-- 更新餐廳 -->
+            <!-- 修改餐廳 -->
             <div v-show="changePageNum == 9" class="addRestaurant">
-                <h1 style="color:rgb(255, 255, 255); margin-left: 7vw;">更新餐廳</h1>
+                <h1 style="color:rgb(255, 255, 255); margin-left: 7vw;">修改餐廳</h1>
                 <el-form class="formPlace" :model="form" label-width="120px">
                     <el-form-item label="餐廳名稱">
                         <el-input v-model="this.nameRest" />
@@ -1789,17 +1819,16 @@ export default {
                             <el-option label="孤島" value="孤島" />
                         </el-select>
                     </el-form-item>
-
                     <el-form-item label="開放時間">
                         <el-col :span="11">
-                            <input v-model="this.date1Rest" type="date" style="width: 100%">
+                            <input v-model="this.date1Rest" type="date" style="width: 100%" id="datePicker">
                         </el-col>
                         <el-col :span="2" class="text-center">
                             <span class="text-gray-500">-</span>
                         </el-col>
 
                         <el-col :span="11">
-                            <input type="date" v-model="this.date2Rest" style="width: 100%">
+                            <input type="date" v-model="this.date2Rest" style="width: 100%" id="datePicker">
                         </el-col>
                     </el-form-item>
 
@@ -1810,15 +1839,15 @@ export default {
                     <el-form-item label="選擇照片">
                         <div class="photoPlace">
                             <label for="file-upload" class="custom-file-upload">選擇照片</label>
-                            <input id="file-upload" type="file" @change="handleRestFileChange">
-                            <img id="edditimgShow" src="" style="display: none; max-width: 200px; max-height: 200px;">
+                            <input id="file-upload" type="file" @change="handleFileChange">
+                            <img id="addFacilityIMG" src="" ref="preview" style="display: none;  max-width: 200px; max-height: 200px;" >
                         </div>
                     </el-form-item>
 
                     <el-form-item>
                         <el-button style="background-color: rgb(0, 174, 0);" type="primary"
-                            @click="updateRstaurant">Update</el-button>
-                        <el-button @click="goManageRestaurant">Cancel</el-button>
+                            @click="updateRestaurant">Update</el-button>
+                        <el-button @click="goBackHome">Cancel</el-button>
                     </el-form-item>
                 </el-form>
             </div> 
