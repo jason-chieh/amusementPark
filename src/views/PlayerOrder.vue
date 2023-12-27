@@ -79,9 +79,6 @@ export default{
         },
 
 
-
-
-
         // 讓卡片們旋轉
         changeCard(){
 
@@ -104,6 +101,11 @@ export default{
         // 跳轉到地圖頁
         gomap(){
         this.page=2
+        },
+        //跳轉到留言區
+        goFacilityInfo(index){
+            console.log(index)
+            this.$router.push({ path: '/FacilityInfo', query: { data: JSON.stringify({ key:this.publishedFacility[index] }) } })
         },
 
         //計算設施使用時間
@@ -457,7 +459,7 @@ export default{
                         <p>活動期間:{{item.startDate}}~{{item.endDate}}</p>
                         <p>限制年齡:{{item.age}}</p>
                         <p>地點:{{item.place}}</p>
-                        <button class="btnMore" type="button">詳細資訊</button>
+                        <button @click="goFacilityInfo(index)" class="btnMore" type="button">詳細資訊</button>
                         <button  @click="changeCard(index)" class="carousel-control-next " type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next" >
                         <span  class="carousel-control-next-icon" aria-hidden="true"></span>
                         <span class="visually-hidden">Next</span>

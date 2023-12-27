@@ -28,6 +28,9 @@ export default {
 
       //模糊搜尋綁定的變數
       regxSearchName:"",
+
+      //2d3d地圖切換
+      threedmapshow:false,
     }
   },
   methods: {
@@ -44,11 +47,6 @@ export default {
     },
     // 跳轉到地圖頁
     gomap() {
-      this.page = 2
-    },
-    // 跳轉到3地圖
-    go3dmap() {
-
       let flypeople = 0;
       let  hoursepeople = 0;
       let  icepeople  = 0;
@@ -74,6 +72,11 @@ export default {
         }
       }
       this.setpeople(flypeople,hoursepeople,icepeople,slowpeople,firepeople)
+
+      this.page = 2
+    },
+    // 跳轉到3地圖
+    go3dmap() {
       this.page = 3
 
     },
@@ -88,6 +91,10 @@ export default {
     // 跳轉到紀念品頁
     goSouvenir() {
       this.page = 6
+    },
+    goFacilityInfo(index){
+        console.log(index)
+        this.$router.push({ path: '/FacilityInfo', query: { data: JSON.stringify({ key:this.publishedFacility[index] }) } })
     },
 
     // ===========================================================以上跳轉頁
@@ -259,9 +266,7 @@ export default {
   },
   // 更新頁面後，重新渲染
   updated() {
-    // if (this.page == 2) {
-    //   this.zoomAndShowText()
-    // }
+    console.log(this.threedmapshow)
   },
   computed:{
     // 抓取pinia裡面
@@ -331,29 +336,26 @@ export default {
     </div>
     <div @click="go3dmap" class="tour  block">
       <div class="iconPlace">
-        <i class="fa-solid fa-street-view"></i>
-        <!-- <i class="fa-solid fa-fire"></i> -->
+        <!-- <i class="fa-solid fa-street-view"></i> -->
+        <i class="fa-solid fa-fire"></i>
       </div>
-      <span>3D地圖資訊</span>
+      <span>最新活動</span>
     </div>
-    <!-- <div class="Activity  block">
-          <div class="iconPlace">
-            <i class="fa-solid fa-shoe-prints"></i>
-          </div>
-          <span>特別活動</span>
-        </div> -->
+    <!-- 門市通路 -->
     <div @click="goticket" class="ticket  block">
       <div class="iconPlace">
         <i class="fa-solid fa-ticket"></i>
       </div>
       <span>門票通路</span>
     </div>
+    <!-- 美食餐廳 -->
     <div @click="goRestaurant" class="restaurant  block">
       <div class="iconPlace">
         <i class="fa-solid fa-utensils"></i>
       </div>
       <span>美食餐廳</span>
     </div>
+    <!-- 獨家商品 -->
     <div @click="goSouvenir" class="Activity  block">
       <div class="iconPlace">
         <i class="fa-solid fa-gift"></i>
@@ -397,7 +399,7 @@ export default {
           <p>限制年齡:{{ item.age }}</p>
           <p>地點:{{ item.place }}</p>
           <p>預約人數:{{ item.reserveNum }}</p>
-          <button class="btnMore" type="button">詳細資訊</button>
+          <button @click="goFacilityInfo(index)" class="btnMore" type="button">詳細資訊</button>
           <button @click="changeCard(index)" class="carousel-control-next " type="button"
             data-bs-target="#carouselExampleControls" data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
@@ -411,8 +413,18 @@ export default {
   <!-- 地圖資訊 -->
   <div v-if="page == 2" class="mapByMyself" ref="mapPlace">
           <div class="left">
-            <h1>地圖資訊</h1>
-            <div class="svgdiv">
+            <!-- //上方文字區 -->
+            <div class="leftTitle" style="display:flex;align-items: center;">
+              <h1>地圖資訊</h1>
+              <!-- //切換地圖按鈕 -->
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" v-model="this.threedmapshow" role="switch" id="flexSwitchCheckDefault">
+                <label class="form-check-label" for="flexSwitchCheckDefault">觀看3D跟及時人數資訊</label>
+              </div>
+            </div>
+
+            <!-- 自己做的地圖區 -->
+            <div v-if="this.threedmapshow==false" class="svgdiv">
               <!-- Generator: Adobe Illustrator 21.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
               <svg class="mySvg"  version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
                 y="0px" viewBox="0 0 841.9 595.3" style="enable-background:new 0 0 841.9 595.3;" xml:space="preserve">
@@ -981,6 +993,9 @@ export default {
     
               </svg>
             </div>
+            <div v-if="this.threedmapshow==true" class="3dAccess">
+                <ThreeSphereView />
+            </div>
           </div>
 
           <div class="right" ref="mapRightPlace">
@@ -1490,17 +1505,72 @@ export default {
           </div>
   </div>
 
-  <!-- 3d地圖資訊 -->
-  <div v-if="page == 3" class="3dAccess">
-    <!-- <div class="ThreeSphereViewInf">
-        <span style="width:20px;height:20px;background-color: red;margin: 0 1vw;border-radius: 50%;"></span>
-        <span>人數大於20人</span>
-        <span style="width:20px;height:20px;background-color: yellow;margin: 0 1vw;border-radius: 50%;"></span>
-        <span>人數介於10人~20人</span>
-        <span style="width:20px;height:20px;background-color: green;margin: 0 1vw;border-radius: 50%;"></span>
-        <span>人數小於10人</span>
-    </div> -->
-    <ThreeSphereView />
+  <!-- 最新活動 -->
+  <div v-if="page == 3" class="newActiveity">
+      <h1>最新活動</h1>
+      <!-- 下方v-for遊樂設施區 -->
+      <div class="activeityArrPlace">
+          <!-- 活動 -->
+          <div class="card mb-3" style="max-width: 540px;">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="../../picture/activeity/活動1.jpg" style="height: 100%;width:auto;" class="img-fluid rounded-start" alt="...">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title">浪漫摩天輪</h5>
+                  <p class="card-text">浪漫就是一個很溫馨的感覺.享受當下的感覺，你可以跟你愛的人一起乘坐</p>
+                  <p class="card-text"><small class="text-muted">限時活動</small></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 活動 -->
+          <div class="card mb-3" style="max-width: 540px;">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="../../picture/activeity/活動2.jpg"  style="height: 100%;width:auto;"  class="img-fluid rounded-start" alt="...">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title">旋轉木馬</h5>
+                  <p class="card-text">旋轉木馬是一種很好玩的旋轉器材.旋轉木馬是一種很好玩的旋轉器材</p>
+                  <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 活動 -->
+          <div class="card mb-3" style="max-width: 540px;">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="../../picture/activeity/活動3.jpg"  style="height: 100%;" class="img-fluid rounded-start" alt="...">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title">游泳很好玩</h5>
+                  <p class="card-text"> 水上活動很精采也很刺激可以來玩樂，小孩大人都可以</p>
+                  <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 活動 -->
+          <div class="card mb-3" style="max-width: 540px;">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="../../picture/activeity/活動4.jpg"  style="height: 100%;" class="img-fluid rounded-start" alt="...">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title">雀躍地跳舞</h5>
+                  <p class="card-text">可以一起跳舞的話我真的會很開心也很快樂，大家可以一起來同樂，一起快樂的遊玩快樂.</p>
+                  <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
   </div>
 
 
@@ -1806,6 +1876,7 @@ export default {
       // /* 隐藏卡片背面 */
       backface-visibility: hidden;
 
+
       img {
         width: 100%;
       }
@@ -1931,7 +2002,9 @@ export default {
     width: 100vw;
 
     h1 {
-      margin: 2vh 10%;
+      margin: 2vh 0;
+      margin-left: 10%;
+      margin-right: 3%;
       font-weight: bold;
       font-family: Arial Black;
     }
@@ -2206,13 +2279,23 @@ export default {
 
 }
 
-//3d地圖區
-.ThreeSphereViewInf{
-  width:100%;
-  height: 10vh;
-  display:flex;
-  justify-content:center;
-  align-items: center;
+//最新活動地區
+.newActiveity{
+  width: 80vw;
+  margin: 0 10vw;
+  min-height: 30vh;
+  
+  h1 {
+    margin: 2vh 0;
+    font-weight: bold;
+    font-family: Arial Black;
+  }
+  .activeityArrPlace{
+    display:flex;
+    justify-content: space-around;
+    flex-wrap:wrap;
+  }
+
 }
 
 // ====================================================================
