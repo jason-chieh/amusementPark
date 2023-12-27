@@ -7,7 +7,6 @@ import Swal from 'sweetalert2'
 //這是新增設施
 import { reactive } from 'vue'
 
-
 //這是畫面loding
 import { ElLoading } from 'element-plus'
 
@@ -89,8 +88,10 @@ export default {
             //登入人的資料
             loginInfo: {},
 
-            //權限設定
+            //權限設定只有超級管理員才可以新增人員
             isAuthorization:false
+
+            //活動的變數
         }
     },
     components: {
@@ -271,7 +272,6 @@ export default {
             console.log('Close:', key, keyPath);
         },
         // ================================================================以上左邊選擇欄位暫停並且show金色後停留
-
         //頁面跳轉框
         goBackHome() {
             this.changePageNum = 0
@@ -318,7 +318,6 @@ export default {
             this.changePageNum = 3
             this.openFullScreen2()
         },
-
         goaddmanager() {
             this.changePageNum = 4
 
@@ -414,8 +413,6 @@ export default {
         handleChange(value) {
             console.log(value)
         },
-
-
         //新增設施---選擇照片
         handleFileChange(event) {
             // 獲取文件資料
@@ -455,7 +452,11 @@ export default {
                 return
             }
 
+<<<<<<< HEAD
             //判斷你是不是超級管理員
+=======
+            判斷你是不是超級管理員
+>>>>>>> 12-27_restaurant_fetch_DB
             if (this.loginInfo.adminuser.account != "superadmin") {
                 //確定你有沒有權利
                 if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
@@ -463,6 +464,10 @@ export default {
                     return
                 }
             }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 12-27_restaurant_fetch_DB
 
             var url = "http://localhost:8080/api/park/create";
             var data = {
@@ -634,6 +639,11 @@ export default {
                     return
                 }
             }
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 12-27_restaurant_fetch_DB
 
             //後端先
             console.log(this.allFacility[index].name)
@@ -686,6 +696,10 @@ export default {
                     return
                 }
             }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 12-27_restaurant_fetch_DB
 
             const url = 'http://localhost:8080/api/park/updateFacility';
             // 要帶入的值
@@ -1204,6 +1218,10 @@ export default {
                     return
                 }
             }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 12-27_restaurant_fetch_DB
             const url = 'http://localhost:8080/api/park/updateRestaurant';
 
             // 要带入的值
@@ -1265,6 +1283,8 @@ export default {
                 });
         }
 
+
+
         // ================================================================以上功能跟連接方法
 
     },
@@ -1323,7 +1343,6 @@ export default {
                         <!-- 後臺標語title -->
                         <span @click="goBackHome" style="cursor: pointer;" class="titleSpan">後臺管理頁面</span>
 
-
                         <el-sub-menu index="1">
                             <template #title>
                                 <el-icon>
@@ -1351,11 +1370,6 @@ export default {
                                 index="2-2">新增人員</el-menu-item>
                         </el-sub-menu>
 
-                        <!-- <el-menu-item index="3">
-                                <el-icon><setting /></el-icon>
-                                <span>Navigator Four</span>
-                            </el-menu-item> -->
-
                         <el-sub-menu index="3">
                             <template #title>
                                 <el-icon>
@@ -1371,6 +1385,7 @@ export default {
                                 index="3-3">修改餐廳</el-menu-item>
                         </el-sub-menu>
 
+
                     </el-menu>
                 </el-col>
             </el-row>
@@ -1380,7 +1395,6 @@ export default {
         <!-- 右半邊 -->
         <div class="rightBg">
             <img src="" alt="">
-
             <!-- 管理設施 -->
             <div v-show="changePageNum == 1" class="manageFacility">
                 <div class="manageTop">
@@ -1856,6 +1870,9 @@ export default {
                     </el-form-item>
                 </el-form>
             </div> 
+
+
+
         </div>
 
         <!-- 使用者資訊 -->
@@ -2042,6 +2059,8 @@ export default {
             }
 
         }
+
+
 
         //人員管理-新增
         .addmanager {
@@ -2264,6 +2283,129 @@ export default {
             }
 
         }
+
+
+        //管理活動
+        .manageActiveity {
+            position: relative;
+
+            .manageTop {
+                width: 70vw;
+                margin: 0 5vw;
+                height: 20vh;
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                // background-color: #ccc;
+                border-radius: 10px;
+                backdrop-filter: blur(10px);
+                border: 1px solid black;
+                padding: 0 8vw;
+
+                option {
+                    font-size: 16pt;
+                }
+            }
+
+            .manageBot {
+                width: 70vw;
+                margin: 0 5vw;
+                height: 70vh;
+                border-radius: 10px;
+                backdrop-filter: blur(10px);
+                border: 1px solid black;
+                margin-top: 5vh;
+                overflow: auto;
+
+
+
+                .itemBlock {
+                    width: 100%;
+                    height: calc(20%);
+                    display: flex;
+                    // border: 1px solid blue;
+                    text-align: center;
+
+                    &:hover {
+                        background-color: rgb(157, 157, 157);
+                    }
+
+                    .TextPlace {
+                        width: 70%;
+                        display: flex;
+                        justify-content: baseline;
+                        align-items: center;
+                        padding: 0 1vw;
+
+                        span {
+                            min-width: 10vw;
+                            margin-right: 5vw;
+                        }
+                    }
+
+                    .BtnPlace {
+                        width: 20%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+
+                        button {
+                            border: 0;
+                            border-radius: 10px;
+                            width: 3vw;
+                            height: 5vh;
+                            margin: 0 0.5vw;
+
+                            &:hover {
+                                background-color: black;
+                                color: white;
+                            }
+                        }
+                    }
+                }
+            }
+
+
+        }
+
+        //新增活動
+        .addActiveity {
+            position: relative;
+
+            .formPlace {
+                padding: 3% 5%;
+            }
+
+            .photoPlace {
+                display: flex;
+
+                //隱藏預設的外框
+                input[type="file"] {
+                    display: none;
+                }
+
+                /* 自定义文件选择按钮外观 */
+                .custom-file-upload {
+                    height: 5vh;
+                    border: 1px solid #ccc;
+                    border-radius: 5px;
+                    display: inline-block;
+                    padding: 2px 12px;
+                    cursor: pointer;
+                    background-color: #2669fb;
+                    color: black;
+                }
+
+                /* 当文件选择按钮被激活（hover 或 focus 时），改变其外观 */
+                .custom-file-upload:hover,
+                .custom-file-upload:focus {
+                    background-color: #ffffff;
+                }
+            }
+
+        }
+
+
     }
 }
 
