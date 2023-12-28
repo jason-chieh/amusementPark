@@ -181,7 +181,7 @@ export default {
     justify-content: center;
     align-items: center;
     // background-color: rgb(35, 139, 224);
-    background-image: url(../../picture/parking/parking_background.png);
+    background-image: url(../../picture/backView/下載.png);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;

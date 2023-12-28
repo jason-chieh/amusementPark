@@ -336,7 +336,7 @@ p {
     display: flex;
     justify-content: center;
     // background-color: rgb(35, 139, 224);
-    background-image: url(../../picture/parking/parking_background.png);
+    background-image: url(../../picture/backView/下載.png);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -345,7 +345,7 @@ p {
 .page2 {
     height: 85vh;
     // background-color: rgb(35, 139, 224);
-    background-image: url(../../picture/parking/parking_background.png);
+    background-image: url(../../picture/backView/下載.png);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -386,7 +386,7 @@ img {
     justify-content: space-around;
     align-items: center;
     // background-color: rgb(35, 139, 224);
-    background-image: url(../../picture/parking/parking_background.png);
+    background-image: url(../../picture/backView/下載.png);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;

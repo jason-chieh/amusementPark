@@ -398,7 +398,8 @@ export default{
   		left: 0;
 		width: 100vw;
   		height: 85vh;
-		background-image: url("../../picture/backView/pexels-david-geib-3220852.jpg");
+		background-image: url("../../picture/backView/pexels-vlad-chețan-3387165.jpg");
+		background-position: center;
 		margin-top: 15vh;
 	}
 	.content{
