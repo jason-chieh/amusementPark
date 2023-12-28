@@ -452,11 +452,7 @@ export default {
                 return
             }
 
-<<<<<<< HEAD
-            //判斷你是不是超級管理員
-=======
             判斷你是不是超級管理員
->>>>>>> 12-27_restaurant_fetch_DB
             if (this.loginInfo.adminuser.account != "superadmin") {
                 //確定你有沒有權利
                 if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
@@ -464,10 +460,6 @@ export default {
                     return
                 }
             }
-<<<<<<< HEAD
-=======
-
->>>>>>> 12-27_restaurant_fetch_DB
 
             var url = "http://localhost:8080/api/park/create";
             var data = {
@@ -639,11 +631,8 @@ export default {
                     return
                 }
             }
-<<<<<<< HEAD
-=======
 
 
->>>>>>> 12-27_restaurant_fetch_DB
 
             //後端先
             console.log(this.allFacility[index].name)
@@ -696,10 +685,6 @@ export default {
                     return
                 }
             }
-<<<<<<< HEAD
-=======
-
->>>>>>> 12-27_restaurant_fetch_DB
 
             const url = 'http://localhost:8080/api/park/updateFacility';
             // 要帶入的值
@@ -1218,10 +1203,6 @@ export default {
                     return
                 }
             }
-<<<<<<< HEAD
-=======
-
->>>>>>> 12-27_restaurant_fetch_DB
             const url = 'http://localhost:8080/api/park/updateRestaurant';
 
             // 要带入的值
@@ -1381,8 +1362,8 @@ export default {
                                 index="3-1">管理餐廳</el-menu-item>
                             <el-menu-item @click="goAddRestaurant" style="cursor: pointer;" class="child"
                                 index="3-2">新增餐廳</el-menu-item>
-                            <el-menu-item @click="goEditRestaurant" style="cursor: pointer;" class="child"
-                                index="3-3">修改餐廳</el-menu-item>
+                            <!-- <el-menu-item @click="goEditRestaurant" style="cursor: pointer;" class="child"
+                                index="3-3">修改餐廳</el-menu-item> -->
                         </el-sub-menu>
 
 
