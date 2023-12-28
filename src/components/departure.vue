@@ -307,7 +307,7 @@ button {
 }
 
 h1 {
-    color: white;
+    color: black;
 }
 
 p {
@@ -340,7 +340,6 @@ p {
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
-
 }
 
 .page2 {
