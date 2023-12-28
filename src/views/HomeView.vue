@@ -1584,23 +1584,6 @@ export default {
             </div>
           </div>
   </div>
-
-<<<<<<< HEAD
-  <!-- 3d地圖資訊 -->
-  <div v-if="page == 3" class="3dAccess">
-
-    <!-- <div class="ThreeSphereViewInf">
-        <span style="width:20px;height:20px;background-color: red;margin: 0 1vw;border-radius: 50%;"></span>
-        <span>人數大於20人</span>
-        <span style="width:20px;height:20px;background-color: yellow;margin: 0 1vw;border-radius: 50%;"></span>
-        <span>人數介於10人~20人</span>
-        <span style="width:20px;height:20px;background-color: green;margin: 0 1vw;border-radius: 50%;"></span>
-        <span>人數小於10人</span>
-    </div> -->
-
-    <ThreeSphereView />
-=======
-
   
   <!-- 最新活動 -->
   <div v-if="page == 3" class="newActiveity">
@@ -1668,7 +1651,6 @@ export default {
             </div>
           </div>
       </div>
->>>>>>> f124454555b8e1584f681bd51e5ce7e4121a4367
   </div>
 
 
@@ -1716,7 +1698,7 @@ export default {
     <p>* 售票處營業時間為開園前1小時前，至閉園前2小時為止</p>
 
     <h4><strong style="color:brown ; text-decoration:underline">營業時間</strong></h4>
-    <p>8：00 ～ 22：00</p>
+    <p>8：30 ～ 21：00</p>
 
   </div>
 

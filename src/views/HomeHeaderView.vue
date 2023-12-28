@@ -59,10 +59,10 @@ export default{
         <div class="headerBodyRight">
             <!-- <button type="button">精選內容</button>
             <button type="button">最新消息</button> -->
-            <i class="fa-regular fa-credit-card"><button @click="goBuyTicket()" type="button">線上購票</button></i>            
-            <i class="fa-solid fa-right-to-bracket"><button @click="goLogin()" type="button">購票登入</button></i>            
+            <i class="fa-regular fa-credit-card"><button @click="goBuyTicket()" type="button"> 線上購票</button></i>            
+            <i class="fa-solid fa-right-to-bracket"><button @click="goLogin()" type="button"> 購票登入</button></i>            
             <i class="fa-solid fa-square-parking"><button @click="parking()" type="button"> 停車資訊</button></i>
-            <i class="fa-sharp fa-solid fa-user"><button @click="QA()" type="button"> 客服QA</button></i>     
+            <i class="fa-regular fa-circle-question"><button @click="QA()" type="button"> 常見問題</button></i>    
             <!-- <i class="fa-solid fa-road-barrier"><button @click="goBack()" type="button">臨時後台入口</button></i>      -->
             <!-- <i class="fa-solid fa-magnifying-glass"></i> -->
         </div>

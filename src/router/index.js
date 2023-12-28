@@ -90,21 +90,20 @@ const router = createRouter({
       component: () => import('../views/ThreeSphere.vue')
     },
     {
-<<<<<<< HEAD
       path: '/CustomerServiceQA',
       name: 'CustomerServiceQA',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/CustomerServiceQA.vue')  
-=======
+    },
+    {
       path: '/FacilityInfo',
       name: 'FacilityInfo',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/FacilityInfo.vue')
->>>>>>> f124454555b8e1584f681bd51e5ce7e4121a4367
     },
 
 
