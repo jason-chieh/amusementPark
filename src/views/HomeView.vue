@@ -1584,8 +1584,6 @@ export default {
             </div>
           </div>
   </div>
-
-
   
   <!-- 最新活動 -->
   <div v-if="page == 3" class="newActiveity">
@@ -1700,7 +1698,7 @@ export default {
     <p>* 售票處營業時間為開園前1小時前，至閉園前2小時為止</p>
 
     <h4><strong style="color:brown ; text-decoration:underline">營業時間</strong></h4>
-    <p>8：00 ～ 22：00</p>
+    <p>8：30 ～ 21：00</p>
 
   </div>
 

@@ -328,7 +328,6 @@ export default {
 
         },
         goManageManager() {
-
             this.changePageNum = 5
         },
         goEditUser(index) {
@@ -393,7 +392,6 @@ export default {
                // //設定舊姓名
                 this.editOldNameRest = this.allRestaurant[index].name
                 this.changePageNum = 9
-                this.openFullScreen2()
                 return
             }
             this.nameRest = ""
@@ -409,7 +407,6 @@ export default {
             
             //頁面跳轉
             this.changePageNum = 9
-            this.openFullScreen2()
         },
 
         // ================================================================以上頁面跳轉框
@@ -455,7 +452,7 @@ export default {
                 return
             }
 
-            //判斷你是不是超級管理員
+            // 判斷你是不是超級管理員
             if (this.loginInfo.adminuser.account != "superadmin") {
                 //確定你有沒有權利
                 if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
@@ -1239,6 +1236,7 @@ export default {
                     // 在这里处理更新成功后的逻辑
                     // 例如，你可能想调用一个函数来执行其他操作或显示消息
                     this.showUpdateSucess();
+                    this.goManageRestaurant();
                 })
                 .catch(error => {
                     console.error("Error:", error);
@@ -1487,7 +1485,7 @@ export default {
 
                     <el-form-item>
                         <el-button type="primary" @click="onSubmit">Create</el-button>
-                        <el-button @click="goBackHome">Cancel</el-button>
+                        <el-button @click="goManageFacility">Cancel</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -1587,7 +1585,7 @@ export default {
 
                     <el-form-item class="userBtnPlace">
                         <el-button type="primary" @click="createAdminUser">Create</el-button>
-                        <el-button class="userCancelBtn" @click="">Cancel</el-button>
+                        <el-button class="userCancelBtn" @click="goManageManager">Cancel</el-button>
                     </el-form-item>
 
                 </el-form>
@@ -1794,7 +1792,7 @@ export default {
 
                     <el-form-item>
                         <el-button type="primary" @click="onSubmitRestaurant">Create</el-button>
-                        <el-button @click="goBackHome">Cancel</el-button>
+                        <el-button @click="goManageRestaurant">Cancel</el-button>
                     </el-form-item>
                 </el-form>
 
@@ -1849,7 +1847,7 @@ export default {
                     <el-form-item>
                         <el-button style="background-color: rgb(0, 174, 0);" type="primary"
                             @click="updateRestaurant">Update</el-button>
-                        <el-button @click="goBackHome">Cancel</el-button>
+                        <el-button @click="goManageRestaurant">Cancel</el-button>
                     </el-form-item>
                 </el-form>
             </div> 
