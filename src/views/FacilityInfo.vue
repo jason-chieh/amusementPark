@@ -783,7 +783,7 @@ export default {
     margin: 0 10vw;
     padding: 2% 2%;
     // background-color: pink;
-    background-image: url("../../picture/backView/pexels-pixabay-235985.jpg");
+    background-image: url("../../picture/backView/comment.png");
     background-size: cover;
     background-repeat: no-repeat;
     border-radius: 10px;
