@@ -50,6 +50,8 @@ export default {
                     console.log(data)
                     return this.searchComment();
                 })
+
+                this.comments=""
         },
         //搜尋留言
         searchComment(){

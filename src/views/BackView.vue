@@ -89,7 +89,9 @@ export default {
             loginInfo: {},
 
             //權限設定只有超級管理員才可以新增人員
-            isAuthorization:false
+            isAuthorization:false,
+            //權限設定只有超級管理員和島管理員才可以新增設施
+            isAuthorizationAddFacility:false,
 
             //活動的變數
         }
@@ -680,7 +682,7 @@ export default {
             //判斷你是不是超級管理員
             if (this.loginInfo.adminuser.account != "superadmin") {
                 //確定你有沒有權利
-                if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 20) {
+                if (this.loginInfo.adminuser.managePlace != this.region || this.loginInfo.adminuser.manageNum < 10) {
                     this.showAuthorizeFail();
                     return
                 }
@@ -1277,10 +1279,13 @@ export default {
         const data = JSON.parse(this.$route.query.data);
         // 輸出 'value' 拿取裡面的key
         this.loginInfo = data.key;
-        // console.log()
+        console.log(this.loginInfo.adminuser)
         //判斷是不是超級管理員可以新增人員
         if(this.loginInfo.adminuser.account=='superadmin'){
             this.isAuthorization=true
+        }
+        if(this.loginInfo.adminuser.manageNum>=20){
+            this.isAuthorizationAddFacility=true
         }
 
         // //登入成功的提示窗-看是誰登入
@@ -1333,7 +1338,7 @@ export default {
                             </template>
                             <el-menu-item @click="goManageFacility" style="cursor: pointer;" class="child"
                                 index="1-1">管理設施</el-menu-item>
-                            <el-menu-item   @click="goAddFacility" style="cursor: pointer;" class="child"
+                            <el-menu-item v-show="this.isAuthorizationAddFacility==true"   @click="goAddFacility" style="cursor: pointer;" class="child"
                                 index="1-2">新增設施</el-menu-item>
                         </el-sub-menu>
 
@@ -1347,7 +1352,7 @@ export default {
                             </template>
                             <el-menu-item @click="goManageManager" style="cursor: pointer;" class="child"
                                 index="2-1">管理人員</el-menu-item>
-                            <el-menu-item v-if="this.isAuthorization==true" @click="goaddmanager" style="cursor: pointer;" class="child"
+                            <el-menu-item v-show="this.isAuthorization==true" @click="goaddmanager" style="cursor: pointer;" class="child"
                                 index="2-2">新增人員</el-menu-item>
                         </el-sub-menu>
 
@@ -1419,9 +1424,9 @@ export default {
                             <span>{{ facility.published == true ? "開放中" : "停止中" }}</span>
                         </div>
                         <div class="BtnPlace">
-                            <button :key="index" @click="goEdit(index)" type="button"><i
+                            <button v-show="(this.loginInfo.adminuser.managePlace==facility.place&&this.loginInfo.adminuser.manageNum>=10)||this.loginInfo.adminuser.account=='superadmin'" :key="index" @click="goEdit(index)" type="button"><i
                                     class="fa-solid fa-pen-to-square"></i></button>
-                            <button :key="index" @click="sureDelete(index)" type="button"><i
+                            <button v-show="(this.loginInfo.adminuser.managePlace==facility.place&&this.loginInfo.adminuser.manageNum>=20)||this.loginInfo.adminuser.account=='superadmin'" :key="index" @click="sureDelete(index)" type="button"><i
                                     class="fa-solid fa-trash"></i></button>
                         </div>
 
@@ -1435,7 +1440,7 @@ export default {
                 <h1 style="color: rgb(255, 255, 255); margin-left: 7vw;">新增設施</h1>
 
                 <el-form class="formPlace" :model="form" label-width="120px">
-                    <el-form-item label="設施名稱">
+                    <el-form-item  label="設施名稱">
                         <el-input v-model="this.name" />
                     </el-form-item>
 
@@ -1634,9 +1639,9 @@ export default {
                             <span>管轄區:{{ adminuser.managePlace }}</span>
                         </div>
                         <div class="BtnPlace">
-                            <button :key="index" @click="goEditUser(index)" type="button"><i
+                            <button  v-show="(this.loginInfo.adminuser.managePlace==adminuser.managePlace&&this.loginInfo.adminuser.manageNum>=20)||this.loginInfo.adminuser.account=='superadmin'" :key="index" @click="goEditUser(index)" type="button"><i
                                     class="fa-solid fa-pen-to-square"></i></button>
-                            <button :key="index" @click="sureDeleteUser(index)" type="button"><i
+                            <button v-show="(this.loginInfo.adminuser.managePlace==adminuser.managePlace&&this.loginInfo.adminuser.manageNum>=20)||this.loginInfo.adminuser.account=='superadmin'" :key="index" @click="sureDeleteUser(index)" type="button"><i
                                     class="fa-solid fa-trash"></i></button>
                         </div>
 
@@ -1721,7 +1726,7 @@ export default {
 
                 <div class="restaurantmanageBot">
                     <div class="itemBlock" v-for="restaurant, index in this.allRestaurant">
-                        -<img :src=restaurant.photo alt="">
+                        <img :src=restaurant.photo alt="">
                         <div class="TextPlace">
                             <span>{{ restaurant.name }}</span>
                             <span>{{ restaurant.region }}</span>

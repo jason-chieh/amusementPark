@@ -132,6 +132,7 @@ td {
     font-size: 16pt;
     font-weight: bold;
     border: 1px black solid;
+    background-color: rgb(223, 223, 223);
 }
 
 th {

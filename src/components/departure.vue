@@ -267,7 +267,7 @@ export default {
     </div>
     <div v-if="page == 2" class="page2">
         <div class="body">
-            <h1>歡應再次蒞臨AIR TIME</h1>
+            <h1>歡迎再次蒞臨AIR TIME</h1>
             <button class="btn" @click="cancel">確認<span></span><span></span><span></span><span></span></button>
         </div>
     </div>

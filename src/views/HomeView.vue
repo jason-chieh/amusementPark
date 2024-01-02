@@ -36,7 +36,7 @@ export default {
       publishedRestaurant: [],
 
       // 餐廳頁面
-      page: 5,
+      page: 1,
       currentPage: 1,
       pageSize: 3,              // 每頁顯示的餐廳數量
       publishedRestaurant:[]    // 前台餐廳頁面接後端
@@ -1079,7 +1079,7 @@ export default {
           </div>
 
           <div class="right" ref="mapRightPlace">
-            <h1 @click="svgMoveRight">{{ this.islandName }}</h1>
+            <h1 @click="svgMoveRight">←{{ this.islandName }}</h1>
             <div class="uniqueMap">
                 <div class="uniqueMapLeft">
                   
@@ -1615,7 +1615,7 @@ export default {
                 <div class="card-body">
                   <h5 class="card-title">旋轉木馬</h5>
                   <p class="card-text">旋轉木馬是一種很好玩的旋轉器材.旋轉木馬是一種很好玩的旋轉器材</p>
-                  <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                  <p class="card-text"><small class="text-muted">限時活動</small></p>
                 </div>
               </div>
             </div>
@@ -1630,7 +1630,7 @@ export default {
                 <div class="card-body">
                   <h5 class="card-title">游泳很好玩</h5>
                   <p class="card-text"> 水上活動很精采也很刺激可以來玩樂，小孩大人都可以</p>
-                  <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                  <p class="card-text"><small class="text-muted">限時活動</small></p>
                 </div>
               </div>
             </div>
@@ -1645,7 +1645,7 @@ export default {
                 <div class="card-body">
                   <h5 class="card-title">雀躍地跳舞</h5>
                   <p class="card-text">可以一起跳舞的話我真的會很開心也很快樂，大家可以一起來同樂，一起快樂的遊玩快樂.</p>
-                  <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                  <p class="card-text"><small class="text-muted">限時活動</small></p>
                 </div>
               </div>
             </div>
@@ -2397,7 +2397,10 @@ export default {
       .uniqueMapRight {
         width: 60%;
         height: 50vh;
-        border: 5px solid black;
+        // border: 5px solid black;
+        box-shadow: 6px 5px 5px black;
+        background-color: rgb(215, 215, 215);
+        border-radius: 10px;
         display: flex;
         justify-content: center;
         flex-wrap: wrap;
